@@ -24,5 +24,15 @@
             A description of the group.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.Name">
+            <summary>
+            The unique name of the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.Description">
+            <summary>
+            A description of the group.
+            </summary>
+        </member>
     </members>
 </doc>

@@ -8,6 +8,8 @@ namespace VenimusAPIs.Maps
         {
             CreateMap<ViewModels.CreateNewGroup, Models.Group>()
                 .ForMember(dest => dest._id, opt => opt.Ignore());
+
+            CreateMap<Models.Group, ViewModels.GetGroup>();
         }
     }
 }
