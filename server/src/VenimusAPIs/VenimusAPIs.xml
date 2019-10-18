@@ -4,5 +4,25 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
+        <member name="P:VenimusAPIs.Models.Group.Name">
+            <summary>
+            The unique name for the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.Description">
+            <summary>
+            A description of the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Name">
+            <summary>
+            The unique name for the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Description">
+            <summary>
+            A description of the group.
+            </summary>
+        </member>
     </members>
 </doc>

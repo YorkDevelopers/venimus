@@ -1,3 +1,4 @@
+using AutoMapper;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +22,8 @@ namespace VenimusAPIs
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(GetType().Assembly);
+
             services.Configure<Settings.MongoDBSettings>(
                 options => Configuration.GetSection("MongoDB").Bind(options));
 
