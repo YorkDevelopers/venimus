@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VenimusAPIs.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 
 namespace VenimusAPIs.Controllers
 {
@@ -11,20 +13,32 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Services.Mongo _mongo;
 
-        public GroupController(Services.Mongo mongo)
+        private readonly IMapper _mapper;
+
+        public GroupController(Services.Mongo mongo, IMapper mapper)
         {
             _mongo = mongo;
+            _mapper = mapper;
         }
 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateNewGroup group)
         {
-            var model = new Models.Group { };
+            var model = _mapper.Map<Models.Group>(group);
 
             await _mongo.StoreGroup(model);
 
-            return Ok();
+            return CreatedAtRoute("Groups", new { groupName = model.Name }, group);
+        }
+
+        [Route("{groupName}", Name = "Groups")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Get(string groupName)
+        {
+            return NotFound();
         }
     }
 }

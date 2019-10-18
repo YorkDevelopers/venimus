@@ -1,6 +1,10 @@
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using TestStack.BDDfy;
+using VenimusAPIs.Tests.Infrastucture;
+using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests
@@ -10,6 +14,11 @@ namespace VenimusAPIs.Tests
     {
         private HttpResponseMessage _response;
         private string _token;
+        private CreateNewGroup _group;
+
+        public CreateGroup(Fixture fixture) : base(fixture)
+        {
+        }
 
         [Fact]
         public void Execute()
@@ -19,32 +28,41 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenIAmASystemAdministrator()
         {
-            _token = await GetToken();
+            _token = await Fixture.GetToken();
         }
 
         private async Task WhenICallTheCreateGroupApi()
         {
-            var newGroup = new ViewModels.CreateNewGroup
+            _group = new ViewModels.CreateNewGroup
             {
+                Name = System.Guid.NewGuid().ToString(),
+                Description = System.Guid.NewGuid().ToString(),
             };
-            
-            APIClient.SetBearerToken(_token);
-            _response = await APIClient.PostAsJsonAsync("api/Group", newGroup);
+
+            Fixture.APIClient.SetBearerToken(_token);
+            _response = await Fixture.APIClient.PostAsJsonAsync("api/Group", _group);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
         }
 
-        private void ThenANewGroupIsAddedToTheDatabase()
+        private async Task ThenANewGroupIsAddedToTheDatabase()
         {
-            Assert.False(true);
+            var mongoDatabase = Fixture.MongoDatabase();
+            var groups = mongoDatabase.GetCollection<Models.Group>("groups");
+            var actualGroup = await groups.Find(u => u.Name == _group.Name).SingleOrDefaultAsync();
+
+            Assert.Equal(_group.Description, actualGroup.Description);
         }
 
         private void ThenTheLocationOfTheNewGroupIsReturned()
         {
-            Assert.False(true);
+            var location = _response.Headers.Location;
+            var actualGroupName = location.Segments.Last();
+
+            Assert.Equal(_group.Name, actualGroupName);
         }
     }
 }
