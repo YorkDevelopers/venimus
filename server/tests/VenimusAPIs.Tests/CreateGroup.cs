@@ -9,6 +9,7 @@ namespace VenimusAPIs.Tests
     public class CreateGroup : BaseTest
     {
         private HttpResponseMessage _response;
+        private string _token;
 
         [Fact]
         public void Execute()
@@ -16,8 +17,9 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private void GivenIAmASystemAdministrator()
+        private async Task GivenIAmASystemAdministrator()
         {
+            _token = await GetToken();
         }
 
         private async Task WhenICallTheCreateGroupApi()
@@ -25,8 +27,8 @@ namespace VenimusAPIs.Tests
             var newGroup = new ViewModels.CreateNewGroup
             {
             };
-
-            APIClient.SetBearerToken("PUT TOKEN HERE");
+            
+            APIClient.SetBearerToken(_token);
             _response = await APIClient.PostAsJsonAsync("api/Group", newGroup);
         }
 

@@ -13,6 +13,7 @@
     <DocumentationFile>VenimusAPIs.Tests.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
     <WarningsAsErrors />
+    <UserSecretsId>fc98eb2f-7c0c-49ee-9ad6-2e6d15cc291a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
