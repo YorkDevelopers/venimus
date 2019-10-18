@@ -20,6 +20,11 @@ namespace VenimusAPIs
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Settings.MongoDBSettings>(
+                options => Configuration.GetSection("MongoDB").Bind(options));
+
+            services.AddSingleton<Services.Mongo>();
+
             services.AddControllers();
 
             services.AddSwagger();
