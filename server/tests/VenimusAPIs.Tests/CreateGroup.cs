@@ -26,7 +26,7 @@ namespace VenimusAPIs.Tests
             {
             };
 
-            APIClient.SetBearerToken("PUT TOKEN HERE);
+            APIClient.SetBearerToken("PUT TOKEN HERE");
             _response = await APIClient.PostAsJsonAsync("api/Group", newGroup);
         }
 
