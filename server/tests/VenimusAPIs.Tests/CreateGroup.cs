@@ -33,11 +33,7 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheCreateGroupApi()
         {
-            _group = new ViewModels.CreateNewGroup
-            {
-                Name = System.Guid.NewGuid().ToString(),
-                Description = System.Guid.NewGuid().ToString(),
-            };
+            _group = Data.Create<ViewModels.CreateNewGroup>();
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PostAsJsonAsync("api/Group", _group);

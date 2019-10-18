@@ -64,12 +64,6 @@ namespace VenimusAPIs.Tests.Infrastucture
             _client.DefaultRequestHeaders.Remove("Authorization");
         }
 
-        internal void SetDigest(string digest)
-        {
-            _client.DefaultRequestHeaders.Remove("Digest");
-            _client.DefaultRequestHeaders.Add("Digest", digest);
-        }
-
         internal void SetBearerToken(string token)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
