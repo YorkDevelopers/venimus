@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VenimusAPIs.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VenimusAPIs.Controllers
 {
@@ -15,10 +16,11 @@ namespace VenimusAPIs.Controllers
             _mongo = mongo;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateNewGroup group)
         {
-            var model = new Models.Group();
+            var model = new Models.Group { };
 
             await _mongo.StoreGroup(model);
 

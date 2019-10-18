@@ -26,12 +26,13 @@ namespace VenimusAPIs.Tests
             {
             };
 
+            APIClient.SetBearerToken("PUT TOKEN HERE");
             _response = await APIClient.PostAsJsonAsync("api/Group", newGroup);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.True(_response.IsSuccessStatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
         }
 
         private void ThenANewGroupIsAddedToTheDatabase()
