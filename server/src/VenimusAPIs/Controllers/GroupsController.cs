@@ -9,13 +9,13 @@ namespace VenimusAPIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroupController : ControllerBase
+    public class GroupsController : ControllerBase
     {
         private readonly Services.Mongo _mongo;
 
         private readonly IMapper _mapper;
 
-        public GroupController(Services.Mongo mongo, IMapper mapper)
+        public GroupsController(Services.Mongo mongo, IMapper mapper)
         {
             _mongo = mongo;
             _mapper = mapper;
@@ -36,9 +36,18 @@ namespace VenimusAPIs.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Get(string groupName)
+        public async Task<ActionResult<GetGroup>> Get(string groupName)
         {
-            return NotFound();
+            var group = await _mongo.RetrieveGroup(groupName);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<GetGroup>(group);
+
+            return viewModel;
         }
     }
 }

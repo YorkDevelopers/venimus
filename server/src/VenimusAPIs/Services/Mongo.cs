@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -16,9 +17,18 @@ namespace VenimusAPIs.Services
         public async Task StoreGroup(Models.Group group)
         {
             var database = ConnectToDatabase();
-            var collection = database.GetCollection<Models.Group>("groups");
+            var groups = database.GetCollection<Models.Group>("groups");
 
-            await collection.InsertOneAsync(group);
+            await groups.InsertOneAsync(group);
+        }
+
+        public async Task<Models.Group> RetrieveGroup(string groupName)
+        {
+            var database = ConnectToDatabase();
+            var groups = database.GetCollection<Models.Group>("groups");
+            var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
+
+            return group;
         }
 
         private IMongoDatabase ConnectToDatabase()
