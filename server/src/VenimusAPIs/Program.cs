@@ -20,6 +20,16 @@ namespace VenimusAPIs
 
         public static void Main(string[] args)
         {
+            System.Console.WriteLine(@"************************************************************************");
+            System.Console.WriteLine(@"____    ____  _______ .__   __.  __  .___  ___.  __    __       _______.");
+            System.Console.WriteLine(@"\   \  /   / |   ____||  \ |  | |  | |   \/   | |  |  |  |     /       |");
+            System.Console.WriteLine(@" \   \/   /  |  |__   |   \|  | |  | |  \  /  | |  |  |  |    |   (----`");
+            System.Console.WriteLine(@"  \      /   |   __|  |  . `  | |  | |  |\/|  | |  |  |  |     \   \    ");
+            System.Console.WriteLine(@"   \    /    |  |____ |  |\   | |  | |  |  |  | |  `--'  | .----)   | ");
+            System.Console.WriteLine(@"    \__/     |_______||__| \__| |__| |__|  |__|  \______/  |_______/    ");
+            System.Console.WriteLine();
+            System.Console.WriteLine(@"************************************************************************");
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .Enrich.FromLogContext()
