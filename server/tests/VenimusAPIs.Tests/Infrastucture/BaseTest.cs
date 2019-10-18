@@ -6,9 +6,12 @@ namespace VenimusAPIs.Tests.Infrastucture
     {
         protected Fixture Fixture { get; }
 
+        protected Data Data { get; }
+
         public BaseTest(Fixture fixture)
         {
             Fixture = fixture;
+            Data = new Data();
         }
     }
 }
