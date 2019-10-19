@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Services
 {
@@ -29,6 +30,14 @@ namespace VenimusAPIs.Services
             var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
 
             return group;
+        }
+
+        internal async Task StoreEvent(Event newEvent)
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.Event>("events");
+
+            await events.InsertOneAsync(newEvent);
         }
 
         private IMongoDatabase ConnectToDatabase()

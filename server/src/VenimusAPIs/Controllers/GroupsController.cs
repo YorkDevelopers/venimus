@@ -23,6 +23,7 @@ namespace VenimusAPIs.Controllers
 
         [Authorize]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateNewGroup group)
         {
             var model = _mapper.Map<Models.Group>(group);
@@ -32,6 +33,7 @@ namespace VenimusAPIs.Controllers
             return CreatedAtRoute("Groups", new { groupName = model.Name }, group);
         }
 
+        [Authorize]
         [Route("{groupName}", Name = "Groups")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]

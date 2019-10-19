@@ -4,6 +4,36 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
+        <member name="P:VenimusAPIs.Models.Event.EventID">
+            <summary>
+            Unique ID for the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.Title">
+            <summary>
+            The title of the event,  for example March 2019 Meetup. Must be unique for the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.Description">
+            <summary>
+            A description of the event,  in markdown format.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.Location">
+            <summary>
+            The location of the event, for example York Minster,  Room 201 York St John University
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.StartTime">
+            <summary>
+            Date and time the event starts
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EndTime">
+            <summary>
+            Date and time the event ends.  Must be after the StartTime
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Group.Name">
             <summary>
             The unique name for the group / community.  For example York Code Dojo
@@ -12,6 +42,31 @@
         <member name="P:VenimusAPIs.Models.Group.Description">
             <summary>
             A description of the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Title">
+            <summary>
+            The title of the event,  for example March 2019 Meetup. Must be unique for the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Description">
+            <summary>
+            A description of the event,  in markdown format.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Location">
+            <summary>
+            The location of the event, for example York Minster,  Room 201 York St John University
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.StartTime">
+            <summary>
+            Date and time the event starts
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.EndTime">
+            <summary>
+            Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Name">
