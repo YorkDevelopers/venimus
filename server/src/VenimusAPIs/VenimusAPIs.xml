@@ -4,6 +4,74 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
+        <member name="M:VenimusAPIs.Controllers.EventsController.Post(System.String,VenimusAPIs.ViewModels.CreateNewEvent)">
+             <summary>
+                 Allows you to create a new event for your group.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/groups/YorkCodeDojo/events
+                 {
+                     "title" : "Game of Life - Oct 2019",
+                     "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
+                     "location" : "Room 12"
+                     "startTime" : "2019-12-12 18:30"
+                     "endTime" : "2019-12-12 21:00"
+                 }
+            
+             </remarks>
+             <returns>The route to the created event</returns>
+             <response code="201">Success</response>
+             <response code="401">User is not authorized.</response>
+             <response code="404">The group does not exist.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.String,System.String)">
+             <summary>
+                 Allows you to retrieve the details of an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/groups/YorkCodeDojo/events/1234
+            
+             </remarks>
+             <returns>The GetEvent view model</returns>
+             <response code="200">Success</response>
+             <response code="404">Group or Event does not exist.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Post(VenimusAPIs.ViewModels.CreateNewGroup)">
+             <summary>
+                 Allows you to create a new group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/groups
+                 {
+                     "name" : "YorkCodeDojo",
+                     "description" : "Improve your code by practice."
+                 }
+            
+             </remarks>
+             <returns>The route to the created group</returns>
+             <response code="201">Success</response>
+             <response code="401">User is not authorized.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(System.String)">
+             <summary>
+                 Allows you to retrieve the details of a group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/groups/YorkCodeDojo
+            
+             </remarks>
+             <returns>The GetGroup view model</returns>
+             <response code="200">Success</response>
+             <response code="404">Group does not exist.</response>
+        </member>
         <member name="P:VenimusAPIs.Models.Event.EventID">
             <summary>
             Unique ID for the event

@@ -54,6 +54,9 @@ namespace VenimusAPIs
                 await next();
             });
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,11 +65,6 @@ namespace VenimusAPIs
             app.UseHttpsRedirection();
 
             app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Venimus APIs V1");
-            });
 
             app.UseRouting();
 

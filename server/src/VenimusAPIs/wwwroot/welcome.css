@@ -1,0 +1,11 @@
+﻿.bigText {
+    color: #0e1d37;
+    font-size: 3em;
+    font-family: Arial;
+}
+
+.smallText {
+    color: #0e1d37;
+    font-family: Arial;
+    line-height: 1.5;
+}
