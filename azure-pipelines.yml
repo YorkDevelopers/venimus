@@ -1,0 +1,41 @@
+pool:
+  vmImage: 'Ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.x'
+
+- task: FileTransform@1
+  inputs:
+    folderPath: '$(System.DefaultWorkingDirectory)/server/src/VenimusAPIs'
+    fileType: 'json'
+    targetFiles: 'appsettings.json'  
+  
+- script: dotnet build "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- script: dotnet test ./server/tests/VenimusAPIs.Tests/VenimusAPIs.Tests.csproj --logger:trx
+  displayName: 'Running tests'
+
+- script: dotnet publish "./server/src/VenimusAPIs" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
+  displayName: 'dotnet publish $(buildConfiguration)'
+  
+- pwsh: ((Get-Content -path .\default.html -Raw) -replace '<!--versionNumber-->', $env:VERSION_NUMBER) | Set-Content -Path .\default.html
+  workingDirectory: "$(Build.ArtifactStagingDirectory)/app/wwwroot"
+  env:
+    VERSION_NUMBER: '1.0.$(Build.BuildID)'
+  displayName: 'Set up version to the view'
+
+- task: PublishBuildArtifacts@1
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true
