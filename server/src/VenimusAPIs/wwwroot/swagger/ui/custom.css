@@ -1,0 +1,51 @@
+﻿body {
+    background-color: white!important;
+    background: transparent!important;
+}
+.swagger-ui .topbar {
+    background-color: white;
+}
+
+.topbar-wrapper img[alt="Swagger UI"], .topbar-wrapper span {
+    visibility: collapse;
+}
+
+img[alt="Swagger UI"] {
+    background-image : none;
+}
+
+.topbar-wrapper .link:after {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+.swagger-ui .topbar .download-url-wrapper .download-url-button {
+    background-color: orange;
+}
+.swagger-ui .topbar .download-url-wrapper input[type=text] {
+    border-color: orange;
+}
+
+.swagger-ui .topbar{
+    padding-top:30px;
+}
+
+html {
+    box-sizing: border-box;
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    background: #fafafa;
+}
+
+

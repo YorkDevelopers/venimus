@@ -21,9 +21,30 @@ namespace VenimusAPIs.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        ///     Allows you to create a new event for your group.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/groups/YorkCodeDojo/events
+        ///     {
+        ///         "title" : "Game of Life - Oct 2019",
+        ///         "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
+        ///         "location" : "Room 12"
+        ///         "startTime" : "2019-12-12 18:30"
+        ///         "endTime" : "2019-12-12 21:00"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The route to the created event</returns>
+        /// <response code="201">Success</response>
+        /// <response code="401">User is not authorized.</response>
+        /// <response code="404">The group does not exist.</response>
         [Route("api/groups/{groupName}/events")]
         [Authorize]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromRoute] string groupName, [FromBody] CreateNewEvent newEvent)
         {
@@ -34,6 +55,18 @@ namespace VenimusAPIs.Controllers
             return CreatedAtRoute("Events", new { groupName = groupName,  eventID = model.EventID }, newEvent);
         }
 
+        /// <summary>
+        ///     Allows you to retrieve the details of an event
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/groups/YorkCodeDojo/events/1234
+        ///
+        /// </remarks>
+        /// <returns>The GetEvent view model</returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
         [Route("api/groups/{groupName}/events/{eventID}", Name = "Events")]
         [HttpGet]
