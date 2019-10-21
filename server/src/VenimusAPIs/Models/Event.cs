@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 
 namespace VenimusAPIs.Models
@@ -8,8 +9,12 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Unique ID for the event
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "Required for Mongo")]
-        public ObjectId _id { get; set; }
+        public ObjectId Id { get; set; }
+
+        /// <summary>
+        /// The group to which this event belongs
+        /// </summary>
+        public ObjectId GroupId { get; set; }
 
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
@@ -35,5 +40,23 @@ namespace VenimusAPIs.Models
         /// Date and time the event ends.  Must be after the StartTime
         /// </summary>
         public DateTime EndTime { get; set; }
+
+        /// <summary>
+        /// Attendees of this group
+        /// </summary>
+        public List<EventAttendees>[] Members { get; set; }
+
+        public class EventAttendees
+        {
+            public ObjectId UserId { get; set; }
+            
+            public bool SignedUp { get; set; }
+            
+            public bool Attended { get; set; }
+
+            public bool Host { get; set; }
+            
+            public bool Speaker { get; set; }
+        }
     }
 }

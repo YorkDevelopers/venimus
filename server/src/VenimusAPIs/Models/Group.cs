@@ -1,11 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace VenimusAPIs.Models
 {
     public class Group
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "Required for Mongo")]
-        public ObjectId _id { get; set; }
+        public ObjectId Id { get; set; }
 
         /// <summary>
         /// The unique name for the group / community.  For example York Code Dojo
@@ -16,5 +16,10 @@ namespace VenimusAPIs.Models
         /// A description of the group.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Members of this group
+        /// </summary>
+        public List<ObjectId>[] Members { get; set; }
     }
 }

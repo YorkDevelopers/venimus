@@ -7,7 +7,7 @@ namespace VenimusAPIs.Maps
         public GroupProfile()
         {
             CreateMap<ViewModels.CreateNewGroup, Models.Group>()
-                .ForMember(dest => dest._id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<Models.Group, ViewModels.GetGroup>();
         }

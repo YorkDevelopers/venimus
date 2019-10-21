@@ -46,7 +46,7 @@ namespace VenimusAPIs.Services
         {
             var database = ConnectToDatabase();
             var events = database.GetCollection<Models.Event>("events");
-            var group = await events.Find(u => u._id == ObjectId.Parse(eventID)).SingleOrDefaultAsync();
+            var group = await events.Find(u => u.Id == ObjectId.Parse(eventID)).SingleOrDefaultAsync();
 
             return group;
         }
@@ -64,7 +64,7 @@ namespace VenimusAPIs.Services
             var database = ConnectToDatabase();
             var events = database.GetCollection<Models.Event>("events");
 
-            await events.ReplaceOneAsync(u => u._id == amendedEvent._id, amendedEvent);
+            await events.ReplaceOneAsync(u => u.Id == amendedEvent.Id, amendedEvent);
         }
     }
 }
