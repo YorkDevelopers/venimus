@@ -60,7 +60,7 @@ namespace VenimusAPIs.Tests
             _amendedEvent.EndTime = null;
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PatchAsJsonAsync($"api/Groups/{_group.Name}/Events/{_event._id}", _amendedEvent);
+            _response = await Fixture.APIClient.PatchAsJsonAsync($"api/Groups/{_group.Name}/Events/{_event.Id}", _amendedEvent);
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -72,7 +72,7 @@ namespace VenimusAPIs.Tests
         {
             var mongoDatabase = Fixture.MongoDatabase();
             var events = mongoDatabase.GetCollection<Models.Event>("events");
-            var actualGroup = await events.Find(u => u._id == _event._id).SingleOrDefaultAsync();
+            var actualGroup = await events.Find(u => u.Id == _event.Id).SingleOrDefaultAsync();
 
             Assert.Equal(_amendedEvent.Title ?? _event.Title, actualGroup.Title);
             Assert.Equal(_amendedEvent.Description ?? _event.Description, actualGroup.Description);
