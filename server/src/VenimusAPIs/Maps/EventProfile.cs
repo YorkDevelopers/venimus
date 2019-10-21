@@ -8,6 +8,9 @@ namespace VenimusAPIs.Maps
         {
             CreateMap<ViewModels.CreateNewEvent, Models.Event>()
                 .ForMember(dest => dest._id, opt => opt.Ignore());
+
+            CreateMap<ViewModels.UpdateEvent, Models.Event>()
+                .ForMember(dest => dest._id, opt => opt.Ignore());
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VenimusAPIs.Models;
+using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Services
 {
@@ -40,12 +41,29 @@ namespace VenimusAPIs.Services
             await events.InsertOneAsync(newEvent);
         }
 
+        public async Task<Models.Event> RetrieveEvent(string eventID)
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.Event>("events");
+            var group = await events.Find(u => u.EventID == eventID).SingleOrDefaultAsync();
+
+            return group;
+        }
+
         private IMongoDatabase ConnectToDatabase()
         {
             var client = new MongoClient(_mongoDBSettings.ConnectionString);
             var database = client.GetDatabase(_mongoDBSettings.DatabaseName);
 
             return database;
+        }
+
+        internal async Task UpdateEvent(Models.Event amendedEvent)
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.Event>("events");
+
+            await events.ReplaceOneAsync(b => b.EventID == amendedEvent.EventID, amendedEvent);
         }
     }
 }

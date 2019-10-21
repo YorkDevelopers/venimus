@@ -56,6 +56,42 @@ namespace VenimusAPIs.Controllers
         }
 
         /// <summary>
+        ///     Allows you to amend the details of an existing event
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /api/groups/YorkCodeDojo/events/12345
+        ///     {
+        ///         "title" : "Game of Life - Oct 2019",
+        ///         "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
+        ///         "location" : "Room 12"
+        ///         "startTime" : "2019-12-12 18:30"
+        ///         "endTime" : "2019-12-12 21:00"
+        ///         "host" : "E Betteridge"
+        ///         "speaker" : "J Betteridge"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>No data</returns>
+        /// <response code="200">Success</response>
+        /// <response code="401">User is not authorized.</response>
+        /// <response code="404">The group does not exist.</response>
+        [Route("api/groups/{groupName}/events/{eventID}")]
+        [Authorize]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> Put([FromRoute] string groupName, [FromRoute] string eventID, [FromBody] UpdateEvent amendedEvent)
+        {
+            var model = await _mongo.RetrieveEvent(eventID);
+            _mapper.Map(amendedEvent, model);
+
+            await _mongo.UpdateEvent(model);
+            return Ok();
+        }
+
+        /// <summary>
         ///     Allows you to retrieve the details of an event
         /// </summary>
         /// <remarks>
