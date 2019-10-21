@@ -32,6 +32,7 @@ namespace VenimusAPIs.Tests
             }
 
             var builder = new ConfigurationBuilder()
+                          .AddEnvironmentVariables()
                           .AddUserSecrets<Fixture>()
                           .SetBasePath(Directory.GetCurrentDirectory())
                           .AddJsonFile("appsettings.json", false, false)
