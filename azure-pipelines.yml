@@ -5,6 +5,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- powershell: ./Setup-MongoDB.ps1
+  displayName: 'Setup MongoDB'
+  
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
