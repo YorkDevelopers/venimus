@@ -18,6 +18,9 @@ steps:
 
 - script: dotnet test ./server/tests/VenimusAPIs.Tests/VenimusAPIs.Tests.csproj --logger:trx
   displayName: 'Running tests'
+  inputs: 
+    mongoDB__connectionString: "mongodb://localhost"
+    mongoDB__databaseName: "TestDatabase"
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
   displayName: 'dotnet publish $(buildConfiguration)'
