@@ -32,11 +32,11 @@ namespace VenimusAPIs.Tests
             }
 
             var builder = new ConfigurationBuilder()
-                          .AddEnvironmentVariables()
                           .AddUserSecrets<Fixture>()
                           .SetBasePath(Directory.GetCurrentDirectory())
                           .AddJsonFile("appsettings.json", false, false)
-                          .AddJsonFile($"appsettings.Testing.json", true, false);
+                          .AddJsonFile($"appsettings.Testing.json", true, false)
+                          .AddEnvironmentVariables();
             _configuration = builder.Build();
 
             _fixture = new WebApplicationFactory<Startup>();
