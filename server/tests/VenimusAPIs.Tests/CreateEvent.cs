@@ -68,7 +68,7 @@ namespace VenimusAPIs.Tests
         {
             var mongoDatabase = Fixture.MongoDatabase();
             var events = mongoDatabase.GetCollection<Models.Event>("events");
-            var actualGroup = await events.Find(u => u._id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
+            var actualGroup = await events.Find(u => u.Id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
 
             Assert.Equal(_event.Title, actualGroup.Title);
             Assert.Equal(_event.Description, actualGroup.Description);
