@@ -5,7 +5,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- powershell: ./Setup-MongoDB.ps1
+- script: docker run -d -p 27017:27017 mongo
   displayName: 'Setup MongoDB'
   
 - task: UseDotNet@2
