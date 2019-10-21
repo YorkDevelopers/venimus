@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using VenimusAPIs.Models;
 using VenimusAPIs.ViewModels;
@@ -45,7 +46,7 @@ namespace VenimusAPIs.Services
         {
             var database = ConnectToDatabase();
             var events = database.GetCollection<Models.Event>("events");
-            var group = await events.Find(u => u.EventID == eventID).SingleOrDefaultAsync();
+            var group = await events.Find(u => u._id == ObjectId.Parse(eventID)).SingleOrDefaultAsync();
 
             return group;
         }
@@ -63,7 +64,7 @@ namespace VenimusAPIs.Services
             var database = ConnectToDatabase();
             var events = database.GetCollection<Models.Event>("events");
 
-            await events.ReplaceOneAsync(b => b.EventID == amendedEvent.EventID, amendedEvent);
+            await events.ReplaceOneAsync(u => u._id == amendedEvent._id, amendedEvent);
         }
     }
 }

@@ -120,7 +120,7 @@
              <response code="200">Success</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="P:VenimusAPIs.Models.Event.EventID">
+        <member name="P:VenimusAPIs.Models.Event._id">
             <summary>
             Unique ID for the event
             </summary>

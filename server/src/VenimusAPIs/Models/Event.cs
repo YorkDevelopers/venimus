@@ -5,13 +5,11 @@ namespace VenimusAPIs.Models
 {
     public class Event
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "Required for Mongo")]
-        public ObjectId _id { get; set; }
-
         /// <summary>
         /// Unique ID for the event
         /// </summary>
-        public string EventID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "Required for Mongo")]
+        public ObjectId _id { get; set; }
 
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.

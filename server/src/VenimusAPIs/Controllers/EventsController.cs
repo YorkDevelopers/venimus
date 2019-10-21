@@ -49,10 +49,9 @@ namespace VenimusAPIs.Controllers
         public async Task<IActionResult> Post([FromRoute] string groupName, [FromBody] CreateNewEvent newEvent)
         {
             var model = _mapper.Map<Models.Event>(newEvent);
-            model.EventID = Guid.NewGuid().ToString();
 
             await _mongo.StoreEvent(model);
-            return CreatedAtRoute("Events", new { groupName = groupName,  eventID = model.EventID }, newEvent);
+            return CreatedAtRoute("Events", new { groupName = groupName, eventID = model._id }, newEvent);
         }
 
         /// <summary>

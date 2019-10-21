@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -67,7 +68,7 @@ namespace VenimusAPIs.Tests
         {
             var mongoDatabase = Fixture.MongoDatabase();
             var events = mongoDatabase.GetCollection<Models.Event>("events");
-            var actualGroup = await events.Find(u => u.EventID == _actualEventID).SingleOrDefaultAsync();
+            var actualGroup = await events.Find(u => u._id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
 
             Assert.Equal(_event.Title, actualGroup.Title);
             Assert.Equal(_event.Description, actualGroup.Description);
