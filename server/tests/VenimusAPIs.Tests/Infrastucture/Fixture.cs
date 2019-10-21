@@ -35,7 +35,7 @@ namespace VenimusAPIs.Tests
                           .AddUserSecrets<Fixture>()
                           .SetBasePath(Directory.GetCurrentDirectory())
                           .AddJsonFile("appsettings.json", false, false)
-                          .AddJsonFile($"appsettings.Testing.json", false, false);
+                          .AddJsonFile($"appsettings.Testing.json", true, false);
             _configuration = builder.Build();
 
             _fixture = new WebApplicationFactory<Startup>();
