@@ -1,11 +1,15 @@
+using System.IO;
 using AutoMapper;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using VenimusAPIs.Registration;
 
@@ -56,6 +60,27 @@ namespace VenimusAPIs
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            if (env.IsEnvironment("Testing") || env.IsDevelopment())
+            {
+                app.Use(async (ctx, next) =>
+                {
+                    if (ctx.Request.Path.Value == @"/.well-known/openid-configuration")
+                    {
+                        var contents = await File.ReadAllTextAsync(@"MockOpenID\openid-configuration.txt");
+                        await ctx.Response.WriteAsync(contents);
+                    }
+                    else if (ctx.Request.Path.Value == @"/.well-known/jwks.json")
+                    {
+                        var contents = await File.ReadAllTextAsync(@"MockOpenID\jwks.json");
+                        await ctx.Response.WriteAsync(contents);
+                    }
+                    else
+                    {
+                        await next();
+                    }
+                });
+            }
 
             if (env.IsDevelopment())
             {

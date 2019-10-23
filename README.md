@@ -19,3 +19,14 @@ For example
     "databaseName": "venimus"
   }
 ```  
+
+
+## APIS
+
+System adminstrators can :  List / Create / Edit / Delete Groups / Ban Users
+
+Group administrators can : List (including people) / Create / Edit / Delete Events
+
+Users can : Signup / Join/Leave Groups / RSVP/SignDown to/from Events / View Groups / View Events / Change Details
+
+

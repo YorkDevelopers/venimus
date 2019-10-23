@@ -4,16 +4,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VenimusAPIs.Tests.Extensions;
@@ -58,8 +58,14 @@ namespace VenimusAPIs.Tests
 
         public Task<string> GetToken()
         {
-            return Task.FromResult(CreateToken());
-            /*
+            IdentityModelEventSource.ShowPII = true;
+
+            var token = CreateMockToken();
+            return Task.FromResult(token);
+        }
+
+        private async Task<string> CreateAuth0Token()
+        {
             var client_id = _configuration["Auth0:client_id"];
             var client_secret = _configuration["Auth0:client_secret"];
 
@@ -79,29 +85,22 @@ namespace VenimusAPIs.Tests
             var details = await response.Content.ReadAsJsonAsync<AuthOResponse>();
 
             return details.AccessToken;
-            */
         }
 
-        private string CreateToken()
+        private string CreateMockToken()
         {
-            var rsa = new RSACryptoServiceProvider();
-            rsa.ImportParameters(
-              new RSAParameters()
-              {
-                  Modulus = FromBase64Url("w7Zdfmece8iaB0kiTY8pCtiBtzbptJmP28nSWwtdjRu0f2GFpajvWE4VhfJAjEsOcwYzay7XGN0b-X84BfC8hmCTOj2b2eHT7NsZegFPKRUQzJ9wW8ipn_aDJWMGDuB1XyqT1E7DYqjUCEOD1b4FLpy_xPn6oV_TYOfQ9fZdbE5HGxJUzekuGcOKqOQ8M7wfYHhHHLxGpQVgL0apWuP2gDDOdTtpuld4D2LK1MZK99s9gaSjRHE8JDb1Z4IGhEcEyzkxswVdPndUWzfvWBBWXWxtSUvQGBRkuy1BHOa4sP6FKjWEeeF7gm7UMs2Nm2QUgNZw6xvEDGaLk4KASdIxRQ"),
-                  Exponent = FromBase64Url("AQAB"),
-              });
-            var key = new RsaSecurityKey(rsa);
+            using var rsa = RSA.Create(2048);
+            RSAFromXmlFile(rsa, @"MockOpenId\private.xml");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = "https://localhost:5001",
+                Issuer = "https://localhost:5001/",
                 Expires = DateTime.UtcNow.AddDays(7),
                 Audience = "https://Venimus.YorkDevelopers.org",
                 SigningCredentials = new SigningCredentials(
-                    key,
-                    SecurityAlgorithms.RsaSha256Signature),
+                    new RsaSecurityKey(rsa),
+                    SecurityAlgorithms.RsaSha256),
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -116,6 +115,38 @@ namespace VenimusAPIs.Tests
                                   .Replace("-", "+");
             var s = Convert.FromBase64String(base64);
             return s;
+        }
+
+        private void RSAFromXmlFile(RSA rsa, string filename)
+        {
+            RSAParameters parameters = new RSAParameters();
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(filename);
+
+            if (xmlDoc.DocumentElement.Name.Equals("RSAKeyValue"))
+            {
+                foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+                {
+                    switch (node.Name)
+                    {
+                        case "Modulus": parameters.Modulus = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "Exponent": parameters.Exponent = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "P": parameters.P = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "Q": parameters.Q = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "DP": parameters.DP = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "DQ": parameters.DQ = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "InverseQ": parameters.InverseQ = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                        case "D": parameters.D = string.IsNullOrEmpty(node.InnerText) ? null : FromBase64Url(node.InnerText); break;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Invalid XML RSA key.");
+            }
+
+            rsa.ImportParameters(parameters);
         }
 
         private class AuthOResponse
