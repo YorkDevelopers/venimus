@@ -3,6 +3,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  mockauthimageName: 'venimus-mockauth'
 
 steps:
 - script: docker run -d -p 27017:27017 mongo
@@ -13,6 +14,21 @@ steps:
     packageType: 'sdk'
     version: '3.0.x'
 
+- script: dotnet publish "./server/tools/MockAuth/MockAuth.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/mockauth'
+  displayName: 'Build MockAuth'
+
+  steps:
+  - task: Docker@2
+    displayName: Build an MockAuth image
+    inputs:
+      repository: $(mockauthimageName)
+      command: build
+      Dockerfile: ./server/tools/MockAuth/Dockerfile  
+      buildContext: "$(Build.ArtifactStagingDirectory)/mockauth"
+
+- script: docker run -d -p 6001:443 $(mockauthimageName)
+  displayName: 'Run MockAuth'
+
 - script: dotnet build "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
@@ -21,6 +37,8 @@ steps:
   env: 
     MongoDB__connectionString: "mongodb://localhost"
     MongoDB__databaseName: "TestDatabase"
+    Auth0__Domain: "localhost:6001",
+    Auth0__Audience: "https://Venimus.YorkDevelopers.org"
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
   displayName: 'dotnet publish $(buildConfiguration)'
