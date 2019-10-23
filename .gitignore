@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Avoid checking in passwords etc!
-src/VenimusAPIs/appsettings.Development.json
+appsettings.Development.json
 appsettings.Testing.json
 
 # User-specific files

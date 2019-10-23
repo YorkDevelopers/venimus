@@ -1,4 +1,5 @@
 # Project Venimus
+
 Open source event organising community platform ran by YorkDevelopers.org
 
 ## Build Status
@@ -9,7 +10,7 @@ Open source event organising community platform ran by YorkDevelopers.org
 
 You will need to install an instance of MongoDB locally or sign up to a cloud provider such as Atlas
 
-Then add/update the `appsettings.Testing.json` with your details
+Then add/update the `appsettings.json` with your details
 
 For example
 
@@ -20,6 +21,16 @@ For example
   }
 ```  
 
+You may also need a mock Auth provider.  One option is to run the project `server\tools\MockAuth` on port 6001.  Then add the following lines to your `appsettings.json` file
+
+```json
+  "Auth0": {
+    "Domain": "localhost:6001",
+    "Audience": "https://Venimus.YorkDevelopers.org"
+  }
+```  
+
+It is recommended that rather than editing the existing `appsettings.json` file you create `appsettings.Testing.json` and/or `appsettings.Development.json`
 
 ## APIS
 
@@ -28,5 +39,3 @@ System adminstrators can :  List / Create / Edit / Delete Groups / Ban Users
 Group administrators can : List (including people) / Create / Edit / Delete Events
 
 Users can : Signup / Join/Leave Groups / RSVP/SignDown to/from Events / View Groups / View Events / Change Details
-
-

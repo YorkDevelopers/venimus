@@ -95,7 +95,7 @@ namespace VenimusAPIs.Tests
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = "https://localhost:5001/",
+                Issuer = "https://localhost:6001/",
                 Expires = DateTime.UtcNow.AddDays(7),
                 Audience = "https://Venimus.YorkDevelopers.org",
                 SigningCredentials = new SigningCredentials(
