@@ -37,7 +37,7 @@ steps:
   env: 
     MongoDB__connectionString: "mongodb://localhost"
     MongoDB__databaseName: "TestDatabase"
-    Auth0__Domain: "localhost:6001",
+    Auth0__Domain: "localhost:6001"
     Auth0__Audience: "https://Venimus.YorkDevelopers.org"
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
