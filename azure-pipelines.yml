@@ -17,14 +17,13 @@ steps:
 - script: dotnet publish "./server/tools/MockAuth/MockAuth.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/mockauth'
   displayName: 'Build MockAuth'
 
-  steps:
-  - task: Docker@2
-    displayName: Build an MockAuth image
-    inputs:
-      repository: $(mockauthimageName)
-      command: build
-      Dockerfile: ./server/tools/MockAuth/Dockerfile  
-      buildContext: "$(Build.ArtifactStagingDirectory)/mockauth"
+- task: Docker@2
+  displayName: Build an MockAuth image
+  inputs:
+    repository: $(mockauthimageName)
+    command: build
+    Dockerfile: ./server/tools/MockAuth/Dockerfile  
+    buildContext: "$(Build.ArtifactStagingDirectory)/mockauth"
 
 - script: docker run -d -p 6001:443 $(mockauthimageName)
   displayName: 'Run MockAuth'
