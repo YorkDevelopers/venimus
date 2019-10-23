@@ -90,7 +90,7 @@ namespace VenimusAPIs.Tests
         private string CreateMockToken()
         {
             using var rsa = RSA.Create(2048);
-            RSAFromXmlFile(rsa, @"MockOpenId\private.xml");
+            RSAFromXmlFile(rsa, @"MockOpenId/private.xml");
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
