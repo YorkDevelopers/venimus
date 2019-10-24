@@ -12,7 +12,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  mockauthimageName: 'venimus-mockauth'
+  apiimageName: 'venimus-api'
+  dockerRegistryServiceConnection: 'venimuscr'
 
 steps:
 - task: UseDotNet@2
@@ -31,7 +32,7 @@ steps:
   env: 
     MongoDB__connectionString: "mongodb://localhost"
     MongoDB__databaseName: "TestDatabase"
-    Auth0__Domain: "localhost:6001"
+    Auth0__Domain: "venimus-mockauth.azurewebsites.net"
     Auth0__Audience: "https://Venimus.YorkDevelopers.org"
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
@@ -51,3 +52,13 @@ steps:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
     failTaskOnFailedTests: true
+
+- task: Docker@2
+  displayName: Build an API image
+  inputs:
+    repository: $(apiimageName)
+    command: buildAndPush
+    Dockerfile: ./server/src/VenimusAPIs/Dockerfile  
+    buildContext: "$(Build.ArtifactStagingDirectory)/api"
+    containerRegistry: $(dockerRegistryServiceConnection)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
