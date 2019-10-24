@@ -47,7 +47,7 @@ namespace MockAuth
                 }
                 else
                 {
-                    await next();
+                    await ctx.Response.WriteAsync($"{ctx.Request.Path.Value} was requested.  Please request either .well-known/openid-configuration or .well-known/jwks.json");
                 }
             });
 
