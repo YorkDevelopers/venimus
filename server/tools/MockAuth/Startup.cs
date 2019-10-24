@@ -37,12 +37,12 @@ namespace MockAuth
             {
                 if (ctx.Request.Path.Value == @"/.well-known/openid-configuration")
                 {
-                    var contents = await File.ReadAllTextAsync(@"MockOpenID\openid-configuration.txt");
+                    var contents = await File.ReadAllTextAsync(@"MockOpenID/openid-configuration.txt");
                     await ctx.Response.WriteAsync(contents);
                 }
                 else if (ctx.Request.Path.Value == @"/.well-known/jwks.json")
                 {
-                    var contents = await File.ReadAllTextAsync(@"MockOpenID\jwks.json");
+                    var contents = await File.ReadAllTextAsync(@"MockOpenID/jwks.json");
                     await ctx.Response.WriteAsync(contents);
                 }
                 else

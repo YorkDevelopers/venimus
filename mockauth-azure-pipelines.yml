@@ -31,3 +31,4 @@ steps:
     Dockerfile: ./server/tools/MockAuth/Dockerfile  
     buildContext: "$(Build.ArtifactStagingDirectory)/mockauth"
     containerRegistry: $(dockerRegistryServiceConnection)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
