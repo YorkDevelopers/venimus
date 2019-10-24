@@ -39,4 +39,14 @@
     <ProjectReference Include="..\..\src\VenimusAPIs\VenimusAPIs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MockOpenId\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MockOpenId\private.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

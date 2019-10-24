@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Serilog;
 
 namespace VenimusAPIs
@@ -30,6 +31,8 @@ namespace VenimusAPIs
             System.Console.WriteLine(@"    \__/     |_______||__| \__| |__| |__|  |__|  \______/  |_______/    ");
             System.Console.WriteLine();
             System.Console.WriteLine(@"************************************************************************");
+
+            IdentityModelEventSource.ShowPII = true;
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)

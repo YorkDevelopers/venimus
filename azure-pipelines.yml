@@ -1,13 +1,20 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - server/tools/MockAuth/*
+    - mockauth-azure-pipelines.yml
+
 pool:
   vmImage: 'Ubuntu-latest'
 
 variables:
   buildConfiguration: 'Release'
+  mockauthimageName: 'venimus-mockauth'
 
 steps:
-- script: docker run -d -p 27017:27017 mongo
-  displayName: 'Setup MongoDB'
-  
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
@@ -16,11 +23,16 @@ steps:
 - script: dotnet build "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+- script: docker run -d -p 27017:27017 mongo
+  displayName: 'Setup MongoDB'
+
 - script: dotnet test ./server/tests/VenimusAPIs.Tests/VenimusAPIs.Tests.csproj --logger:trx
   displayName: 'Running tests'
   env: 
     MongoDB__connectionString: "mongodb://localhost"
     MongoDB__databaseName: "TestDatabase"
+    Auth0__Domain: "localhost:6001"
+    Auth0__Audience: "https://Venimus.YorkDevelopers.org"
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
   displayName: 'dotnet publish $(buildConfiguration)'

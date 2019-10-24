@@ -68,6 +68,8 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetGroup>> Get(string groupName)
         {
+            var who = User;
+
             var group = await _mongo.RetrieveGroup(groupName);
 
             if (group == null)
