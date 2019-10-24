@@ -39,7 +39,7 @@ steps:
   displayName: 'dotnet publish $(buildConfiguration)'
   
 - pwsh: ((Get-Content -path .\default.html -Raw) -replace '<!--versionNumber-->', $env:VERSION_NUMBER) | Set-Content -Path .\default.html
-  workingDirectory: "$(Build.ArtifactStagingDirectory)/app/wwwroot"
+  workingDirectory: "$(Build.ArtifactStagingDirectory)/api/wwwroot"
   env:
     VERSION_NUMBER: '1.0.$(Build.BuildID)'
   displayName: 'Set up version to the view'
