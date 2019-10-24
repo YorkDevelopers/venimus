@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - server/tools/MockAuth/*
+    - mockauth-azure-pipelines.yml
+
+pool:
+  vmImage: 'Ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  mockauthimageName: 'venimus-mockauth'
+  dockerRegistryServiceConnection: 'venimuscr'
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.x'
+
+- script: dotnet publish "./server/tools/MockAuth/MockAuth.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/mockauth'
+  displayName: 'Build MockAuth'
+
+- task: Docker@2
+  displayName: Build an MockAuth image
+  inputs:
+    repository: $(mockauthimageName)
+    command: buildAndPush
+    Dockerfile: ./server/tools/MockAuth/Dockerfile  
+    buildContext: "$(Build.ArtifactStagingDirectory)/mockauth"
+    containerRegistry: $(dockerRegistryServiceConnection)
