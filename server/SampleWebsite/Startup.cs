@@ -39,12 +39,14 @@ namespace SampleWebsite
             .AddCookie()
             .AddOpenIdConnect("Auth0", options =>
             {
+                options.SaveTokens = true;
+
                 // Set the authority to your Auth0 domain
                 options.Authority = $"https://{Configuration["Auth0:Domain"]}";
 
                 // Configure the Auth0 Client ID and Client Secret
-                options.ClientId = Configuration["Auth0:ClientId"];
-                options.ClientSecret = Configuration["Auth0:ClientSecret"];
+                options.ClientId = Configuration["Auth0:client_id"];
+                options.ClientSecret = Configuration["Auth0:client_secret"];
 
                 // Set response type to code
                 options.ResponseType = "code";
@@ -62,6 +64,12 @@ namespace SampleWebsite
 
                 options.Events = new OpenIdConnectEvents
                 {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
+                        return Task.FromResult(0);
+                    },
+
                     // handle the logout redirection
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
@@ -110,6 +118,8 @@ namespace SampleWebsite
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

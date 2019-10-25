@@ -56,12 +56,12 @@ namespace VenimusAPIs.Tests
 
         private readonly HttpClient _client;
 
-        public Task<string> GetToken()
+        public async Task<string> GetToken()
         {
             IdentityModelEventSource.ShowPII = true;
 
-            var token = CreateMockToken();
-            return Task.FromResult(token);
+            var token = await CreateAuth0Token();
+            return token;
         }
 
         private async Task<string> CreateAuth0Token()
