@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace VenimusAPIs.Models
 {
@@ -8,6 +9,6 @@ namespace VenimusAPIs.Models
 
         public string EmailAddress { get; set; }
 
-        public string[] Identities { get; set; }
+        public List<string> Identities { get; set; }
     }
 }

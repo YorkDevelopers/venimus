@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +13,12 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Services.Mongo _mongo;
 
-        private readonly IMapper _mapper;
+        private readonly Services.Auth0API _auth0API;
 
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public UserConnectedController(Services.Mongo mongo, IMapper mapper, IHttpClientFactory httpClientFactory)
+        public UserConnectedController(Services.Mongo mongo, Services.Auth0API auth0API)
         {
             _mongo = mongo;
-            _mapper = mapper;
-            _httpClientFactory = httpClientFactory;
+            _auth0API = auth0API;
         }
 
         /// <summary>
@@ -45,32 +40,50 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post()
         {
-            var client = _httpClientFactory.CreateClient("Auth0");
+            var uniqueID = (User.Identity as ClaimsIdentity).Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-            // sub
-            var id = (User.Identity as System.Security.Claims.ClaimsIdentity).Claims.First(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
-
-            var accessToken = User.FindFirst("access_token")?.Value;
-
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var json = await client.GetStringAsync("/userinfo");
-            var profile = JsonSerializer.Deserialize<UserProfile>(json);
-
-            var newUser = new Models.User
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+            if (existingUser == null)
             {
-                Identities = new string[] { id },
-                EmailAddress = profile.Email,
-            };
-
-            await _mongo.StoreUser(newUser);
+                await CreateOrMergeUser(uniqueID);
+            }
 
             return NoContent();
         }
 
-        private class UserProfile
+        private async Task CreateOrMergeUser(string uniqueID)
         {
-            [System.Text.Json.Serialization.JsonPropertyName("email")]
-            public string Email { get; set; }
+            var accessToken = User.FindFirst("access_token")?.Value;
+
+            var userInfo = await _auth0API.UserInfo(accessToken);
+
+            var existingUser = await _mongo.GetUserByEmailAddress(userInfo.Email);
+            if (existingUser == null)
+            {
+                await CreateNewUser(uniqueID, userInfo);
+            }
+            else
+            {
+                await AddIdentityToExistingUser(uniqueID, existingUser);
+            }
+        }
+
+        private async Task AddIdentityToExistingUser(string uniqueID, Models.User existingUser)
+        {
+            existingUser.Identities.Add(uniqueID);
+
+            await _mongo.UpdateUser(existingUser);
+        }
+
+        private async Task CreateNewUser(string uniqueID, Services.Auth0Models.UserProfile userInfo)
+        {
+            var newUser = new Models.User
+            {
+                Identities = new List<string> { uniqueID },
+                EmailAddress = userInfo.Email,
+            };
+
+            await _mongo.InsertUser(newUser);
         }
     }
 }

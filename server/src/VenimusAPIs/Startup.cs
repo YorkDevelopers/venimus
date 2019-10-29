@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using HealthChecks.UI.Client;
@@ -64,6 +60,8 @@ namespace VenimusAPIs
             });
 
             services.AddSingleton<Services.Mongo>();
+
+            services.AddSingleton<Services.Auth0API>();
 
             services.AddControllers();
 
