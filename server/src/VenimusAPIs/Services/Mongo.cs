@@ -51,6 +51,14 @@ namespace VenimusAPIs.Services
             return group;
         }
 
+        internal async Task StoreUser(User newUser)
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.User>("users");
+
+            await events.InsertOneAsync(newUser);
+        }
+
         private IMongoDatabase ConnectToDatabase()
         {
             var client = new MongoClient(_mongoDBSettings.ConnectionString);

@@ -16,12 +16,16 @@ namespace SampleWebsite.Pages
 
         public async Task OnGetAsync()
         {
+            var me = User;
+
             var accessToken = await HttpContext.GetTokenAsync("Auth0", "access_token");
 
             var httpClient = new HttpClient();
             //httpClient.BaseAddress = new Uri("https://venimus-api.azurewebsites.net");
             httpClient.BaseAddress = new Uri("https://localhost:7001");
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var r = await httpClient.PostAsync("/api/users/Connected", null);
 
             var json = await httpClient.GetStringAsync("/api/Groups/YorkCodeDojo");
             ViewModel = JsonSerializer.Deserialize<GroupViewModel>(json);

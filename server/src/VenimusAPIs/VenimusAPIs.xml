@@ -120,6 +120,21 @@
              <response code="200">Success</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.UserConnectedController.Post">
+             <summary>
+                 Called once the user has connected to the frontend.  This ensures that they exist in the database.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/users/connected
+                 {
+                 }
+            
+             </remarks>
+             <returns>The route to the user</returns>
+             <response code="201">Success</response>
+        </member>
         <member name="P:VenimusAPIs.Models.Event.Id">
             <summary>
             Unique ID for the event
