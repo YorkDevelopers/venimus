@@ -39,19 +39,23 @@ namespace SampleWebsite
             .AddCookie()
             .AddOpenIdConnect("Auth0", options =>
             {
+                options.SaveTokens = true;
+
                 // Set the authority to your Auth0 domain
                 options.Authority = $"https://{Configuration["Auth0:Domain"]}";
 
                 // Configure the Auth0 Client ID and Client Secret
-                options.ClientId = Configuration["Auth0:ClientId"];
-                options.ClientSecret = Configuration["Auth0:ClientSecret"];
+                options.ClientId = Configuration["Auth0:client_id"];
+                options.ClientSecret = Configuration["Auth0:client_secret"];
 
                 // Set response type to code
                 options.ResponseType = "code";
 
                 // Configure the scope
                 options.Scope.Clear();
-                options.Scope.Add("openid");
+                options.Scope.Add("openid"); 
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
 
                 // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
@@ -62,6 +66,12 @@ namespace SampleWebsite
 
                 options.Events = new OpenIdConnectEvents
                 {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
+                        return Task.FromResult(0);
+                    },
+
                     // handle the logout redirection
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
@@ -87,8 +97,6 @@ namespace SampleWebsite
                 };
             });
 
-
-
             services.AddRazorPages();
         }
 
@@ -110,6 +118,8 @@ namespace SampleWebsite
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

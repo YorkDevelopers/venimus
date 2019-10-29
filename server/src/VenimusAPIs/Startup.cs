@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,15 +38,41 @@ namespace VenimusAPIs
             {
                 options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
                 options.Audience = Configuration["Auth0:Audience"];
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // Add the access_token as a claim, as we may actually need it
+                        var accessToken = context.SecurityToken as JwtSecurityToken;
+                        if (accessToken != null)
+                        {
+                            var identity = context.Principal.Identity as ClaimsIdentity;
+                            if (identity != null)
+                            {
+                                identity.AddClaim(new Claim("access_token", accessToken.RawData));
+                            }
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                };
             });
 
             services.AddSingleton<Services.Mongo>();
+
+            services.AddSingleton<Services.Auth0API>();
 
             services.AddControllers();
 
             services.AddSwagger();
 
             services.AddHealthChecks();
+
+            services.AddHttpClient("Auth0", client =>
+            {
+                client.BaseAddress = new System.Uri($"https://{Configuration["Auth0:Domain"]}");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

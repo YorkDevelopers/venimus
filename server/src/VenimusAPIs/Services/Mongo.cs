@@ -51,6 +51,35 @@ namespace VenimusAPIs.Services
             return group;
         }
 
+        internal async Task InsertUser(User newUser)
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.User>("users");
+
+            await events.InsertOneAsync(newUser);
+        }
+
+        internal async Task<Models.User> GetUserByEmailAddress(string emailAddress)
+        {
+            var database = ConnectToDatabase();
+            var users = database.GetCollection<Models.User>("users");
+
+            var existingUser = await users.Find(u => u.EmailAddress == emailAddress).SingleOrDefaultAsync();
+
+            return existingUser;
+        }
+
+        internal async Task<Models.User> GetUserByID(string uniqueId)
+        {
+            var database = ConnectToDatabase();
+            var users = database.GetCollection<Models.User>("users");
+
+            var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, uniqueId);
+            var existingUser = await users.Find(filter).SingleOrDefaultAsync();
+
+            return existingUser;
+        }
+
         private IMongoDatabase ConnectToDatabase()
         {
             var client = new MongoClient(_mongoDBSettings.ConnectionString);
@@ -65,6 +94,14 @@ namespace VenimusAPIs.Services
             var events = database.GetCollection<Models.Event>("events");
 
             await events.ReplaceOneAsync(u => u.Id == amendedEvent.Id, amendedEvent);
+        }
+
+        internal async Task UpdateUser(User amendedUser)
+        {
+            var database = ConnectToDatabase();
+            var users = database.GetCollection<Models.User>("users");
+
+            await users.ReplaceOneAsync(u => u.Id == amendedUser.Id, amendedUser);
         }
     }
 }

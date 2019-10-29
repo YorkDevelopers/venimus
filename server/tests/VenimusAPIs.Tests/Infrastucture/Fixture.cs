@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -29,11 +30,15 @@ namespace VenimusAPIs.Tests
 
         public Fixture()
         {
-            static void ConfigureWebHostBuilder(IWebHostBuilder builder)
+            void ConfigureWebHostBuilder(IWebHostBuilder builder)
             {
                 builder.UseEnvironment("Testing");
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddSingleton(sp => MockAuth0);
+
+                    services.AddHttpClient("Auth0")
+                        .AddHttpMessageHandler<MockAuth0>();
                 });
             }
 
@@ -45,6 +50,8 @@ namespace VenimusAPIs.Tests
                           .AddEnvironmentVariables();
             _configuration = builder.Build();
 
+            MockAuth0 = new MockAuth0();
+
             _fixture = new WebApplicationFactory<Startup>();
             _factory = _fixture.Factories.FirstOrDefault() ?? _fixture.WithWebHostBuilder(ConfigureWebHostBuilder);
             _client = _factory.CreateClient();
@@ -54,14 +61,22 @@ namespace VenimusAPIs.Tests
 
         public APIClient APIClient => new APIClient(_client);
 
+        public MockAuth0 MockAuth0 { get; }
+
         private readonly HttpClient _client;
 
-        public Task<string> GetToken()
+        public string GetTokenForNewUser(string uniqueID)
+        {
+            return CreateMockToken(uniqueID);
+        }
+
+        public async Task<string> GetToken()
         {
             IdentityModelEventSource.ShowPII = true;
 
-            var token = CreateMockToken();
-            return Task.FromResult(token);
+            // var token = await CreateAuth0Token();
+            var token = CreateMockToken(string.Empty);
+            return await Task.FromResult(token);
         }
 
         private async Task<string> CreateAuth0Token()
@@ -87,7 +102,7 @@ namespace VenimusAPIs.Tests
             return details.AccessToken;
         }
 
-        private string CreateMockToken()
+        private string CreateMockToken(string uniqueID)
         {
             using var rsa = RSA.Create(2048);
             RSAFromXmlFile(rsa, @"MockOpenId/private.xml");
@@ -101,6 +116,10 @@ namespace VenimusAPIs.Tests
                 SigningCredentials = new SigningCredentials(
                     new RsaSecurityKey(rsa),
                     SecurityAlgorithms.RsaSha256),
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, uniqueID),
+                }),
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

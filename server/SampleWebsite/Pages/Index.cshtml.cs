@@ -20,7 +20,7 @@ namespace SampleWebsite.Pages
 
         public async Task OnGet()
         {
-            var returnUrl = "https://localhost:5001/";
+            var returnUrl = "/Groups";
             await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
         }
     }
