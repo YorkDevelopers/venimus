@@ -40,13 +40,33 @@ namespace VenimusAPIs.Controllers
         [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Post([FromBody] CreateNewGroup group)
+        public async Task<IActionResult> Post([FromBody] CreateGroup group)
         {
             var model = _mapper.Map<Models.Group>(group);
 
             await _mongo.StoreGroup(model);
 
             return CreatedAtRoute("Groups", new { groupName = model.Name }, group);
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("{groupName}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Put([FromRoute]string groupName, [FromBody] UpdateGroup newDetails)
+        {
+            var group = await _mongo.RetrieveGroup(groupName);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(newDetails, group);
+
+            await _mongo.UpdateGroup(group);
+
+            return NoContent();
         }
 
         /// <summary>
@@ -68,8 +88,6 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetGroup>> Get(string groupName)
         {
-            var who = User;
-
             var group = await _mongo.RetrieveGroup(groupName);
 
             if (group == null)
@@ -80,6 +98,29 @@ namespace VenimusAPIs.Controllers
             var viewModel = _mapper.Map<GetGroup>(group);
 
             return viewModel;
+        }
+
+        /// <summary>
+        ///     Allows you to retrieve the list of all groups
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/groups
+        ///
+        /// </remarks>
+        /// <returns>An array of ListGroup view models</returns>
+        /// <response code="200">Success</response>
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ListGroups[]>> Get()
+        {
+            var groups = await _mongo.RetrieveAllGroups();
+           
+            var viewModels = _mapper.Map<ListGroups[]>(groups);
+
+            return viewModels;
         }
     }
 }

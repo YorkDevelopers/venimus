@@ -2,10 +2,10 @@
 
 namespace VenimusAPIs.ViewModels
 {
-    public class CreateNewGroup
+    public class CreateGroup
     {
         /// <summary>
-        /// The unique name for the group / community.  For example York Code Dojo
+        /// The unique name for the group / community.  For example YorkCodeDojo
         /// </summary>
         [Required]
         [MaxLength(100)]
