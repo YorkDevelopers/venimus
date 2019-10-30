@@ -37,7 +37,7 @@ namespace VenimusAPIs.Controllers
         /// <returns>The route to the created group</returns>
         /// <response code="201">Success</response>
         /// <response code="401">User is not authorized.</response>
-        [Authorize]
+        [Authorize(Roles = "SystemAdministrator")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateGroup group)
@@ -49,7 +49,7 @@ namespace VenimusAPIs.Controllers
             return CreatedAtRoute("Groups", new { groupName = model.Name }, group);
         }
 
-        [Authorize]
+        [Authorize(Roles = "SystemAdministrator")]
         [HttpPut]
         [Route("{groupName}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

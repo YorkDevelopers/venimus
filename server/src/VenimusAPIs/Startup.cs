@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using VenimusAPIs.Registration;
 
 namespace VenimusAPIs
@@ -38,6 +39,12 @@ namespace VenimusAPIs
             {
                 options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
                 options.Audience = Configuration["Auth0:Audience"];
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "Roles",
+                    RoleClaimType = "https://Venimus.YorkDevelopers.org/roles",
+                };
 
                 options.Events = new JwtBearerEvents
                 {

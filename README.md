@@ -1,12 +1,12 @@
 # Project Venimus
 
-Open source event organising community platform ran by YorkDevelopers.org
+Open source event organising community platform ran by https://YorkDevelopers.org
 
 ## Build Status
 
 [![Build Status](https://dev.azure.com/david0415/Venimus/_apis/build/status/YorkDevelopers.venimus?branchName=master)](https://dev.azure.com/david0415/Venimus/_build/latest?definitionId=1&branchName=master)
 
-## Get Started - MongoDB
+## MongoDB
 
 You will need to install an instance of MongoDB locally or sign up to a cloud provider such as Atlas
 
@@ -21,7 +21,17 @@ For example
   }
 ```  
 
-You will also need to configure the Auth provider.  To use our mocked version add the following lines to your `appsettings.json` file
+It is recommended that rather than editing the existing `appsettings.json` file you create `appsettings.Testing.json` and/or `appsettings.Development.json` files.
+
+---
+
+## Auth0
+
+Authentication is handled by a 3rd party called Auth0.  Users are automatically created in Auth0 the first time they log in.
+
+The granting of a user the right to be a system administrator is carried out in the Auth0 dashboard by manually granted the user the "System Administrator" role.
+
+The unit tests used our mocked version of Auth0.  This is configured by adding the following settings to your `appsettings.json` file
 
 ```json
   "Auth0": {
@@ -31,6 +41,7 @@ You will also need to configure the Auth provider.  To use our mocked version ad
 ```  
 
 It is recommended that rather than editing the existing `appsettings.json` file you create `appsettings.Testing.json` and/or `appsettings.Development.json` files.
+
 
 ---
 
@@ -70,9 +81,67 @@ Returns a list of events which have been scheduled for the groups.  (A maximum o
 
 ---
 
-## Private APIs
+## APIs For System Administrators
 
-System adminstrators can :  List / Create / Edit / Delete Groups / Ban Users
+The following APIs can only be called by sysadmin administrators.
+
+### POST /api/Groups
+
+Creates a new group.  The body of the request must include the following information.
+
+* __Slug__ - The unique external ID for the group.  _For example _YorkCodeDojo_
+
+* __IsActive__ - Is the community currently active.
+
+* __Name__ - The unique name for the group / community.  _For example York Code Dojo_
+
+* __Description__ - A description of the group in markdown
+
+* __SlackChannelName__ - The name of this groups slack channel
+
+* __LogoInBase64__ - The group's logo.
+
+Validation rules
+
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
+
+* The name is required, must be unique and no more than 100 characters.
+
+* The description is required,  and should be in markdown format
+
+### PUT /api/Groups/{slug}
+
+Updates an existing group with the matching `slug`. The body of the request must include the following information.
+
+* __Slug__ - The unique external ID for the group.  _For example _YorkCodeDojo_
+
+* __IsActive__ - Is the community currently active.
+
+* __Name__ - The unique name for the group / community.  _For example York Code Dojo_
+
+* __Description__ - A description of the group in markdown
+
+* __SlackChannelName__ - The name of this groups slack channel
+
+* __LogoInBase64__ - The group's logo.
+
+Validation rules
+
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
+
+* The name is required, must be unique and no more than 100 characters.
+
+* The description is required,  and should be in markdown format
+
+---
+
+
+
+
+
+
+
+System adminstrators can :  List /  Delete Groups / Ban Users
 
 Group administrators can : List (including people) / Create / Edit / Delete Events
 

@@ -1,0 +1,13 @@
+function (user, context, callback) { 
+    const namespace = 'https://Venimus.YorkDevelopers.org';
+  	const assignedRoles = (context.authorization || {}).roles;
+
+  	let accessTokenClaims = context.accessToken || {};
+  
+	accessTokenClaims[`${namespace}/email`] = user.email;
+	accessTokenClaims[`${namespace}/roles`] = assignedRoles;
+  
+    context.accessToken = accessTokenClaims;  
+  
+	callback(null, user, context); 
+}

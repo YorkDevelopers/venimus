@@ -119,6 +119,7 @@ namespace VenimusAPIs.Tests
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, uniqueID),
+                    new Claim("https://Venimus.YorkDevelopers.org/roles", "SystemAdministrator"),
                 }),
             };
 
