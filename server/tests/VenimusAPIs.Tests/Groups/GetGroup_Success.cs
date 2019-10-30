@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -54,8 +55,11 @@ namespace VenimusAPIs.Tests
             var json = await _response.Content.ReadAsStringAsync();
             var actualGroup = JsonSerializer.Deserialize<ViewModels.GetGroup>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
+            Assert.Equal(_expectedGroup.Slug, actualGroup.Slug);
             Assert.Equal(_expectedGroup.Name, actualGroup.Name);
             Assert.Equal(_expectedGroup.Description, actualGroup.Description);
+            Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(_expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
         }
     }
 }

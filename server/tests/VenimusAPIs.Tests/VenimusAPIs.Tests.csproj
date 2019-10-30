@@ -45,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="images\York_Code_Dojo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="MockOpenId\private.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

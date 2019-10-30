@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -49,6 +51,8 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheEditGroupApi()
         {
             _amendedGroup = Data.Create<ViewModels.UpdateGroup>();
+            var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
+            _amendedGroup.LogoInBase64 = Convert.ToBase64String(logo);
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Name}", _amendedGroup);
@@ -64,8 +68,11 @@ namespace VenimusAPIs.Tests
             var groups = GroupsCollection();
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
+            Assert.Equal(_amendedGroup.Slug, actualGroup.Slug);
             Assert.Equal(_amendedGroup.Name, actualGroup.Name);
             Assert.Equal(_amendedGroup.Description, actualGroup.Description);
+            Assert.Equal(_amendedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(_amendedGroup.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));
         }
     }
 }

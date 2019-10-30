@@ -27,8 +27,9 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         }
 
         [Fact]
-        public void Execute()
+        public async Task Execute()
         {
+            await ResetDatabase();
             this.BDDfy();
         }
 

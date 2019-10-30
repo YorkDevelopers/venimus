@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,6 +36,8 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheCreateGroupApi()
         {
             _group = Data.Create<ViewModels.CreateGroup>();
+            var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
+            _group.LogoInBase64 = Convert.ToBase64String(logo);
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
@@ -47,9 +51,12 @@ namespace VenimusAPIs.Tests
         private async Task ThenANewGroupIsAddedToTheDatabase()
         {
             var groups = GroupsCollection();
-            var actualGroup = await groups.Find(u => u.Name == _group.Name).SingleOrDefaultAsync();
+            var actualGroup = await groups.Find(u => u.Slug == _group.Slug).SingleOrDefaultAsync();
 
+            Assert.Equal(_group.Name, actualGroup.Name);
             Assert.Equal(_group.Description, actualGroup.Description);
+            Assert.Equal(_group.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(_group.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));
         }
 
         private void ThenTheLocationOfTheNewGroupIsReturned()
