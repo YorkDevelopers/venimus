@@ -29,7 +29,7 @@ It is recommended that rather than editing the existing `appsettings.json` file 
 
 Authentication is handled by a 3rd party called Auth0.  Users are automatically created in Auth0 the first time they log in.
 
-The granting of a user the right to be a system administrator is carried out in the Auth0 dashboard by manually granted the user the "System Administrator" role.
+The granting of a user the right to be a system administrator is carried out in the Auth0 dashboard by manually granting the user the "System Administrator" role.
 
 The unit tests used our mocked version of Auth0.  This is configured by adding the following settings to your `appsettings.json` file
 
@@ -135,14 +135,17 @@ Validation rules
 
 ---
 
+TODO!
 
-
-
-
-
-
-System adminstrators can :  List /  Delete Groups / Ban Users
+System adminstrators can :  Delete Groups / Ban Users
+### DELETE /api/Groups/{groupslug}
+### POST /api/BannedUsers/{userslug}
+### DELETE /api/BannedUsers/{userslug}
 
 Group administrators can : List (including people) / Create / Edit / Delete Events
+### GET /api/Groups/{GroupSlug}/Members
+### POST /api/Groups/{GroupSlug}/Events
+### PUT /api/Groups/{GroupSlug}/Events
+### DELETE /api/Groups/{GroupSlug}/Events
 
 Users can : Signup / Join/Leave Groups / RSVP/SignDown to/from Events / View Groups / View Events / Change Details
