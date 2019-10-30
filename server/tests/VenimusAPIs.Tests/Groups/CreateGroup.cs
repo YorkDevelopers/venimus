@@ -46,8 +46,7 @@ namespace VenimusAPIs.Tests
 
         private async Task ThenANewGroupIsAddedToTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var groups = mongoDatabase.GetCollection<Models.Group>("groups");
+            var groups = GroupsCollection();
             var actualGroup = await groups.Find(u => u.Name == _group.Name).SingleOrDefaultAsync();
 
             Assert.Equal(_group.Description, actualGroup.Description);

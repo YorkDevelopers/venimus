@@ -33,10 +33,9 @@ namespace VenimusAPIs.Tests
         {
             _expectedGroup = Data.Create<Models.Group>();
 
-            var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.Group>("groups");
+            var groups = GroupsCollection();
 
-            await collection.InsertOneAsync(_expectedGroup);
+            await groups.InsertOneAsync(_expectedGroup);
         }
 
         private async Task WhenICallTheGetGroupApi()

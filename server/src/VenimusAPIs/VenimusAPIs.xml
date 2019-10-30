@@ -135,6 +135,19 @@
              <returns>The route to the user</returns>
              <response code="201">Success</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.FutureEventsController.Get">
+             <summary>
+                 Allows you request the list of future events.  Maximum of 10 per group.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /public/FutureEvents
+            
+             </remarks>
+             <returns>Array of FutureEvent view models</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="P:VenimusAPIs.Models.Event.Id">
             <summary>
             Unique ID for the event
@@ -223,6 +236,36 @@
         <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Description">
             <summary>
             A description of the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.EventId">
+            <summary>
+                The unique ID for the event.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.GroupName">
+            <summary>
+                The name of the group hosting the event.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.EventTitle">
+            <summary>
+                The title of the event.  Monthly meeting - October
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.EventDescription">
+            <summary>
+                A description of the event in markdown.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.EventStartsUTC">
+            <summary>
+                When does the event start,  in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.FutureEvent.EventFinishesUTC">
+            <summary>
+                When does the event finish, in UTC time?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Name">

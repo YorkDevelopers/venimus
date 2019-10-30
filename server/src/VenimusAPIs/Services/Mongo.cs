@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
@@ -40,6 +42,48 @@ namespace VenimusAPIs.Services
             var events = database.GetCollection<Models.Event>("events");
 
             await events.InsertOneAsync(newEvent);
+        }
+
+        internal async Task<List<ViewModels.FutureEvent>> GetFutureEvents()
+        {
+            var database = ConnectToDatabase();
+
+            var events = database.GetCollection<Models.Event>("events");
+            var groups = database.GetCollection<Models.Group>("groups");
+
+            var currentTime = DateTime.UtcNow;
+            
+            var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty);
+            var groupsList = await allGroups.ToListAsync();
+
+            var result = new List<ViewModels.FutureEvent>();
+            foreach (var group in groupsList)
+            {
+                var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id) &
+                             Builders<Event>.Filter.Gt(ent => ent.StartTime, currentTime);
+
+                var sort = Builders<Event>.Sort.Ascending("StartTime");
+
+                var nextEvents = await events.FindAsync(filter, new FindOptions<Event, Event>()
+                {
+                    Limit = 10,
+                    Sort = sort,
+                });
+
+                var viewModels = nextEvents.ToEnumerable().Select(e => new FutureEvent
+                {
+                    EventDescription = e.Description,
+                    EventFinishesUTC = e.EndTime,
+                    EventId = e.Id.ToString(),
+                    EventStartsUTC = e.StartTime,
+                    EventTitle = e.Title,
+                    GroupName = group.Name,
+                });
+
+                result.AddRange(viewModels);
+            }
+
+            return result;
         }
 
         public async Task<Models.Event> RetrieveEvent(string eventID)

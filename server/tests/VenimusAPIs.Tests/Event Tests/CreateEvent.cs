@@ -39,8 +39,7 @@ namespace VenimusAPIs.Tests
         {
             _group = Data.Create<Models.Group>();
 
-            var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.Group>("groups");
+            var collection = GroupsCollection();
 
             await collection.InsertOneAsync(_group);
         }
@@ -66,8 +65,7 @@ namespace VenimusAPIs.Tests
 
         private async Task AndANewEventIsAddedToTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var events = mongoDatabase.GetCollection<Models.Event>("events");
+            var events = EventsCollection();
             var actualGroup = await events.Find(u => u.Id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
 
             Assert.Equal(_event.Title, actualGroup.Title);

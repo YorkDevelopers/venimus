@@ -44,8 +44,7 @@ namespace VenimusAPIs.Tests
         {
             var user = Data.Create<Models.User>();
 
-            var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.User>("users");
+            var collection = UsersCollection();
 
             user.Identities = new List<string> { _uniqueID };
 
@@ -62,9 +61,7 @@ namespace VenimusAPIs.Tests
 
         private async Task ThenIAmNotAddedToTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var users = mongoDatabase.GetCollection<Models.User>("users");
-
+            var users = UsersCollection();
             var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, _uniqueID);
             var numberOfEntries = await users.Find(filter).CountDocumentsAsync();
 
