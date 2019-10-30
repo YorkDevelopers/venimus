@@ -203,7 +203,17 @@
         </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
             <summary>
-                The unique ID of this group
+                The unique internal ID of this group
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.IsActive">
+            <summary>
+                Is this group still actively running events?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.Slug">
+            <summary>
+                The unique external id for the group.  For example YorkCodeDojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Group.Name">
@@ -213,12 +223,27 @@
         </member>
         <member name="P:VenimusAPIs.Models.Group.Description">
             <summary>
-            A description of the group.
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.Logo">
+            <summary>
+                The group's logo.
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Group.Members">
             <summary>
             Members of this group
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.Administrators">
+            <summary>
+            Administrators of this group
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Title">
@@ -246,24 +271,54 @@
             Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.Slug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Name">
             <summary>
-            The unique name for the group / community.  For example YorkCodeDojo
+            The unique name for the group / community.  For example York Code Dojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Description">
             <summary>
-            A description of the group.
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.LogoInBase64">
+            <summary>
+                The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.Slug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Name">
             <summary>
-            The unique name of the group / community.  For example York Code Dojo
+            The unique name for the group / community.  For example York Code Dojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Description">
             <summary>
-            A description of the group.
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.LogoInBase64">
+            <summary>
+                The group's logo.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventId">
@@ -296,14 +351,29 @@
                 When does the event finish, in UTC time?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.Slug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Name">
             <summary>
-            The unique name of the group / community.  For example York Code Dojo
+            The unique name for the group / community.  For example York Code Dojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Description">
             <summary>
-            A description of the group.
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.LogoInBase64">
+            <summary>
+                The group's logo.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.Title">
@@ -356,14 +426,29 @@
             Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Slug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Name">
             <summary>
-            The unique name for the group / community.  For example YorkCodeDojo
+            The unique name for the group / community.  For example York Code Dojo
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Description">
             <summary>
-            A description of the group.
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.LogoInBase64">
+            <summary>
+                The group's logo.
             </summary>
         </member>
     </members>

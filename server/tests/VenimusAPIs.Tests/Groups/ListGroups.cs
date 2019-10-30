@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -25,8 +26,9 @@ namespace VenimusAPIs.Tests
         }
 
         [Fact]
-        public void Execute()
+        public async Task Execute()
         {
+            await ResetDatabase();
             this.BDDfy();
         }
 
@@ -68,10 +70,12 @@ namespace VenimusAPIs.Tests
 
         private void AssertGroup(Group expectedGroup, ViewModels.ListGroups[] actualGroups)
         {
-            var actualGroup = actualGroups.Single(g => g.Name == expectedGroup.Name);
+            var actualGroup = actualGroups.Single(g => g.Slug == expectedGroup.Slug);
 
             Assert.Equal(expectedGroup.Name, actualGroup.Name);
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
+            Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
         }
     }
 }

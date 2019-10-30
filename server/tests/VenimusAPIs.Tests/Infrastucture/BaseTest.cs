@@ -1,7 +1,9 @@
-﻿using Xunit;
+﻿using System.Threading.Tasks;
+using Xunit;
 
 namespace VenimusAPIs.Tests.Infrastucture
 {
+    [Collection("Serial")]
     public abstract class BaseTest : IClassFixture<Fixture>
     {
         protected Fixture Fixture { get; }
@@ -36,6 +38,14 @@ namespace VenimusAPIs.Tests.Infrastucture
             var collection = mongoDatabase.GetCollection<Models.User>("users");
 
             return collection;
+        }
+
+        protected async Task ResetDatabase()
+        {
+            var mongoDatabase = Fixture.MongoDatabase();
+            await mongoDatabase.DropCollectionAsync("events");
+            await mongoDatabase.DropCollectionAsync("groups");
+            await mongoDatabase.DropCollectionAsync("users");
         }
     }
 }
