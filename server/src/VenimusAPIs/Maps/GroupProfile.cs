@@ -20,6 +20,9 @@ namespace VenimusAPIs.Maps
 
             CreateMap<Models.Group, ViewModels.ListGroups>()
                 .ForMember(dest => dest.LogoInBase64, opt => opt.MapFrom(src => Convert.ToBase64String(src.Logo)));
+
+            CreateMap<Models.Group, ViewModels.ListActiveGroups>()
+                .ForMember(dest => dest.LogoInBase64, opt => opt.MapFrom(src => Convert.ToBase64String(src.Logo)));
         }
     }
 }

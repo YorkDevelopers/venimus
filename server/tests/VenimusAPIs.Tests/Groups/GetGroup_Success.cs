@@ -59,6 +59,7 @@ namespace VenimusAPIs.Tests
             Assert.Equal(_expectedGroup.Name, actualGroup.Name);
             Assert.Equal(_expectedGroup.Description, actualGroup.Description);
             Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal(_expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
         }
     }

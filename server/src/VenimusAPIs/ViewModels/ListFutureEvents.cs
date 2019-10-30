@@ -5,9 +5,9 @@ namespace VenimusAPIs.ViewModels
     public class ListFutureEvents
     {
         /// <summary>
-        ///     The unique ID for the event.
+        ///     The unique external ID for the event.
         /// </summary>
-        public string EventId { get; set; }
+        public string EventSlug { get; set; }
 
         /// <summary>
         ///     The name of the group hosting the event.  For example YorkCodeDojo

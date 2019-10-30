@@ -29,7 +29,7 @@ namespace VenimusAPIs.Tests.Infrastucture
             return result;
         }
 
-        public T Create<T>()
+        public T Create<T>(Action<T> modifier = null)
         {
             var properties = typeof(T).GetProperties();
             var obj = (T)Activator.CreateInstance(typeof(T));
@@ -130,6 +130,11 @@ namespace VenimusAPIs.Tests.Infrastucture
                     _random.NextBytes(b);
                     property.SetValue(obj, b);
                 }
+            }
+
+            if (modifier != null)
+            {
+                modifier.Invoke(obj);
             }
 
             return obj;

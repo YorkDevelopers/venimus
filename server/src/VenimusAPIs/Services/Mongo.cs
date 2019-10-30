@@ -40,6 +40,14 @@ namespace VenimusAPIs.Services
             return users;
         }
 
+        internal async Task<List<Models.Group>> GetActiveGroups()
+        {
+            var groups = GroupsCollection();
+            var models = await groups.Find(u => u.IsActive).ToListAsync();
+
+            return models;
+        }
+
         public async Task StoreGroup(Models.Group group)
         {
             var groups = GroupsCollection();
@@ -100,7 +108,7 @@ namespace VenimusAPIs.Services
                 {
                     EventDescription = e.Description,
                     EventFinishesUTC = e.EndTime,
-                    EventId = e.Id.ToString(),
+                    EventSlug = e.Id.ToString(),
                     EventStartsUTC = e.StartTime,
                     EventTitle = e.Title,
                     GroupName = group.Name,

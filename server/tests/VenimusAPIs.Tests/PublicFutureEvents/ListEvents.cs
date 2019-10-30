@@ -20,7 +20,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private Group _group3;
         private Event _futureEvent1;
         private Event _futureEvent2;
-        private Event _futureEvent3;
+        private Event[] _futureEvents;
 
         public ListEvents(Fixture fixture) : base(fixture)
         {
@@ -53,12 +53,17 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             _futureEvent2.StartTime = DateTime.UtcNow.AddDays(6);
             _futureEvent2.GroupId = _group2.Id;
 
-            _futureEvent3 = Data.Create<Models.Event>();
-            _futureEvent3.StartTime = DateTime.UtcNow.AddYears(2);
-            _futureEvent3.GroupId = _group3.Id;
+            _futureEvents = Enumerable.Range(1, 20)
+                                      .Select(day => Data.Create<Models.Event>(e =>
+                                      {
+                                          e.StartTime = DateTime.UtcNow.AddDays(day);
+                                          e.GroupId = _group3.Id;
+                                      }))
+                                      .ToArray();
 
             var events = EventsCollection();
-            await events.InsertManyAsync(new[] { pastEvent, _futureEvent1, _futureEvent2, _futureEvent3, });
+            await events.InsertManyAsync(new[] { pastEvent, _futureEvent1, _futureEvent2 });
+            await events.InsertManyAsync(_futureEvents);
         }
 
         private async Task WhenICallTheAPI()
@@ -69,20 +74,25 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             _response.EnsureSuccessStatusCode();
         }
 
-        private async Task ThenTheFutureEventsAreReturned()
+        private async Task ThenTheNext10FutureEventsForEachGroupAreReturned()
         {
             var json = await _response.Content.ReadAsStringAsync();
             var events = JsonSerializer.Deserialize<ListFutureEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            // Assert.Equal(3, events.Length);
+            Assert.Equal(12, events.Length);
+
             AssertEvent(events, _futureEvent1, _group1);
             AssertEvent(events, _futureEvent2, _group2);
-            AssertEvent(events, _futureEvent3, _group3);
+
+            for (int i = 0; i < 10; i++)
+            {
+                AssertEvent(events, _futureEvents[i], _group3);
+            }
         }
 
         private void AssertEvent(ListFutureEvents[] actualEvents, Event expectedEvent, Group expectedGroup)
         {
-            var actualEvent = actualEvents.Single(e => e.EventId == expectedEvent.Id.ToString());
+            var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Id.ToString());
 
             Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
             Assert.Equal(expectedEvent.Title, actualEvent.EventTitle);

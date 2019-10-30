@@ -148,6 +148,19 @@
              <returns>The route to the user</returns>
              <response code="201">Success</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.ActiveGroupsController.Get">
+             <summary>
+                 Allows you request the list of active groups
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /public/Groups
+            
+             </remarks>
+             <returns>Array of ListActiveGroups view models</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.FutureEventsController.Get">
              <summary>
                  Allows you request the list of future events.  Maximum of 10 per group.
@@ -276,6 +289,11 @@
                 The unique external code for the group.  For example YorkCodeDojo
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.IsActive">
+            <summary>
+                Is this group still actively running events?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Name">
             <summary>
             The unique name for the group / community.  For example York Code Dojo
@@ -301,6 +319,11 @@
                 The unique external code for the group.  For example YorkCodeDojo
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.IsActive">
+            <summary>
+                Is this group still actively running events?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Name">
             <summary>
             The unique name for the group / community.  For example York Code Dojo
@@ -321,9 +344,34 @@
                 The group's logo.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventId">
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Slug">
             <summary>
-                The unique ID for the event.
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Name">
+            <summary>
+            The unique name for the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Description">
+            <summary>
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.LogoInBase64">
+            <summary>
+                The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventSlug">
+            <summary>
+                The unique external ID for the event.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupName">
@@ -354,6 +402,11 @@
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Slug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.IsActive">
+            <summary>
+                Is this group still actively running events?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Name">
@@ -429,6 +482,11 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Slug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.IsActive">
+            <summary>
+                Is this group still actively running events?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Name">
