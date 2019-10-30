@@ -71,7 +71,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private async Task ThenTheFutureEventsAreReturned()
         {
             var json = await _response.Content.ReadAsStringAsync();
-            var events = JsonSerializer.Deserialize<FutureEvent[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var events = JsonSerializer.Deserialize<ListFutureEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             // Assert.Equal(3, events.Length);
             AssertEvent(events, _futureEvent1, _group1);
@@ -79,7 +79,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             AssertEvent(events, _futureEvent3, _group3);
         }
 
-        private void AssertEvent(FutureEvent[] actualEvents, Event expectedEvent, Group expectedGroup)
+        private void AssertEvent(ListFutureEvents[] actualEvents, Event expectedEvent, Group expectedGroup)
         {
             var actualEvent = actualEvents.Single(e => e.EventId == expectedEvent.Id.ToString());
 

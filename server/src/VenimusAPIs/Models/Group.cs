@@ -5,6 +5,9 @@ namespace VenimusAPIs.Models
 {
     public class Group
     {
+        /// <summary>
+        ///     The unique ID of this group
+        /// </summary>
         public ObjectId Id { get; set; }
 
         /// <summary>

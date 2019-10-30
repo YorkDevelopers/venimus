@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VenimusAPIs.ViewModels
 {
-    public class CreateNewEvent
+    public class CreateEvent
     {
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.

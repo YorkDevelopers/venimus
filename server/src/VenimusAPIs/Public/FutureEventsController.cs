@@ -30,7 +30,7 @@ namespace VenimusAPIs.Controllers
         [Route("public/FutureEvents")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<FutureEvent>>> Get()
+        public async Task<ActionResult<List<ListFutureEvents>>> Get()
         {
             var futureEvents = await _mongo.GetFutureEvents();
 

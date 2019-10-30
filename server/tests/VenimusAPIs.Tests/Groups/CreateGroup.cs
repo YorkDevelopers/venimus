@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests
     {
         private HttpResponseMessage _response;
         private string _token;
-        private CreateNewGroup _group;
+        private ViewModels.CreateGroup _group;
 
         public CreateGroup(Fixture fixture) : base(fixture)
         {
@@ -33,7 +33,7 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheCreateGroupApi()
         {
-            _group = Data.Create<ViewModels.CreateNewGroup>();
+            _group = Data.Create<ViewModels.CreateGroup>();
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);

@@ -19,32 +19,58 @@ namespace VenimusAPIs.Services
             _mongoDBSettings = mongoDBSettings.Value;
         }
 
-        public async Task StoreGroup(Models.Group group)
+        private IMongoCollection<Group> GroupsCollection()
         {
             var database = ConnectToDatabase();
             var groups = database.GetCollection<Models.Group>("groups");
+            return groups;
+        }
+
+        private IMongoCollection<Event> EventsCollection()
+        {
+            var database = ConnectToDatabase();
+            var events = database.GetCollection<Models.Event>("events");
+            return events;
+        }
+
+        private IMongoCollection<User> UsersCollection()
+        {
+            var database = ConnectToDatabase();
+            var users = database.GetCollection<Models.User>("users");
+            return users;
+        }
+
+        public async Task StoreGroup(Models.Group group)
+        {
+            var groups = GroupsCollection();
 
             await groups.InsertOneAsync(group);
         }
 
         public async Task<Models.Group> RetrieveGroup(string groupName)
         {
-            var database = ConnectToDatabase();
-            var groups = database.GetCollection<Models.Group>("groups");
+            var groups = GroupsCollection();
             var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
 
             return group;
         }
 
+        public async Task<List<Models.Group>> RetrieveAllGroups()
+        {
+            var groups = GroupsCollection();
+            var models = await groups.Find(u => true).ToListAsync();
+
+            return models;
+        }
+
         internal async Task StoreEvent(Event newEvent)
         {
-            var database = ConnectToDatabase();
-            var events = database.GetCollection<Models.Event>("events");
+            var events = EventsCollection();
 
             await events.InsertOneAsync(newEvent);
         }
 
-        internal async Task<List<ViewModels.FutureEvent>> GetFutureEvents()
+        internal async Task<List<ViewModels.ListFutureEvents>> GetFutureEvents()
         {
             var database = ConnectToDatabase();
 
@@ -56,7 +82,7 @@ namespace VenimusAPIs.Services
             var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty);
             var groupsList = await allGroups.ToListAsync();
 
-            var result = new List<ViewModels.FutureEvent>();
+            var result = new List<ViewModels.ListFutureEvents>();
             foreach (var group in groupsList)
             {
                 var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id) &
@@ -70,7 +96,7 @@ namespace VenimusAPIs.Services
                     Sort = sort,
                 });
 
-                var viewModels = nextEvents.ToEnumerable().Select(e => new FutureEvent
+                var viewModels = nextEvents.ToEnumerable().Select(e => new ListFutureEvents
                 {
                     EventDescription = e.Description,
                     EventFinishesUTC = e.EndTime,
@@ -88,8 +114,7 @@ namespace VenimusAPIs.Services
 
         public async Task<Models.Event> RetrieveEvent(string eventID)
         {
-            var database = ConnectToDatabase();
-            var events = database.GetCollection<Models.Event>("events");
+            var events = EventsCollection();
             var group = await events.Find(u => u.Id == ObjectId.Parse(eventID)).SingleOrDefaultAsync();
 
             return group;
@@ -97,16 +122,14 @@ namespace VenimusAPIs.Services
 
         internal async Task InsertUser(User newUser)
         {
-            var database = ConnectToDatabase();
-            var events = database.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
-            await events.InsertOneAsync(newUser);
+            await users.InsertOneAsync(newUser);
         }
 
         internal async Task<Models.User> GetUserByEmailAddress(string emailAddress)
         {
-            var database = ConnectToDatabase();
-            var users = database.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
             var existingUser = await users.Find(u => u.EmailAddress == emailAddress).SingleOrDefaultAsync();
 
@@ -115,8 +138,7 @@ namespace VenimusAPIs.Services
 
         internal async Task<Models.User> GetUserByID(string uniqueId)
         {
-            var database = ConnectToDatabase();
-            var users = database.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
             var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, uniqueId);
             var existingUser = await users.Find(filter).SingleOrDefaultAsync();
@@ -134,18 +156,23 @@ namespace VenimusAPIs.Services
 
         internal async Task UpdateEvent(Models.Event amendedEvent)
         {
-            var database = ConnectToDatabase();
-            var events = database.GetCollection<Models.Event>("events");
+            var events = EventsCollection();
 
             await events.ReplaceOneAsync(u => u.Id == amendedEvent.Id, amendedEvent);
         }
 
         internal async Task UpdateUser(User amendedUser)
         {
-            var database = ConnectToDatabase();
-            var users = database.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
             await users.ReplaceOneAsync(u => u.Id == amendedUser.Id, amendedUser);
+        }
+
+        internal async Task UpdateGroup(Group group)
+        {
+            var groups = GroupsCollection();
+
+            await groups.ReplaceOneAsync(grp => grp.Id == group.Id, group);
         }
     }
 }

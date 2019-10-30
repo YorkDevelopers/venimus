@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VenimusAPIs.ViewModels
+﻿namespace VenimusAPIs.ViewModels
 {
-    public class GetGroup
+    public class ListGroups
     {
         /// <summary>
         /// The unique name of the group / community.  For example York Code Dojo
