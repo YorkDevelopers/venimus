@@ -6,10 +6,15 @@ namespace VenimusAPIs.Maps
     {
         public GroupProfile()
         {
-            CreateMap<ViewModels.CreateNewGroup, Models.Group>()
+            CreateMap<ViewModels.CreateGroup, Models.Group>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<ViewModels.UpdateGroup, Models.Group>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<Models.Group, ViewModels.GetGroup>();
+
+            CreateMap<Models.Group, ViewModels.ListGroups>();
         }
     }
 }

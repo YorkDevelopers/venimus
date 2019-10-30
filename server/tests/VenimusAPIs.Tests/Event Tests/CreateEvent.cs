@@ -16,7 +16,7 @@ namespace VenimusAPIs.Tests
     {
         private HttpResponseMessage _response;
         private string _token;
-        private CreateNewEvent _event;
+        private ViewModels.CreateEvent _event;
         private Group _group;
         private string _actualEventID;
 
@@ -39,15 +39,14 @@ namespace VenimusAPIs.Tests
         {
             _group = Data.Create<Models.Group>();
 
-            var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.Group>("groups");
+            var collection = GroupsCollection();
 
             await collection.InsertOneAsync(_group);
         }
 
         private async Task WhenICallTheCreateEventApi()
         {
-            _event = Data.Create<ViewModels.CreateNewEvent>();
+            _event = Data.Create<ViewModels.CreateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Name}/Events", _event);
@@ -66,8 +65,7 @@ namespace VenimusAPIs.Tests
 
         private async Task AndANewEventIsAddedToTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var events = mongoDatabase.GetCollection<Models.Event>("events");
+            var events = EventsCollection();
             var actualGroup = await events.Find(u => u.Id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
 
             Assert.Equal(_event.Title, actualGroup.Title);

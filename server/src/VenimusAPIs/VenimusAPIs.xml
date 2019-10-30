@@ -4,7 +4,7 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
-        <member name="M:VenimusAPIs.Controllers.EventsController.Post(System.String,VenimusAPIs.ViewModels.CreateNewEvent)">
+        <member name="M:VenimusAPIs.Controllers.EventsController.Post(System.String,VenimusAPIs.ViewModels.CreateEvent)">
              <summary>
                  Allows you to create a new event for your group.
              </summary>
@@ -88,7 +88,7 @@
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Post(VenimusAPIs.ViewModels.CreateNewGroup)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Post(VenimusAPIs.ViewModels.CreateGroup)">
              <summary>
                  Allows you to create a new group
              </summary>
@@ -120,6 +120,19 @@
              <response code="200">Success</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Get">
+             <summary>
+                 Allows you to retrieve the list of all groups
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/groups
+            
+             </remarks>
+             <returns>An array of ListGroup view models</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.UserConnectedController.Post">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
@@ -134,6 +147,19 @@
              </remarks>
              <returns>The route to the user</returns>
              <response code="201">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.FutureEventsController.Get">
+             <summary>
+                 Allows you request the list of future events.  Maximum of 10 per group.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /public/FutureEvents
+            
+             </remarks>
+             <returns>Array of FutureEvent view models</returns>
+             <response code="200">Success</response>
         </member>
         <member name="P:VenimusAPIs.Models.Event.Id">
             <summary>
@@ -175,6 +201,11 @@
             Attendees of this group
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Group.Id">
+            <summary>
+                The unique ID of this group
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Group.Name">
             <summary>
             The unique name for the group / community.  For example York Code Dojo
@@ -190,37 +221,37 @@
             Members of this group
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Title">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.Title">
             <summary>
             The title of the event,  for example March 2019 Meetup. Must be unique for the group.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Description">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.Description">
             <summary>
             A description of the event,  in markdown format.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.Location">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.Location">
             <summary>
             The location of the event, for example York Minster,  Room 201 York St John University
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.StartTime">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.StartTime">
             <summary>
             Date and time the event starts
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewEvent.EndTime">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.EndTime">
             <summary>
             Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Name">
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.Name">
             <summary>
-            The unique name for the group / community.  For example York Code Dojo
+            The unique name for the group / community.  For example YorkCodeDojo
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateNewGroup.Description">
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.Description">
             <summary>
             A description of the group.
             </summary>
@@ -231,6 +262,46 @@
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Description">
+            <summary>
+            A description of the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventId">
+            <summary>
+                The unique ID for the event.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupName">
+            <summary>
+                The name of the group hosting the event.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventTitle">
+            <summary>
+                The title of the event.  Monthly meeting - October
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventDescription">
+            <summary>
+                A description of the event in markdown.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventStartsUTC">
+            <summary>
+                When does the event start,  in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventFinishesUTC">
+            <summary>
+                When does the event finish, in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.Name">
+            <summary>
+            The unique name of the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.Description">
             <summary>
             A description of the group.
             </summary>
@@ -283,6 +354,16 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateEvent.EndTime">
             <summary>
             Date and time the event ends.  Must be after the StartTime
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Name">
+            <summary>
+            The unique name for the group / community.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Description">
+            <summary>
+            A description of the group.
             </summary>
         </member>
     </members>

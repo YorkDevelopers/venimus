@@ -46,7 +46,7 @@ namespace VenimusAPIs.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Post([FromRoute] string groupName, [FromBody] CreateNewEvent newEvent)
+        public async Task<IActionResult> Post([FromRoute] string groupName, [FromBody] CreateEvent newEvent)
         {
             var model = _mapper.Map<Models.Event>(newEvent);
 

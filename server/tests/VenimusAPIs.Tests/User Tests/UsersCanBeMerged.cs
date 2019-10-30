@@ -47,13 +47,12 @@ namespace VenimusAPIs.Tests
             var user = Data.Create<Models.User>();
             _originalUniqueID = Guid.NewGuid().ToString();
 
-            var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
             user.Identities = new List<string> { _originalUniqueID };
             user.EmailAddress = _expectedEmailAddress;
 
-            await collection.InsertOneAsync(user);
+            await users.InsertOneAsync(user);
         }
 
         private async Task WhenICallTheUserLoggedInAPI()
@@ -66,9 +65,7 @@ namespace VenimusAPIs.Tests
 
         private async Task ThenIAmMergedInTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var users = mongoDatabase.GetCollection<Models.User>("users");
-
+            var users = UsersCollection();
             var actualUser = await users.Find(u => u.EmailAddress == _expectedEmailAddress).SingleAsync();
 
             Assert.Equal(2, actualUser.Identities.Count());

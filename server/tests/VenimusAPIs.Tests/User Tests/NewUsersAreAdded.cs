@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -50,8 +49,7 @@ namespace VenimusAPIs.Tests
 
         private async Task ThenIAmAddedToTheDatabase()
         {
-            var mongoDatabase = Fixture.MongoDatabase();
-            var users = mongoDatabase.GetCollection<Models.User>("users");
+            var users = UsersCollection();
 
             var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, _uniqueID);
             var actualUser = await users.Find(filter).SingleAsync();
