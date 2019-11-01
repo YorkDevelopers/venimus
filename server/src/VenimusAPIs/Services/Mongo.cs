@@ -48,6 +48,17 @@ namespace VenimusAPIs.Services
             return models;
         }
 
+        internal async Task<List<Group>> RetrieveMyActiveGroups(ObjectId userID)
+        {
+            var groups = GroupsCollection();
+
+            var filter = Builders<Group>.Filter.AnyEq(x => x.Members, userID) &
+                         Builders<Group>.Filter.Eq(ent => ent.IsActive, true);
+            var matchingGroups = await groups.Find(filter).ToListAsync();
+
+            return matchingGroups;
+        }
+
         public async Task StoreGroup(Models.Group group)
         {
             var groups = GroupsCollection();

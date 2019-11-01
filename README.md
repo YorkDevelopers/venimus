@@ -85,6 +85,24 @@ Returns a list of events which have been scheduled for the groups.  (A maximum o
 
 The following APIs can be called by normal users once they have authenticated.
 
+### GET /api/User/Groups
+
+Returns the active groups that the current user is a member of.  The properties of a group are
+
+* __Slug__ - The unique external ID for the group.  _For example _YorkCodeDojo_
+
+* __Name__ - The unique name for the group / community.  _For example York Code Dojo_
+
+* __Description__ - A description of the group in markdown
+
+* __SlackChannelName__ - The name of this groups slack channel
+
+* __LogoInBase64__ - The group's logo.
+
+#### Business Rules
+
+Only active groups are returned.
+
 ### POST /api/User/Groups
 
 Allows the user to join a group.  The supplied model must contain:

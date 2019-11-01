@@ -259,6 +259,19 @@
              <returns>The route to the user</returns>
              <response code="201">Success</response>
         </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get">
+             <summary>
+                 Allows the current user to see the groups they are a member of
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user/groups
+            
+             </remarks>
+             <returns>An array of ListMyGroups view models</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
              <summary>
                  Allows the current user to join a group
@@ -266,7 +279,7 @@
              <remarks>
              Sample request:
             
-                 POST /api/groups
+                 POST /api/user/groups
                  {
                      "groupSlug" : "YorkCodeDojo",
                  }
@@ -284,12 +297,13 @@
              <remarks>
              Sample request:
             
-                 DELETE /api/groups/YorkCodeDojo
+                 DELETE /api/user/groups/YorkCodeDojo
             
              </remarks>
              <returns>Nothing</returns>
              <response code="204">Success</response>
              <response code="401">User is not authorized.</response>
+             <response code="404">Group does not exist.</response>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Title">
             <summary>
@@ -462,6 +476,31 @@
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.LogoInBase64">
+            <summary>
+                The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.Slug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.Name">
+            <summary>
+            The unique name for the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.Description">
+            <summary>
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.SlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.LogoInBase64">
             <summary>
                 The group's logo.
             </summary>

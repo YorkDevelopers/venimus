@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,39 @@ namespace VenimusAPIs.UserControllers
     {
         private readonly Services.Mongo _mongo;
 
-        public UserGroupsController(Services.Mongo mongo)
+        private readonly IMapper _mapper;
+
+        public UserGroupsController(Services.Mongo mongo, IMapper mapper)
         {
             _mongo = mongo;
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        ///     Allows the current user to see the groups they are a member of
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/user/groups
+        ///
+        /// </remarks>
+        /// <returns>An array of ListMyGroups view models</returns>
+        /// <response code="200">Success</response>
+        [Authorize]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ListMyGroups[]>> Get()
+        {
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            var groups = await _mongo.RetrieveMyActiveGroups(existingUser.Id);
+
+            var viewModels = _mapper.Map<ListMyGroups[]>(groups);
+
+            return viewModels;
         }
 
         /// <summary>
@@ -24,7 +55,7 @@ namespace VenimusAPIs.UserControllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     POST /api/groups
+        ///     POST /api/user/groups
         ///     {
         ///         "groupSlug" : "YorkCodeDojo",
         ///     }
@@ -69,17 +100,19 @@ namespace VenimusAPIs.UserControllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     DELETE /api/groups/YorkCodeDojo
+        ///     DELETE /api/user/groups/YorkCodeDojo
         ///
         /// </remarks>
         /// <returns>Nothing</returns>
         /// <response code="204">Success</response>
         /// <response code="401">User is not authorized.</response>
+        /// <response code="404">Group does not exist.</response>
         [Authorize]
         [Route("{groupSlug}")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DELETE([FromRoute] string groupSlug)
         {
             var model = await _mongo.RetrieveGroup(groupSlug);
