@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using VenimusAPIs.Validation;
 
 namespace VenimusAPIs.ViewModels
 {
@@ -8,6 +9,7 @@ namespace VenimusAPIs.ViewModels
         ///     The unique external code for the group.  For example YorkCodeDojo
         /// </summary>
         [Required]
+        [Slug]
         [MaxLength(100)]
         public string Slug { get; set; }
 

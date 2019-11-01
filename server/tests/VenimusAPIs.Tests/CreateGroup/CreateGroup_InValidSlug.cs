@@ -1,24 +1,24 @@
 using System;
 using System.IO;
-using System.Linq;
+using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.CreateGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
-    public class CreateGroup : BaseTest
+    public class CreateGroup_InvalidSlug : BaseTest
     {
         private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateGroup _group;
 
-        public CreateGroup(Fixture fixture) : base(fixture)
+        public CreateGroup_InvalidSlug(Fixture fixture) : base(fixture)
         {
         }
 
@@ -39,32 +39,26 @@ namespace VenimusAPIs.Tests
             var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
             _group.LogoInBase64 = Convert.ToBase64String(logo);
 
+            _group.Slug = "Has a space";
+
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private async Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, _response.StatusCode);
+
+            var json = await _response.Content.ReadAsStringAsync();
+            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, new JsonSerializerOptions { IgnoreReadOnlyProperties = true });
+            Assert.Equal("Slugs cannot contain spaces", validationProblemDetails.Errors["Slug"].GetValue(0));
         }
 
-        private async Task ThenANewGroupIsAddedToTheDatabase()
+        private async Task ThenTheNewGroupIsNotAddedToTheDatabase()
         {
             var groups = GroupsCollection();
             var actualGroup = await groups.Find(u => u.Slug == _group.Slug).SingleOrDefaultAsync();
-
-            Assert.Equal(_group.Name, actualGroup.Name);
-            Assert.Equal(_group.Description, actualGroup.Description);
-            Assert.Equal(_group.SlackChannelName, actualGroup.SlackChannelName);
-            Assert.Equal(_group.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));
-        }
-
-        private void ThenTheLocationOfTheNewGroupIsReturned()
-        {
-            var location = _response.Headers.Location;
-            var actualGroupName = location.Segments.Last();
-
-            Assert.Equal(_group.Name, actualGroupName);
+            Assert.Null(actualGroup);
         }
     }
 }

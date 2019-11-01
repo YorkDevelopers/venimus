@@ -42,6 +42,17 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateGroup group)
         {
+            var duplicateGroup = await _mongo.RetrieveGroup(group.Slug);
+            if (duplicateGroup != null)
+            {
+                ModelState.AddModelError("Slug", "A group using this slug already exists");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
             var model = _mapper.Map<Models.Group>(group);
 
             await _mongo.StoreGroup(model);

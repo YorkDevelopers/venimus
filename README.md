@@ -151,7 +151,7 @@ Allows the user to leave a group.
 
 ## APIs For System Administrators
 
-The following APIs can only be called by sysadmin administrators.
+The following APIs can only be called by sysadmin administrators. (NEEDS TEST)
 
 ### POST /api/Groups
 
