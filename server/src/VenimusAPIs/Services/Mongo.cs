@@ -131,10 +131,10 @@ namespace VenimusAPIs.Services
             return result;
         }
 
-        public async Task<Models.Event> RetrieveEvent(string eventID)
+        public async Task<Models.Event> RetrieveEvent(string eventSlug)
         {
             var events = EventsCollection();
-            var group = await events.Find(u => u.Id == ObjectId.Parse(eventID)).SingleOrDefaultAsync();
+            var group = await events.Find(u => u.Slug == eventSlug).SingleOrDefaultAsync();
 
             return group;
         }

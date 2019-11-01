@@ -13,6 +13,7 @@
             
                  POST /api/groups/YorkCodeDojo/events
                  {
+                     "slug" : "Oct2019"
                      "title" : "Game of Life - Oct 2019",
                      "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
                      "location" : "Room 12"
@@ -35,6 +36,7 @@
             
                  PUT /api/groups/YorkCodeDojo/events/12345
                  {
+                     "slug" : "Oct2019"
                      "title" : "Game of Life - Oct 2019",
                      "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
                      "location" : "Room 12"
@@ -59,6 +61,7 @@
             
                  PATCH /api/groups/YorkCodeDojo/events/12345
                  {
+                     "slug" : "Oct2019"
                      "title" : "Game of Life - Oct 2019",
                      "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
                      "location" : null
@@ -161,7 +164,12 @@
         </member>
         <member name="P:VenimusAPIs.Models.Event.Id">
             <summary>
-            Unique ID for the event
+                The unique internal ID for the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.Slug">
+            <summary>
+                The unique external id for the event.  For example May2019
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Event.GroupId">
@@ -319,6 +327,11 @@
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.Slug">
+            <summary>
+                The unique external id for the event.  For example May2019
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Title">
             <summary>
             The title of the event,  for example March 2019 Meetup. Must be unique for the group.
@@ -372,6 +385,11 @@
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.LogoInBase64">
             <summary>
                 The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.Slug">
+            <summary>
+                The unique external id for the event.  For example May2019
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Slug">
@@ -519,6 +537,11 @@
                 The group's logo.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.Slug">
+            <summary>
+                The unique external id for the event.  For example May2019
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.Title">
             <summary>
             The title of the event,  for example March 2019 Meetup. Must be unique for the group.
@@ -542,6 +565,11 @@
         <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.EndTime">
             <summary>
             Date and time the event ends.  Must be after the StartTime
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.Slug">
+            <summary>
+                The unique external id for the event.  For example May2019
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateEvent.Title">

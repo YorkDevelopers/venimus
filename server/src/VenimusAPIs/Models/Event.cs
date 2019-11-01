@@ -7,9 +7,14 @@ namespace VenimusAPIs.Models
     public class Event
     {
         /// <summary>
-        /// Unique ID for the event
+        ///     The unique internal ID for the event
         /// </summary>
         public ObjectId Id { get; set; }
+
+        /// <summary>
+        ///     The unique external id for the event.  For example May2019
+        /// </summary>
+        public string Slug { get; set; }
 
         /// <summary>
         /// The group to which this event belongs

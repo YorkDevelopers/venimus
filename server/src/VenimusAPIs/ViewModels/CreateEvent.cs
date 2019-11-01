@@ -6,6 +6,13 @@ namespace VenimusAPIs.ViewModels
     public class CreateEvent
     {
         /// <summary>
+        ///     The unique external id for the event.  For example May2019
+        /// </summary>
+        [Required]
+        [MaxLength(100)]
+        public string Slug { get; set; }
+
+        /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
         /// </summary>
         [Required]

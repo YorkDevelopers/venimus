@@ -1,12 +1,9 @@
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests
@@ -18,7 +15,6 @@ namespace VenimusAPIs.Tests
         private string _token;
         private ViewModels.CreateEvent _event;
         private Group _group;
-        private string _actualEventID;
 
         public CreateEvent(Fixture fixture) : base(fixture)
         {
@@ -49,7 +45,7 @@ namespace VenimusAPIs.Tests
             _event = Data.Create<ViewModels.CreateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Name}/Events", _event);
+            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Name}/events", _event);
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -59,20 +55,21 @@ namespace VenimusAPIs.Tests
 
         private void ThenTheLocationOfTheNewEventIsReturned()
         {
-            var location = _response.Headers.Location;
-            _actualEventID = location.Segments.Last();
+            var location = _response.Headers.Location.ToString();
+            Assert.Equal($"http://localhost/api/groups/{_group.Name}/events/{_event.Slug}", location);
         }
 
         private async Task AndANewEventIsAddedToTheDatabase()
         {
             var events = EventsCollection();
-            var actualGroup = await events.Find(u => u.Id == ObjectId.Parse(_actualEventID)).SingleOrDefaultAsync();
+            var actualEvent = await events.Find(u => u.Slug == _event.Slug).SingleAsync();
 
-            Assert.Equal(_event.Title, actualGroup.Title);
-            Assert.Equal(_event.Description, actualGroup.Description);
-            Assert.Equal(_event.StartTime, actualGroup.StartTime);
-            Assert.Equal(_event.EndTime, actualGroup.EndTime);
-            Assert.Equal(_event.Location, actualGroup.Location);
+            Assert.Equal(_event.Slug, actualEvent.Slug);
+            Assert.Equal(_event.Title, actualEvent.Title);
+            Assert.Equal(_event.Description, actualEvent.Description);
+            Assert.Equal(_event.StartTime, actualEvent.StartTime);
+            Assert.Equal(_event.EndTime, actualEvent.EndTime);
+            Assert.Equal(_event.Location, actualEvent.Location);
         }
     }
 }

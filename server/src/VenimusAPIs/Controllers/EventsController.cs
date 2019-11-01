@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +28,7 @@ namespace VenimusAPIs.Controllers
         ///
         ///     POST /api/groups/YorkCodeDojo/events
         ///     {
+        ///         "slug" : "Oct2019"
         ///         "title" : "Game of Life - Oct 2019",
         ///         "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
         ///         "location" : "Room 12"
@@ -51,7 +51,7 @@ namespace VenimusAPIs.Controllers
             var model = _mapper.Map<Models.Event>(newEvent);
 
             await _mongo.StoreEvent(model);
-            return CreatedAtRoute("Events", new { groupName = groupName, eventID = model.Id }, newEvent);
+            return CreatedAtRoute("Events", new { groupName = groupName, eventSlug = model.Slug }, newEvent);
         }
 
         /// <summary>
@@ -62,6 +62,7 @@ namespace VenimusAPIs.Controllers
         ///
         ///     PUT /api/groups/YorkCodeDojo/events/12345
         ///     {
+        ///         "slug" : "Oct2019"
         ///         "title" : "Game of Life - Oct 2019",
         ///         "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
         ///         "location" : "Room 12"
@@ -76,14 +77,14 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">The group does not exist.</response>
-        [Route("api/groups/{groupName}/events/{eventID}")]
+        [Route("api/groups/{groupName}/events/{eventSlug}")]
         [Authorize]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Put([FromRoute] string groupName, [FromRoute] string eventID, [FromBody] UpdateEvent amendedEvent)
+        public async Task<IActionResult> Put([FromRoute] string groupName, [FromRoute] string eventSlug, [FromBody] UpdateEvent amendedEvent)
         {
-            var model = await _mongo.RetrieveEvent(eventID);
+            var model = await _mongo.RetrieveEvent(eventSlug);
             _mapper.Map(amendedEvent, model);
 
             await _mongo.UpdateEvent(model);
@@ -98,6 +99,7 @@ namespace VenimusAPIs.Controllers
         ///
         ///     PATCH /api/groups/YorkCodeDojo/events/12345
         ///     {
+        ///         "slug" : "Oct2019"
         ///         "title" : "Game of Life - Oct 2019",
         ///         "description" : "Tonight we will work in pairs implementing the **classic Game Of Life**"
         ///         "location" : null
@@ -112,15 +114,16 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">The group does not exist.</response>
-        [Route("api/groups/{groupName}/events/{eventID}")]
+        [Route("api/groups/{groupName}/events/{eventSlug}")]
         [Authorize]
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Patch([FromRoute] string groupName, [FromRoute] string eventID, [FromBody] PartiallyUpdateEvent amendedEvent)
+        public async Task<IActionResult> Patch([FromRoute] string groupName, [FromRoute] string eventSlug, [FromBody] PartiallyUpdateEvent amendedEvent)
         {
-            var model = await _mongo.RetrieveEvent(eventID);
+            var model = await _mongo.RetrieveEvent(eventSlug);
 
+            model.Slug = amendedEvent.Slug ?? model.Slug;
             model.Description = amendedEvent.Description ?? model.Description;
             model.Title = amendedEvent.Title ?? model.Title;
             model.Location = amendedEvent.Location ?? model.Location;
@@ -144,11 +147,11 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
-        [Route("api/groups/{groupName}/events/{eventID}", Name = "Events")]
+        [Route("api/groups/{groupName}/events/{eventSlug}", Name = "Events")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<GetEvent> Get([FromRoute] string groupName, [FromRoute] string eventID)
+        public ActionResult<GetEvent> Get([FromRoute] string groupName, [FromRoute] string eventSlug)
         {
             return NotFound();
         }
