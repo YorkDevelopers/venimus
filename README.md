@@ -103,6 +103,24 @@ Returns the active groups that the current user is a member of.  The properties 
 
 Only active groups are returned.
 
+### GET /api/User/Groups/{GroupSlug}
+
+Returns the details of a single group the user is a member of.  The properties of a group are
+
+* __GroupSlug__ - The unique external ID for the group.  _For example _YorkCodeDojo_
+
+* __GroupName__ - The unique name for the group / community.  _For example York Code Dojo_
+
+* __GroupDescription__ - A description of the group in markdown
+
+* __GroupSlackChannelName__ - The name of this groups slack channel
+
+* __GroupLogoInBase64__ - The group's logo.
+
+#### Business Rules
+
+If the user is not a member of the group or the group does not exist then 404 is returned.
+
 ### POST /api/User/Groups
 
 Allows the user to join a group.  The supplied model must contain:
@@ -111,7 +129,7 @@ Allows the user to join a group.  The supplied model must contain:
 
 #### Business Rules
 
-* If the user is successfully added to the group then 204 is returned.
+* If the user is successfully added to the group then 201 is returned with location to retrieve the groups details.
 
 * If the group does not exist then 404 is returned.  (NEEDS TEST)
 
@@ -124,7 +142,7 @@ Allows the user to leave a group.
 #### Business Rules
 
 * If the user is successfully removed from the group then 204 is returned.
- 
+
 * If the group does not exist then 404 is returned. (NEEDS TEST)
 
 * If the user is not a member of a group then 204 will still be returned.  (NEEDS TEST)
@@ -198,4 +216,4 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Users can : Signup /  RSVP/SignDown to/from Events / View Groups / View Events / Change Details
+Users can :  RSVP/SignDown to/from Events / View Events / Change their Details

@@ -67,7 +67,12 @@ namespace VenimusAPIs.Tests
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+        }
+
+        private void ThenThePathToGroupIsReturned()
+        {
+            Assert.Equal($"http://localhost/api/User/Groups/{_existingGroup.Slug}", _response.Headers.Location.ToString());
         }
 
         private async Task ThenTheUserIsNowAMemberOfTheGroup()

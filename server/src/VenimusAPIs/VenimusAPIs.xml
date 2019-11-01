@@ -259,6 +259,20 @@
              <returns>The route to the user</returns>
              <response code="201">Success</response>
         </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get(System.String)">
+             <summary>
+                 Allows you to retrieve the details of a group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user/groups/YorkCodeDojo
+            
+             </remarks>
+             <returns>The ViewMyGroupMembership view model</returns>
+             <response code="200">Success</response>
+             <response code="404">Group does not exist or the user is not a member</response>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get">
              <summary>
                  Allows the current user to see the groups they are a member of
@@ -581,6 +595,31 @@
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.LogoInBase64">
+            <summary>
+                The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupSlug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupName">
+            <summary>
+            The unique name for the group / community.  For example York Code Dojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupDescription">
+            <summary>
+            A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupSlackChannelName">
+            <summary>
+                The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupLogoInBase64">
             <summary>
                 The group's logo.
             </summary>

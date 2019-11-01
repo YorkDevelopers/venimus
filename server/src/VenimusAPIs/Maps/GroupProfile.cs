@@ -26,6 +26,13 @@ namespace VenimusAPIs.Maps
 
             CreateMap<Models.Group, ViewModels.ListMyGroups>()
                 .ForMember(dest => dest.LogoInBase64, opt => opt.MapFrom(src => Convert.ToBase64String(src.Logo)));
+
+            CreateMap<Models.Group, ViewModels.ViewMyGroupMembership>()
+                .ForMember(dest => dest.GroupDescription, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.GroupLogoInBase64, opt => opt.MapFrom(src => Convert.ToBase64String(src.Logo)))
+                .ForMember(dest => dest.GroupName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GroupSlackChannelName, opt => opt.MapFrom(src => src.SlackChannelName))
+                .ForMember(dest => dest.GroupSlug, opt => opt.MapFrom(src => src.Slug));
         }
     }
 }

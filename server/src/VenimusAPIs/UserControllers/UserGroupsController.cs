@@ -23,6 +23,45 @@ namespace VenimusAPIs.UserControllers
         }
 
         /// <summary>
+        ///     Allows you to retrieve the details of a group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/user/groups/YorkCodeDojo
+        ///
+        /// </remarks>
+        /// <returns>The ViewMyGroupMembership view model</returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">Group does not exist or the user is not a member</response>
+        [Authorize]
+        [Route("{groupSlug}", Name = "GroupMembership")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ViewMyGroupMembership>> Get(string groupSlug)
+        {
+            var group = await _mongo.RetrieveGroup(groupSlug);
+            if (group == null || !(await DoesUserBelongToTheGroup(group)))
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<ViewMyGroupMembership>(group);
+
+            return viewModel;
+        }
+
+        private async Task<bool> DoesUserBelongToTheGroup(Models.Group group)
+        {
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            return group.Members != null && group.Members.Contains(existingUser.Id);
+        }
+
+        /// <summary>
         ///     Allows the current user to see the groups they are a member of
         /// </summary>
         /// <remarks>
@@ -91,7 +130,7 @@ namespace VenimusAPIs.UserControllers
 
             await _mongo.UpdateGroup(model);
 
-            return NoContent();
+            return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
         }
 
         /// <summary>
