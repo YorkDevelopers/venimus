@@ -25,7 +25,7 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenIAmASystemAdministrator()
         {
-            _token = await Fixture.GetToken();
+            _token = await Fixture.GetTokenForSystemAdministrator();
         }
 
         private void GivenTheGroupDoesNotExists()

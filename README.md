@@ -81,6 +81,18 @@ Returns a list of events which have been scheduled for the groups.  (A maximum o
 
 ---
 
+## APIs For Logged In Users
+
+The following APIs can be called by normal users once they have authenticated.
+
+### POST /api/User/Groups
+
+Allows the user to join a group.  The supplied model must contain:
+
+* __GroupSlug__ - The unique external ID for the group. _For example YorkCodeDojo_
+
+---
+
 ## APIs For System Administrators
 
 The following APIs can only be called by sysadmin administrators.

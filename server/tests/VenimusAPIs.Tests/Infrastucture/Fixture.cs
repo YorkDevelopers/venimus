@@ -67,15 +67,24 @@ namespace VenimusAPIs.Tests
 
         public string GetTokenForNewUser(string uniqueID)
         {
-            return CreateMockToken(uniqueID);
+            return CreateMockToken(uniqueID, string.Empty);
         }
 
-        public async Task<string> GetToken()
+        public async Task<string> GetTokenForNormalUser()
         {
             IdentityModelEventSource.ShowPII = true;
 
             // var token = await CreateAuth0Token();
-            var token = CreateMockToken(string.Empty);
+            var token = CreateMockToken(string.Empty, string.Empty);
+            return await Task.FromResult(token);
+        }
+
+        public async Task<string> GetTokenForSystemAdministrator()
+        {
+            IdentityModelEventSource.ShowPII = true;
+
+            // var token = await CreateAuth0Token();
+            var token = CreateMockToken(string.Empty, "SystemAdministrator");
             return await Task.FromResult(token);
         }
 
@@ -102,7 +111,7 @@ namespace VenimusAPIs.Tests
             return details.AccessToken;
         }
 
-        private string CreateMockToken(string uniqueID)
+        private string CreateMockToken(string uniqueID, string role)
         {
             using var rsa = RSA.Create(2048);
             RSAFromXmlFile(rsa, @"MockOpenId/private.xml");
@@ -119,7 +128,7 @@ namespace VenimusAPIs.Tests
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, uniqueID),
-                    new Claim("https://Venimus.YorkDevelopers.org/roles", "SystemAdministrator"),
+                    new Claim("https://Venimus.YorkDevelopers.org/roles", role),
                 }),
             };
 

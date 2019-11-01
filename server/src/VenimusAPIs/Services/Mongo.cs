@@ -55,10 +55,10 @@ namespace VenimusAPIs.Services
             await groups.InsertOneAsync(group);
         }
 
-        public async Task<Models.Group> RetrieveGroup(string groupName)
+        public async Task<Models.Group> RetrieveGroup(string groupSlug)
         {
             var groups = GroupsCollection();
-            var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
+            var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync();
 
             return group;
         }

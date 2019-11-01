@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VenimusAPIs.Controllers
+namespace VenimusAPIs.UserControllers
 {
     [ApiController]
-    public class UserConnectedController : ControllerBase
+    public class UserConnectedController : BaseUserController
     {
         private readonly Services.Mongo _mongo;
 
@@ -40,7 +40,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post()
         {
-            var uniqueID = (User.Identity as ClaimsIdentity).Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var uniqueID = UniqueID;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
             if (existingUser == null)

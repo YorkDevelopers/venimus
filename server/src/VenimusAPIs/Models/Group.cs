@@ -38,12 +38,12 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Members of this group
         /// </summary>
-        public List<ObjectId>[] Members { get; set; }
+        public List<ObjectId> Members { get; set; }
 
         /// <summary>
         /// Administrators of this group
         /// </summary>
-        public List<ObjectId>[] Administrators { get; set; }
+        public List<ObjectId> Administrators { get; set; }
 
         /// <summary>
         ///     The name of this groups slack channel

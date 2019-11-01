@@ -36,7 +36,7 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenIAmASystemAdministrator()
         {
-            _token = await Fixture.GetToken();
+            _token = await Fixture.GetTokenForSystemAdministrator();
         }
 
         private async Task GivenAGroupAlreadyExists()
@@ -55,7 +55,7 @@ namespace VenimusAPIs.Tests
             _amendedGroup.LogoInBase64 = Convert.ToBase64String(logo);
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Name}", _amendedGroup);
+            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 
         private void ThenASuccessResponseIsReturned()

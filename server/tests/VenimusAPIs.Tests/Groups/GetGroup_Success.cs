@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenIAmASystemAdministrator()
         {
-            _token = await Fixture.GetToken();
+            _token = await Fixture.GetTokenForSystemAdministrator();
         }
 
         private async Task GivenAGroupAlreadyExists()
@@ -42,7 +42,7 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheGetGroupApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/Groups/{_expectedGroup.Name}");
+            _response = await Fixture.APIClient.GetAsync($"api/Groups/{_expectedGroup.Slug}");
         }
 
         private void ThenASuccessResponseIsReturned()
