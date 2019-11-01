@@ -277,6 +277,20 @@
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist</response>
         </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.DELETE(System.String)">
+             <summary>
+                 Allows the current user to leave a group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/groups/YorkCodeDojo
+            
+             </remarks>
+             <returns>Nothing</returns>
+             <response code="204">Success</response>
+             <response code="401">User is not authorized.</response>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Title">
             <summary>
             The title of the event,  for example March 2019 Meetup. Must be unique for the group.

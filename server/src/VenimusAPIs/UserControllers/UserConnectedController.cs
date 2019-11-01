@@ -40,7 +40,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post()
         {
-            var uniqueID = UniqueID;
+            var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
             if (existingUser == null)

@@ -1,3 +1,4 @@
+<!-- markdownlint-disable no-duplicate-heading -->
 # Project Venimus
 
 Open source event organising community platform ran by https://YorkDevelopers.org
@@ -41,7 +42,6 @@ The unit tests used our mocked version of Auth0.  This is configured by adding t
 ```  
 
 It is recommended that rather than editing the existing `appsettings.json` file you create `appsettings.Testing.json` and/or `appsettings.Development.json` files.
-
 
 ---
 
@@ -91,6 +91,26 @@ Allows the user to join a group.  The supplied model must contain:
 
 * __GroupSlug__ - The unique external ID for the group. _For example YorkCodeDojo_
 
+#### Business Rules
+
+* If the user is successfully added to the group then 204 is returned.
+
+* If the group does not exist then 404 is returned.  (NEEDS TEST)
+
+* If the user is already a member of a group then 204 will still be returned. (NEEDS TEST)
+
+### DELETE /api/User/Groups/{groupSlug}
+
+Allows the user to leave a group.  
+
+#### Business Rules
+
+* If the user is successfully removed from the group then 204 is returned.
+ 
+* If the group does not exist then 404 is returned. (NEEDS TEST)
+
+* If the user is not a member of a group then 204 will still be returned.  (NEEDS TEST)
+
 ---
 
 ## APIs For System Administrators
@@ -113,11 +133,11 @@ Creates a new group.  The body of the request must include the following informa
 
 * __LogoInBase64__ - The group's logo.
 
-Validation rules
+#### Business Rules
 
-* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters. (NEEDS TEST)
 
-* The name is required, must be unique and no more than 100 characters.
+* The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
 
 * The description is required,  and should be in markdown format
 
@@ -137,11 +157,11 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * __LogoInBase64__ - The group's logo.
 
-Validation rules
+#### Business Rules
 
-* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters. (NEEDS TEST)
 
-* The name is required, must be unique and no more than 100 characters.
+* The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
 
 * The description is required,  and should be in markdown format
 
@@ -160,4 +180,4 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Users can : Signup / Join/Leave Groups / RSVP/SignDown to/from Events / View Groups / View Events / Change Details
+Users can : Signup /  RSVP/SignDown to/from Events / View Groups / View Events / Change Details

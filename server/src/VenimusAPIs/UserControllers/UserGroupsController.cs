@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -53,14 +51,53 @@ namespace VenimusAPIs.UserControllers
             {
                 model.Members = new List<MongoDB.Bson.ObjectId>();
             }
- 
-            var uniqueID = UniqueID;
+
+            var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
             model.Members.Add(existingUser.Id);
 
             await _mongo.UpdateGroup(model);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        ///     Allows the current user to leave a group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/groups/YorkCodeDojo
+        ///
+        /// </remarks>
+        /// <returns>Nothing</returns>
+        /// <response code="204">Success</response>
+        /// <response code="401">User is not authorized.</response>
+        [Authorize]
+        [Route("{groupSlug}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> DELETE([FromRoute] string groupSlug)
+        {
+            var model = await _mongo.RetrieveGroup(groupSlug);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            if (model.Members != null)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+
+                var existingUser = await _mongo.GetUserByID(uniqueID);
+
+                model.Members.RemoveAll(m => m == existingUser.Id);
+
+                await _mongo.UpdateGroup(model);
+            }
 
             return NoContent();
         }

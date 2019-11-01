@@ -7,6 +7,6 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public abstract class BaseUserController : ControllerBase
     {
-        protected string UniqueID => (User.Identity as ClaimsIdentity).Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        protected string UniqueIDForCurrentUser => (User.Identity as ClaimsIdentity).Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
     }
 }
