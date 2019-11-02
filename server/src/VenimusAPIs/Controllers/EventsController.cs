@@ -65,6 +65,8 @@ namespace VenimusAPIs.Controllers
             }
 
             var model = _mapper.Map<Models.Event>(newEvent);
+            model.GroupSlug = groupSlug;
+            model.GroupId = group.Id;
 
             await _mongo.StoreEvent(model);
             return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);
@@ -93,14 +95,14 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">The group does not exist.</response>
-        [Route("api/groups/{groupName}/events/{eventSlug}")]
+        [Route("api/groups/{groupSlug}/events/{eventSlug}")]
         [Authorize]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Put([FromRoute] string groupName, [FromRoute] string eventSlug, [FromBody] UpdateEvent amendedEvent)
+        public async Task<IActionResult> Put([FromRoute] string groupSlug, [FromRoute] string eventSlug, [FromBody] UpdateEvent amendedEvent)
         {
-            var model = await _mongo.RetrieveEvent(eventSlug);
+            var model = await _mongo.GetEvent(groupSlug, eventSlug);
             _mapper.Map(amendedEvent, model);
 
             await _mongo.UpdateEvent(model);
@@ -130,14 +132,14 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">The group does not exist.</response>
-        [Route("api/groups/{groupName}/events/{eventSlug}")]
+        [Route("api/groups/{groupSlug}/events/{eventSlug}")]
         [Authorize]
         [HttpPatch]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Patch([FromRoute] string groupName, [FromRoute] string eventSlug, [FromBody] PartiallyUpdateEvent amendedEvent)
+        public async Task<IActionResult> Patch([FromRoute] string groupSlug, [FromRoute] string eventSlug, [FromBody] PartiallyUpdateEvent amendedEvent)
         {
-            var model = await _mongo.RetrieveEvent(eventSlug);
+            var model = await _mongo.GetEvent(groupSlug, eventSlug);
 
             model.Slug = amendedEvent.Slug ?? model.Slug;
             model.Description = amendedEvent.Description ?? model.Description;

@@ -17,9 +17,14 @@ namespace VenimusAPIs.Models
         public string Slug { get; set; }
 
         /// <summary>
-        /// The group to which this event belongs
+        ///     The internal ID of the group to which this event belongs
         /// </summary>
         public ObjectId GroupId { get; set; }
+
+        /// <summary>
+        ///     The external ID of the group to which this event belongs
+        /// </summary>
+        public string GroupSlug { get; set; }
 
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
@@ -49,19 +54,46 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Attendees of this group
         /// </summary>
-        public List<EventAttendees>[] Members { get; set; }
+        public List<EventAttendees> Members { get; set; }
 
         public class EventAttendees
         {
             public ObjectId UserId { get; set; }
-            
-            public bool SignedUp { get; set; }
-            
-            public bool Attended { get; set; }
 
+            /// <summary>
+            ///     Are they still signed up
+            /// </summary>
+            public bool SignedUp { get; set; }
+
+            /// <summary>
+            ///     Did they attend the event?
+            /// </summary>
+            public bool? Attended { get; set; }
+
+            /// <summary>
+            ///     Are they organising the event
+            /// </summary>
             public bool Host { get; set; }
-            
+
+            /// <summary>
+            ///     Are they presenting at the event
+            /// </summary>
             public bool Speaker { get; set; }
+
+            /// <summary>
+            ///     Any Dietary Requirements the user has
+            /// </summary>
+            public string DietaryRequirements { get; set; }
+
+            /// <summary>
+            ///     Free format message to the organiser
+            /// </summary>
+            public string MessageToOrganiser { get; set; }
+
+            /// <summary>
+            ///     The number of unregistered guest the person is bringing
+            /// </summary>
+            public int NumberOfGuests { get; set; }
         }
     }
 }

@@ -42,7 +42,11 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenAnEventExists()
         {
-            _event = Data.Create<Models.Event>();
+            _event = Data.Create<Models.Event>(ent =>
+            {
+                ent.GroupId = _group.Id;
+                ent.GroupSlug = _group.Slug;
+            });
 
             var events = EventsCollection();
 
@@ -54,7 +58,7 @@ namespace VenimusAPIs.Tests
             _amendedEvent = Data.Create<ViewModels.UpdateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Name}/Events/{_event.Slug}", _amendedEvent);
+            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
         private void ThenASuccessResponseIsReturned()

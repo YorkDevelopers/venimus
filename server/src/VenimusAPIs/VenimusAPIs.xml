@@ -174,7 +174,12 @@
         </member>
         <member name="P:VenimusAPIs.Models.Event.GroupId">
             <summary>
-            The group to which this event belongs
+                The internal ID of the group to which this event belongs
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.GroupSlug">
+            <summary>
+                The external ID of the group to which this event belongs
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Event.Title">
@@ -205,6 +210,41 @@
         <member name="P:VenimusAPIs.Models.Event.Members">
             <summary>
             Attendees of this group
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.SignedUp">
+            <summary>
+                Are they still signed up
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Attended">
+            <summary>
+                Did they attend the event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Host">
+            <summary>
+                Are they organising the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Speaker">
+            <summary>
+                Are they presenting at the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.DietaryRequirements">
+            <summary>
+                Any Dietary Requirements the user has
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.MessageToOrganiser">
+            <summary>
+                Free format message to the organiser
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.NumberOfGuests">
+            <summary>
+                The number of unregistered guest the person is bringing
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
@@ -326,6 +366,41 @@
              <response code="204">Success</response>
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist.</response>
+        </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Post(System.String,VenimusAPIs.ViewModels.SignUpToEvent)">
+             <summary>
+                 Allows the current user to sign up to an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/user/groups/YorkCodeDojo/Events
+                 {
+                     "eventSlug" : "Nov2019",
+                     "numberOfGuest" : 1,
+                     "dietaryRequirements" : "Milk free",
+                     "messageToOrganiser" : "I might be 10 minutes late"
+                 }
+            
+             </remarks>
+             <returns>The route to the created group</returns>
+             <response code="204">Success</response>
+             <response code="401">User is not authorized.</response>
+             <response code="404">Group does not exist</response>
+        </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Get(System.String,System.String)">
+             <summary>
+                 Allows the current user to retrieve their registration details for an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user/groups/YorkCodeDojo/Events/Nov2019
+            
+             </remarks>
+             <returns>The GetEvent view model</returns>
+             <response code="200">Success</response>
+             <response code="404">Group or Event does not exist.</response>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Slug">
             <summary>

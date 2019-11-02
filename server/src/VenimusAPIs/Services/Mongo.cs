@@ -66,6 +66,14 @@ namespace VenimusAPIs.Services
             await groups.InsertOneAsync(group);
         }
 
+        internal async Task<Event> GetEvent(string groupSlug, string eventSlug)
+        {
+            var events = EventsCollection();
+            var theEvent = await events.Find(u => u.Slug == eventSlug && u.GroupSlug == groupSlug).SingleOrDefaultAsync();
+
+            return theEvent;
+        }
+
         public async Task<Models.Group> RetrieveGroup(string groupSlug)
         {
             var groups = GroupsCollection();
@@ -129,14 +137,6 @@ namespace VenimusAPIs.Services
             }
 
             return result;
-        }
-
-        public async Task<Models.Event> RetrieveEvent(string eventSlug)
-        {
-            var events = EventsCollection();
-            var group = await events.Find(u => u.Slug == eventSlug).SingleOrDefaultAsync();
-
-            return group;
         }
 
         internal async Task InsertUser(User newUser)

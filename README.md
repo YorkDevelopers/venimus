@@ -121,6 +121,26 @@ Schedules a new event for a group.  The following needs to be provided.
 
 The following APIs can be called by normal users once they have authenticated.
 
+### POST api/user/groups/{GroupSlug}/Events
+
+Allows the user to sign up for an event.  The following details must be provided:
+
+* EventSlug - the ID of the event within the group.
+* NumberOfGuests - the number of unregistered guests
+* DietaryRequirements - any dietary requirements
+* MessageToOrganiser - free format message
+
+#### Business Rules (not implemented)
+
+Group does not exist
+Event does not belong to the group
+Event is full
+Event is in the past
+NumberOfGuests is positive
+Guests not allowed
+User is not a member of the group
+A user can only sign up once
+
 ### GET /api/User/Groups
 
 Returns the active groups that the current user is a member of.  The properties of a group are
@@ -254,8 +274,12 @@ System adminstrators can :  Delete Groups / Ban Users
 
 Group administrators can : List (including people) / Create / Edit / Delete Events
 ### GET /api/Groups/{GroupSlug}/Members
-### POST /api/Groups/{GroupSlug}/Events
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Users can :  RSVP/SignDown to/from Events / View Events / Change their Details
+Users can :  Decline event / View Events / Change their Details
+### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
+### PUT /api/user/groups/{GroupSlug}/Events/{EventSlug}
+### GET /api/user/groups/{GroupSlug}/Events/{EventSlug}
+### GET /api/user/events
+
