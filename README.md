@@ -81,6 +81,42 @@ Returns a list of events which have been scheduled for the groups.  (A maximum o
 
 ---
 
+## APIs For Group Administrators
+
+The following APIs can be called by group administrators once they have authenticated.
+
+### POST /api/Groups/{GroupSlug}/events
+
+Schedules a new event for a group.  The following needs to be provided.
+
+* __Slug__ - The unique external ID for the event. _For example Nov2019_
+
+* __Title__ - The title of the event.
+
+* __Description__ - The full description of the event in markdown format.
+
+* __Location__ - Where will the event be held?
+
+* __StartTime__  - When will the event start?
+
+* __EndTime__ - When will the event end?
+
+#### Business Rules
+
+* If the event is successfully created then a URL to the event will be returned.
+
+* If the group does not exist then 404 will be returned. (NEEDS TEST)
+
+* If the user is not an administrator for the group then Forbidden will be returned.
+
+* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters. (NEEDS TEST)
+
+* The start time must be in the future. (NEEDS TEST)
+
+* The end time must be after the start time (NEEDS TEST)
+
+---
+
 ## APIs For Logged In Users
 
 The following APIs can be called by normal users once they have authenticated.
@@ -171,11 +207,13 @@ Creates a new group.  The body of the request must include the following informa
 
 #### Business Rules
 
-* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters. (NEEDS TEST)
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
 
-* The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
+* The name is required, must be unique and no more than 100 characters.
 
 * The description is required,  and should be in markdown format
+
+* The user must be a member of the sysadmin administrators role.
 
 ### PUT /api/Groups/{slug}
 
@@ -200,6 +238,10 @@ Updates an existing group with the matching `slug`. The body of the request must
 * The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
 
 * The description is required,  and should be in markdown format
+
+* The group must exist  (NEEDS TEST)
+
+* The user must be a member of the sysadmin administrators role.  (NEEDS TEST)
 
 ---
 

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -6,17 +8,19 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.CreateEvent
 {
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
-    public class CreateEvent : BaseTest
+    public class CreateEvent_Success : BaseTest
     {
         private HttpResponseMessage _response;
+        private string _uniqueID;
         private string _token;
         private ViewModels.CreateEvent _event;
         private Group _group;
+        private User _user;
 
-        public CreateEvent(Fixture fixture) : base(fixture)
+        public CreateEvent_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -28,12 +32,25 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenIAmAGroupAdministrator()
         {
-            _token = await Fixture.GetTokenForSystemAdministrator();
+            _uniqueID = Guid.NewGuid().ToString();
+            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
         }
 
-        private async Task GivenAGroupExists()
+        private async Task GivenAlreadyExistInTheDatabase()
+        {
+            _user = Data.Create<Models.User>();
+
+            var collection = UsersCollection();
+
+            _user.Identities = new List<string> { _uniqueID };
+
+            await collection.InsertOneAsync(_user);
+        }
+
+        private async Task GivenIAmAnAdminstratorForTheGroupExists()
         {
             _group = Data.Create<Models.Group>();
+            _group.Administrators = new List<MongoDB.Bson.ObjectId> { _user.Id };
 
             var collection = GroupsCollection();
 
@@ -45,7 +62,7 @@ namespace VenimusAPIs.Tests
             _event = Data.Create<ViewModels.CreateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Name}/events", _event);
+            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -56,7 +73,7 @@ namespace VenimusAPIs.Tests
         private void ThenTheLocationOfTheNewEventIsReturned()
         {
             var location = _response.Headers.Location.ToString();
-            Assert.Equal($"http://localhost/api/groups/{_group.Name}/events/{_event.Slug}", location);
+            Assert.Equal($"http://localhost/api/groups/{_group.Slug}/events/{_event.Slug}", location);
         }
 
         private async Task AndANewEventIsAddedToTheDatabase()

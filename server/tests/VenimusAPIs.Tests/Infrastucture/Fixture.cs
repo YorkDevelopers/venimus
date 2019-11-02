@@ -70,12 +70,12 @@ namespace VenimusAPIs.Tests
             return CreateMockToken(uniqueID, string.Empty);
         }
 
-        public async Task<string> GetTokenForNormalUser()
+        public async Task<string> GetTokenForNormalUser(string uniqueID = "")
         {
             IdentityModelEventSource.ShowPII = true;
 
             // var token = await CreateAuth0Token();
-            var token = CreateMockToken(string.Empty, string.Empty);
+            var token = CreateMockToken(uniqueID, string.Empty);
             return await Task.FromResult(token);
         }
 

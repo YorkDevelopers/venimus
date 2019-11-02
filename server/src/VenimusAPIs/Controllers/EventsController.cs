@@ -3,12 +3,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.UserControllers;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class EventsController : ControllerBase
+    public class EventsController : BaseUserController
     {
         private readonly Services.Mongo _mongo;
 
@@ -41,17 +42,32 @@ namespace VenimusAPIs.Controllers
         /// <response code="201">Success</response>
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">The group does not exist.</response>
-        [Route("api/groups/{groupName}/events")]
+        [Route("api/groups/{groupSlug}/events")]
         [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Post([FromRoute] string groupName, [FromBody] CreateEvent newEvent)
+        public async Task<IActionResult> Post([FromRoute] string groupSlug, [FromBody] CreateEvent newEvent)
         {
+            var group = await _mongo.RetrieveGroup(groupSlug);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            if (group.Administrators == null || !group.Administrators.Contains(existingUser.Id))
+            {
+                return Forbid();
+            }
+
             var model = _mapper.Map<Models.Event>(newEvent);
 
             await _mongo.StoreEvent(model);
-            return CreatedAtRoute("Events", new { groupName = groupName, eventSlug = model.Slug }, newEvent);
+            return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);
         }
 
         /// <summary>
@@ -147,11 +163,11 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
-        [Route("api/groups/{groupName}/events/{eventSlug}", Name = "Events")]
+        [Route("api/groups/{groupSlug}/events/{eventSlug}", Name = "Events")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<GetEvent> Get([FromRoute] string groupName, [FromRoute] string eventSlug)
+        public ActionResult<GetEvent> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
             return NotFound();
         }
