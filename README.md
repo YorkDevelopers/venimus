@@ -141,6 +141,18 @@ Guests not allowed
 User is not a member of the group
 A user can only sign up once
 
+### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
+
+Allows the user to record that they are no longer planning on attending an event.
+
+#### Business Rules
+
+* This API can be called regardless of if the user is currently signed up to the event or not.
+
+* If the event does not exist,  then 404 will be returned.
+
+* If the event is in the past,  then an error will be returned.
+
 ### GET /api/User/Groups
 
 Returns the active groups that the current user is a member of.  The properties of a group are
@@ -277,9 +289,8 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Users can :  Decline event / View Events / Change their Details
-### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
-### PUT /api/user/groups/{GroupSlug}/Events/{EventSlug}
+Users can :  View Events / Change their Details
+## PUT /api/user/groups/{GroupSlug}/Events/{EventSlug}
 ### GET /api/user/groups/{GroupSlug}/Events/{EventSlug}
 ### GET /api/user/events
 

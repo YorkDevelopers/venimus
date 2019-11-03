@@ -388,6 +388,21 @@
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist</response>
         </member>
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Delete(System.String,System.String)">
+             <summary>
+                 Allows the current user to decline attending an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/user/groups/YorkCodeDojo/Events/Nov2019
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+             <response code="400">Event has already happened</response>
+             <response code="404">Group or Event does not exist.</response>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Get(System.String,System.String)">
              <summary>
                  Allows the current user to retrieve their registration details for an event

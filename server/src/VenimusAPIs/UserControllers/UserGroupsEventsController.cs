@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +75,68 @@ namespace VenimusAPIs.UserControllers
             await _mongo.UpdateEvent(theEvent);
 
             return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
+        }
+
+        /// <summary>
+        ///     Allows the current user to decline attending an event
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/user/groups/YorkCodeDojo/Events/Nov2019
+        ///
+        /// </remarks>
+        /// <returns>NoContent</returns>
+        /// <response code="204">Success</response>
+        /// <response code="400">Event has already happened</response>
+        /// <response code="404">Group or Event does not exist.</response>
+        [Authorize]
+        [Route("api/user/groups/{groupSlug}/events/{eventSlug}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetEvent>> Delete([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
+        {
+            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
+
+            if (theEvent.EndTime < DateTime.UtcNow)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "This event has already taken place",
+                });
+            }
+
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            if (theEvent.Members == null)
+            {
+                theEvent.Members = new List<Models.Event.EventAttendees>();
+            }
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (member == null)
+            {
+                member = new Models.Event.EventAttendees
+                {
+                    UserId = existingUser.Id,
+                };
+
+                theEvent.Members.Add(member);
+            }
+
+            member.SignedUp = false;
+
+            await _mongo.UpdateEvent(theEvent);
+
+            return NoContent();
         }
 
         /// <summary>
