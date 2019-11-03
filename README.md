@@ -121,6 +121,18 @@ Schedules a new event for a group.  The following needs to be provided.
 
 The following APIs can be called by normal users once they have authenticated.
 
+### GET /api/user/events
+
+Allows the user to view all the future events they have signed up to.  The following properties are returned:
+
+* GroupSlug - the ID of the group.
+* GroupName - the name of the group.
+* EventSlug - the ID of the event within the group.
+* EventTitle - the title of the event
+* EventDescription - the full description of the event in markdown
+* EventStartsUTC - Date and time the event starts
+* EventFinishesUTC - Date and time the event ends
+
 ### POST api/user/groups/{GroupSlug}/Events
 
 Allows the user to sign up for an event.  The following details must be provided:
@@ -159,6 +171,19 @@ NumberOfGuests is positive
 Guests not allowed
 User is not a member of the group
 The user isn't signed up
+
+### GET /api/user/groups/{GroupSlug}/Events/{EventSlug}
+
+Allows the user to view their registration details for any event.  Returns the following properties
+
+* NumberOfGuests - the number of unregistered guests
+* DietaryRequirements - any dietary requirements
+* MessageToOrganiser - free format message
+
+#### Business Rules (not implemented)
+
+Event does not exist
+Not signed up
 
 ### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
 
@@ -308,7 +333,9 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Users can :  View Events / Change their Details
-### GET /api/user/groups/{GroupSlug}/Events/{EventSlug}
-### GET /api/user/events
+Users can :  Change their Details
 
+### GET /api/User - view their details
+### PUT /api/User - update their details
+
+Rename GroupName or Slug needed to update events

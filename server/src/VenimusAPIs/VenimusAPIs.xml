@@ -182,6 +182,11 @@
                 The external ID of the group to which this event belongs
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Event.GroupName">
+            <summary>
+                The name of the group the event belongs to
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Event.Title">
             <summary>
             The title of the event,  for example March 2019 Meetup. Must be unique for the group.
@@ -306,6 +311,19 @@
              </remarks>
              <returns>The route to the user</returns>
              <response code="201">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.UserControllers.UserEventsController.Get">
+             <summary>
+                 Allows the current user to retrieve all the future events they have signed up to.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user/events
+            
+             </remarks>
+             <returns>Array of the ViewAllMyEventRegistrations view model</returns>
+             <response code="200">Success</response>
         </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get(System.String)">
              <summary>
@@ -770,6 +788,41 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.LogoInBase64">
             <summary>
                 The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupSlug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventSlug">
+            <summary>
+                The unique external ID for the event.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupName">
+            <summary>
+                The name of the group hosting the event.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventTitle">
+            <summary>
+                The title of the event.  Monthly meeting - October
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventDescription">
+            <summary>
+                A description of the event in markdown.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventStartsUTC">
+            <summary>
+                When does the event start,  in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventFinishesUTC">
+            <summary>
+                When does the event finish, in UTC time?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.NumberOfGuests">

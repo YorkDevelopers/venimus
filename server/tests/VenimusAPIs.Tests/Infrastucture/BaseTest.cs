@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace VenimusAPIs.Tests.Infrastucture
@@ -46,6 +47,16 @@ namespace VenimusAPIs.Tests.Infrastucture
             await mongoDatabase.DropCollectionAsync("events");
             await mongoDatabase.DropCollectionAsync("groups");
             await mongoDatabase.DropCollectionAsync("users");
+        }
+
+        protected DateTime TrimMilliseconds(DateTime dt)
+        {
+            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);
+        }
+
+        protected void AssertDateTime(DateTime dateTime1, DateTime dateTime2)
+        {
+            Assert.Equal(TrimMilliseconds(dateTime1), TrimMilliseconds(dateTime2));
         }
     }
 }

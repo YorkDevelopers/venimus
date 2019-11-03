@@ -44,11 +44,7 @@ namespace VenimusAPIs.Tests
 
         private async Task GivenAnEventExists()
         {
-            _event = Data.Create<Models.Event>(ent =>
-            {
-                ent.GroupId = _group.Id;
-                ent.GroupSlug = _group.Slug;
-            });
+            _event = Data.CreateEvent(_group);
 
             var collection = EventsCollection();
 

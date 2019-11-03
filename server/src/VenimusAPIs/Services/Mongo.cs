@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -46,6 +47,32 @@ namespace VenimusAPIs.Services
             var models = await groups.Find(u => u.IsActive).ToListAsync();
 
             return models;
+        }
+
+        internal async Task<ActionResult<ViewAllMyEventRegistrations[]>> GetMyEventRegistrations(ObjectId userID)
+        {
+            var currentTime = DateTime.UtcNow;
+
+            var memberMatch = Builders<Event.EventAttendees>.Filter.Eq(a => a.UserId, userID) &
+                              Builders<Event.EventAttendees>.Filter.Eq(a => a.SignedUp, true);
+
+            var filter = Builders<Event>.Filter.ElemMatch(x => x.Members, memberMatch) &
+                         Builders<Event>.Filter.Gt(ent => ent.EndTimeUTC, currentTime);
+
+            var events = EventsCollection();
+
+            var matchingEvents = await events.Find(filter).ToListAsync();
+
+            return matchingEvents.Select(e => new ViewAllMyEventRegistrations
+            {
+                EventDescription = e.Description,
+                EventFinishesUTC = e.EndTimeUTC,
+                EventSlug = e.Slug,
+                EventStartsUTC = e.StartTimeUTC,
+                EventTitle = e.Title,
+                GroupName = e.GroupName,
+                GroupSlug = e.GroupSlug,
+            }).ToArray();
         }
 
         internal async Task<List<Group>> RetrieveMyActiveGroups(ObjectId userID)
@@ -105,7 +132,7 @@ namespace VenimusAPIs.Services
             var groups = database.GetCollection<Models.Group>("groups");
 
             var currentTime = DateTime.UtcNow;
-            
+
             var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty);
             var groupsList = await allGroups.ToListAsync();
 
@@ -130,7 +157,7 @@ namespace VenimusAPIs.Services
                     EventSlug = e.Id.ToString(),
                     EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
-                    GroupName = group.Name,
+                    GroupName = e.GroupName,
                 });
 
                 result.AddRange(viewModels);

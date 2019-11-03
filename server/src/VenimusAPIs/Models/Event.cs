@@ -27,6 +27,11 @@ namespace VenimusAPIs.Models
         public string GroupSlug { get; set; }
 
         /// <summary>
+        ///     The name of the group the event belongs to
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
         /// </summary>
         public string Title { get; set; }

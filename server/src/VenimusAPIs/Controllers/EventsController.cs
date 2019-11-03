@@ -67,6 +67,7 @@ namespace VenimusAPIs.Controllers
             var model = _mapper.Map<Models.Event>(newEvent);
             model.GroupSlug = groupSlug;
             model.GroupId = group.Id;
+            model.GroupName = group.Name;
 
             await _mongo.StoreEvent(model);
             return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);

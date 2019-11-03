@@ -45,19 +45,16 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             var groups = GroupsCollection();
             await groups.InsertManyAsync(new[] { _group1, _group2, _group3 });
 
-            _futureEvent1 = Data.Create<Models.Event>();
+            _futureEvent1 = Data.CreateEvent(_group1);
             _futureEvent1.StartTimeUTC = DateTime.UtcNow.AddDays(1);
-            _futureEvent1.GroupId = _group1.Id;
 
-            _futureEvent2 = Data.Create<Models.Event>();
+            _futureEvent2 = Data.CreateEvent(_group2);
             _futureEvent2.StartTimeUTC = DateTime.UtcNow.AddDays(6);
-            _futureEvent2.GroupId = _group2.Id;
 
             _futureEvents = Enumerable.Range(1, 20)
-                                      .Select(day => Data.Create<Models.Event>(e =>
+                                      .Select(day => Data.CreateEvent(_group3, e =>
                                       {
                                           e.StartTimeUTC = DateTime.UtcNow.AddDays(day);
-                                          e.GroupId = _group3.Id;
                                       }))
                                       .ToArray();
 
@@ -97,13 +94,8 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
             Assert.Equal(expectedEvent.Title, actualEvent.EventTitle);
             Assert.Equal(expectedEvent.Description, actualEvent.EventDescription);
-            Assert.Equal(TrimMilliseconds(expectedEvent.StartTimeUTC), TrimMilliseconds(actualEvent.EventStartsUTC));
-            Assert.Equal(TrimMilliseconds(expectedEvent.EndTimeUTC), TrimMilliseconds(actualEvent.EventFinishesUTC));
-        }
-
-        private DateTime TrimMilliseconds(DateTime dt)
-        {
-            return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);
+            AssertDateTime(expectedEvent.StartTimeUTC, actualEvent.EventStartsUTC);
+            AssertDateTime(expectedEvent.EndTimeUTC, actualEvent.EventFinishesUTC);
         }
     }
 }

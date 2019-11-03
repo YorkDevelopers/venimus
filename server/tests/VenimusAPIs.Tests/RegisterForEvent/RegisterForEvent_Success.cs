@@ -61,11 +61,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
 
         private async Task GivenAnEventExistsForThatGroup()
         {
-            _existingEvent = Data.Create<Models.Event>(evt =>
-            {
-                evt.GroupId = _existingGroup.Id;
-                evt.GroupSlug = _existingGroup.Slug;
-            });
+            _existingEvent = Data.CreateEvent(_existingGroup);
 
             var events = EventsCollection();
 

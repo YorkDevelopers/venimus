@@ -29,6 +29,23 @@ namespace VenimusAPIs.Tests.Infrastucture
             return result;
         }
 
+        public Models.Event CreateEvent(Models.Group group, Action<Models.Event> modifier = null)
+        {
+            var newEvent = Create<Models.Event>(evt =>
+            {
+                evt.GroupId = group.Id;
+                evt.GroupSlug = group.Slug;
+                evt.GroupName = group.Name;
+            });
+
+            if (modifier != null)
+            {
+                modifier.Invoke(newEvent);
+            }
+
+            return newEvent;
+        }
+
         public T Create<T>(Action<T> modifier = null)
         {
             var properties = typeof(T).GetProperties();

@@ -61,10 +61,8 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
 
         private async Task GivenAnEventExistsForThatGroupAndIAmGoing()
         {
-            _existingEvent = Data.Create<Models.Event>(evt =>
+            _existingEvent = Data.CreateEvent(_existingGroup, evt =>
             {
-                evt.GroupId = _existingGroup.Id;
-                evt.GroupSlug = _existingGroup.Slug;
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
                 evt.Members = new List<Event.EventAttendees>
                 {

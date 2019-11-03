@@ -89,6 +89,7 @@ namespace VenimusAPIs.Tests.CreateEvent
             Assert.Equal(_event.Location, actualEvent.Location);
             Assert.Equal(_group.Id, actualEvent.GroupId);
             Assert.Equal(_group.Slug, actualEvent.GroupSlug);
+            Assert.Equal(_group.Name, actualEvent.GroupName);
         }
     }
 }
