@@ -9,6 +9,8 @@ namespace VenimusAPIs.Models
 
         public string EmailAddress { get; set; }
 
+        public string ProNoun { get; set; }
+
         public List<string> Identities { get; set; }
     }
 }

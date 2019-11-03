@@ -6,12 +6,13 @@ using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
+using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests.DeclineEvent
+namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 {
-    [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
-    public class DeclineEvent_NotSignedUp_Success : BaseTest
+    [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
+    public class AmendRegistrationForEvent_Success : BaseTest
     {
         private HttpResponseMessage _response;
         private string _token;
@@ -19,8 +20,9 @@ namespace VenimusAPIs.Tests.DeclineEvent
         private string _uniqueID;
         private User _user;
         private Event _existingEvent;
+        private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
-        public DeclineEvent_NotSignedUp_Success(Fixture fixture) : base(fixture)
+        public AmendRegistrationForEvent_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -57,13 +59,24 @@ namespace VenimusAPIs.Tests.DeclineEvent
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenAnEventExistsForThatGroupButIAmNotSignedUp()
+        private async Task GivenAnEventExistsForThatGroupAndIAmGoing()
         {
             _existingEvent = Data.Create<Models.Event>(evt =>
             {
                 evt.GroupId = _existingGroup.Id;
                 evt.GroupSlug = _existingGroup.Slug;
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
+                evt.Members = new List<Event.EventAttendees>
+                {
+                    new Event.EventAttendees
+                    {
+                        SignedUp = true,
+                        UserId = _user.Id,
+                        DietaryRequirements = "milk free",
+                        MessageToOrganiser = "My first time",
+                        NumberOfGuests = 10,
+                    },
+                };
             });
 
             var events = EventsCollection();
@@ -73,8 +86,10 @@ namespace VenimusAPIs.Tests.DeclineEvent
 
         private async Task WhenICallTheApi()
         {
+            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
+            _response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -82,7 +97,7 @@ namespace VenimusAPIs.Tests.DeclineEvent
             Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
         }
 
-        private async Task ThenTheUserIsRecordedAsNotGoingToTheEvent()
+        private async Task ThenTheUsersRegistrationIsUpdated()
         {
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _existingEvent.Id).SingleAsync();
@@ -91,7 +106,10 @@ namespace VenimusAPIs.Tests.DeclineEvent
 
             var member = actualEvent.Members[0];
             Assert.Equal(_user.Id.ToString(), member.UserId.ToString());
-            Assert.False(member.SignedUp);
+            Assert.Equal(_amendedDetails.DietaryRequirements, member.DietaryRequirements);
+            Assert.Equal(_amendedDetails.MessageToOrganiser, member.MessageToOrganiser);
+            Assert.Equal(_amendedDetails.NumberOfGuests, member.NumberOfGuests);
+            Assert.True(member.SignedUp);
         }
     }
 }

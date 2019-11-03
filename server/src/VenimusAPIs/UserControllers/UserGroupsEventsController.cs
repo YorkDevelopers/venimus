@@ -49,7 +49,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] SignUpToEvent signUpDetails)
+        public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
         {
             var eventSlug = signUpDetails.EventSlug;
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
@@ -75,6 +75,49 @@ namespace VenimusAPIs.UserControllers
             await _mongo.UpdateEvent(theEvent);
 
             return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
+        }
+
+        /// <summary>
+        ///     Allows the current user to update their registration for an event
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /api/user/groups/YorkCodeDojo/Events/Nov2019
+        ///     {
+        ///         "numberOfGuest" : 1,
+        ///         "dietaryRequirements" : "Milk free",
+        ///         "messageToOrganiser" : "I might be 10 minutes late"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>NoContent</returns>
+        /// <response code="204">Success</response>
+        /// <response code="401">User is not authorized.</response>
+        /// <response code="404">Group does not exist</response>
+        [Authorize]
+        [HttpPut]
+        [Route("api/User/Groups/{groupSlug}/Events/{eventSlug}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] AmendRegistrationForEvent newDetails)
+        {
+            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+
+            member.DietaryRequirements = newDetails.DietaryRequirements;
+            member.NumberOfGuests = newDetails.NumberOfGuests;
+            member.MessageToOrganiser = newDetails.MessageToOrganiser;
+
+            await _mongo.UpdateEvent(theEvent);
+
+            return NoContent();
         }
 
         /// <summary>

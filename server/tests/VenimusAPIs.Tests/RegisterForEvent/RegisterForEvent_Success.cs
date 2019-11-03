@@ -9,10 +9,10 @@ using VenimusAPIs.Tests.Infrastucture;
 using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.RegisterForEvent
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
-    public class SignUpToEvent_Success : BaseTest
+    public class RegisterForEvent_Success : BaseTest
     {
         private HttpResponseMessage _response;
         private string _token;
@@ -20,9 +20,9 @@ namespace VenimusAPIs.Tests
         private string _uniqueID;
         private User _user;
         private Event _existingEvent;
-        private SignUpToEvent _signUpToEvent;
+        private ViewModels.RegisterForEvent _signUpToEvent;
 
-        public SignUpToEvent_Success(Fixture fixture) : base(fixture)
+        public RegisterForEvent_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -74,7 +74,7 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheApi()
         {
-            _signUpToEvent = Data.Create<ViewModels.SignUpToEvent>();
+            _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
             _signUpToEvent.EventSlug = _existingEvent.Slug;
 
             Fixture.APIClient.SetBearerToken(_token);

@@ -141,6 +141,26 @@ Guests not allowed
 User is not a member of the group
 A user can only sign up once
 
+### PUT api/user/groups/{GroupSlug}/Events/{EventSlug}
+
+Allows the user to amend their registration for an event.  The following details must be provided:
+
+* NumberOfGuests - the number of unregistered guests
+* DietaryRequirements - any dietary requirements
+* MessageToOrganiser - free format message
+
+#### Business Rules (not implemented)
+
+Group does not exist
+Event does not belong to the group
+Event is full
+Event is in the past
+NumberOfGuests is positive
+Guests not allowed
+User is not a member of the group
+The user isn't signed up
+
+
 ### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
 
 Allows the user to record that they are no longer planning on attending an event.
@@ -290,7 +310,6 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### DELETE /api/Groups/{GroupSlug}/Events
 
 Users can :  View Events / Change their Details
-## PUT /api/user/groups/{GroupSlug}/Events/{EventSlug}
 ### GET /api/user/groups/{GroupSlug}/Events/{EventSlug}
 ### GET /api/user/events
 

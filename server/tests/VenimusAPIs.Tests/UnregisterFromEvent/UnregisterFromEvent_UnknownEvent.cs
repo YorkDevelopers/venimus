@@ -2,25 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.DeclineEvent
+namespace VenimusAPIs.Tests.UnregisterFromEvent
 {
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
-    public class DeclineEvent_Success : BaseTest
+    public class UnregisterFromEvent_UnknownEvent : BaseTest
     {
         private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
         private User _user;
-        private Event _existingEvent;
 
-        public DeclineEvent_Success(Fixture fixture) : base(fixture)
+        public UnregisterFromEvent_UnknownEvent(Fixture fixture) : base(fixture)
         {
         }
 
@@ -57,49 +55,15 @@ namespace VenimusAPIs.Tests.DeclineEvent
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenAnEventExistsForThatGroupAndIAmGoing()
-        {
-            _existingEvent = Data.Create<Models.Event>(evt =>
-            {
-                evt.GroupId = _existingGroup.Id;
-                evt.GroupSlug = _existingGroup.Slug;
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    new Event.EventAttendees
-                    {
-                        SignedUp = true,
-                        UserId = _user.Id,
-                    },
-                };
-            });
-
-            var events = EventsCollection();
-
-            await events.InsertOneAsync(_existingEvent);
-        }
-
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
+            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/MADEUP");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
-        }
-
-        private async Task ThenTheUserIsRecordedAsNotGoingToTheEvent()
-        {
-            var events = EventsCollection();
-            var actualEvent = await events.Find(u => u.Id == _existingEvent.Id).SingleAsync();
-
-            Assert.Single(actualEvent.Members);
-
-            var member = actualEvent.Members[0];
-            Assert.Equal(_user.Id.ToString(), member.UserId.ToString());
-            Assert.False(member.SignedUp);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, _response.StatusCode);
         }
     }
 }

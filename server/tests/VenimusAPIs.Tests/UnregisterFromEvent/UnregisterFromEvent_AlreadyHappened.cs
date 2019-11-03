@@ -10,10 +10,10 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.DeclineEvent
+namespace VenimusAPIs.Tests.UnregisterFromEvent
 {
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
-    public class DeclineEvent_AlreadyHappened : BaseTest
+    public class UnregisterFromEvent_AlreadyHappened : BaseTest
     {
         private HttpResponseMessage _response;
         private string _token;
@@ -22,7 +22,7 @@ namespace VenimusAPIs.Tests.DeclineEvent
         private User _user;
         private Event _existingEvent;
 
-        public DeclineEvent_AlreadyHappened(Fixture fixture) : base(fixture)
+        public UnregisterFromEvent_AlreadyHappened(Fixture fixture) : base(fixture)
         {
         }
 
