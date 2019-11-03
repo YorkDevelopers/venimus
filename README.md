@@ -160,7 +160,6 @@ Guests not allowed
 User is not a member of the group
 The user isn't signed up
 
-
 ### DELETE /api/user/groups/{GroupSlug}/Events/{EventSlug}
 
 Allows the user to record that they are no longer planning on attending an event.

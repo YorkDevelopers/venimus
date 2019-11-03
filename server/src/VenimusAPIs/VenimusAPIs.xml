@@ -772,6 +772,26 @@
                 The group's logo.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.NumberOfGuests">
+            <summary>
+                The number of unregistered guests joining the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.DietaryRequirements">
+            <summary>
+                Any Dietary Requirements.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.MessageToOrganiser">
+            <summary>
+                Free format message to the event host.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.Attending">
+            <summary>
+                Has the user said they are attending the event?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupSlug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo

@@ -105,11 +105,7 @@ namespace VenimusAPIs.UserControllers
         {
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
 
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            var member = await GetUsersRegistrationForThisEvent(theEvent);
 
             member.DietaryRequirements = newDetails.DietaryRequirements;
             member.NumberOfGuests = newDetails.NumberOfGuests;
@@ -155,6 +151,17 @@ namespace VenimusAPIs.UserControllers
                 });
             }
 
+            var member = await GetUsersRegistrationForThisEvent(theEvent);
+
+            member.SignedUp = false;
+
+            await _mongo.UpdateEvent(theEvent);
+
+            return NoContent();
+        }
+
+        private async Task<Models.Event.EventAttendees> GetUsersRegistrationForThisEvent(Models.Event theEvent)
+        {
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
@@ -175,11 +182,7 @@ namespace VenimusAPIs.UserControllers
                 theEvent.Members.Add(member);
             }
 
-            member.SignedUp = false;
-
-            await _mongo.UpdateEvent(theEvent);
-
-            return NoContent();
+            return member;
         }
 
         /// <summary>
@@ -199,9 +202,19 @@ namespace VenimusAPIs.UserControllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<GetEvent> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
+        public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            return NotFound();
+            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+
+            var member = await GetUsersRegistrationForThisEvent(theEvent);
+
+            return new ViewMyEventRegistration
+            {
+                DietaryRequirements = member.DietaryRequirements,
+                NumberOfGuests = member.NumberOfGuests,
+                MessageToOrganiser = member.MessageToOrganiser,
+                Attending = member.SignedUp,
+            };
         }
     }
 }
