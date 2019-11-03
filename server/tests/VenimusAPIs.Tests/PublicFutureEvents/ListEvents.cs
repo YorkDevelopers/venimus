@@ -36,7 +36,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private async Task GivenThereAreSomeEvents()
         {
             var pastEvent = Data.Create<Models.Event>();
-            pastEvent.StartTime = DateTime.UtcNow.AddDays(-1);
+            pastEvent.StartTimeUTC = DateTime.UtcNow.AddDays(-1);
 
             _group1 = Data.Create<Models.Group>();
             _group2 = Data.Create<Models.Group>();
@@ -46,17 +46,17 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             await groups.InsertManyAsync(new[] { _group1, _group2, _group3 });
 
             _futureEvent1 = Data.Create<Models.Event>();
-            _futureEvent1.StartTime = DateTime.UtcNow.AddDays(1);
+            _futureEvent1.StartTimeUTC = DateTime.UtcNow.AddDays(1);
             _futureEvent1.GroupId = _group1.Id;
 
             _futureEvent2 = Data.Create<Models.Event>();
-            _futureEvent2.StartTime = DateTime.UtcNow.AddDays(6);
+            _futureEvent2.StartTimeUTC = DateTime.UtcNow.AddDays(6);
             _futureEvent2.GroupId = _group2.Id;
 
             _futureEvents = Enumerable.Range(1, 20)
                                       .Select(day => Data.Create<Models.Event>(e =>
                                       {
-                                          e.StartTime = DateTime.UtcNow.AddDays(day);
+                                          e.StartTimeUTC = DateTime.UtcNow.AddDays(day);
                                           e.GroupId = _group3.Id;
                                       }))
                                       .ToArray();
@@ -97,8 +97,8 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
             Assert.Equal(expectedEvent.Title, actualEvent.EventTitle);
             Assert.Equal(expectedEvent.Description, actualEvent.EventDescription);
-            Assert.Equal(TrimMilliseconds(expectedEvent.StartTime), TrimMilliseconds(actualEvent.EventStartsUTC));
-            Assert.Equal(TrimMilliseconds(expectedEvent.EndTime), TrimMilliseconds(actualEvent.EventFinishesUTC));
+            Assert.Equal(TrimMilliseconds(expectedEvent.StartTimeUTC), TrimMilliseconds(actualEvent.EventStartsUTC));
+            Assert.Equal(TrimMilliseconds(expectedEvent.EndTimeUTC), TrimMilliseconds(actualEvent.EventFinishesUTC));
         }
 
         private DateTime TrimMilliseconds(DateTime dt)

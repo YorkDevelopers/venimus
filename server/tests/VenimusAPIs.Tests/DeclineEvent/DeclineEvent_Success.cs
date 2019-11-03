@@ -63,7 +63,7 @@ namespace VenimusAPIs.Tests.DeclineEvent
             {
                 evt.GroupId = _existingGroup.Id;
                 evt.GroupSlug = _existingGroup.Slug;
-                evt.EndTime = DateTime.UtcNow.AddDays(1);
+                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
                 evt.Members = new List<Event.EventAttendees>
                 {
                     new Event.EventAttendees

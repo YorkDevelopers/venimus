@@ -59,7 +59,7 @@ namespace VenimusAPIs.Tests
         {
             _amendedEvent = Data.Create<ViewModels.PartiallyUpdateEvent>();
             _amendedEvent.Description = null;
-            _amendedEvent.EndTime = null;
+            _amendedEvent.EndTimeUTC = null;
 
             Fixture.APIClient.SetBearerToken(_token);
             _response = await Fixture.APIClient.PatchAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
@@ -78,8 +78,8 @@ namespace VenimusAPIs.Tests
             Assert.Equal(_amendedEvent.Slug ?? _event.Slug, actualGroup.Slug);
             Assert.Equal(_amendedEvent.Title ?? _event.Title, actualGroup.Title);
             Assert.Equal(_amendedEvent.Description ?? _event.Description, actualGroup.Description);
-            Assert.Equal(_amendedEvent.StartTime ?? _event.StartTime, actualGroup.StartTime);
-            Assert.Equal(_amendedEvent.EndTime ?? _event.EndTime, actualGroup.EndTime);
+            Assert.Equal(_amendedEvent.StartTimeUTC ?? _event.StartTimeUTC, actualGroup.StartTimeUTC);
+            Assert.Equal(_amendedEvent.EndTimeUTC ?? _event.EndTimeUTC, actualGroup.EndTimeUTC);
             Assert.Equal(_amendedEvent.Location ?? _event.Location, actualGroup.Location);
         }
     }

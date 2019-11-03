@@ -44,12 +44,12 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Date and time the event starts
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime StartTimeUTC { get; set; }
 
         /// <summary>
         /// Date and time the event ends.  Must be after the StartTime
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime EndTimeUTC { get; set; }
 
         /// <summary>
         /// Attendees of this group

@@ -113,7 +113,7 @@ namespace VenimusAPIs.Services
             foreach (var group in groupsList)
             {
                 var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id) &
-                             Builders<Event>.Filter.Gt(ent => ent.StartTime, currentTime);
+                             Builders<Event>.Filter.Gt(ent => ent.StartTimeUTC, currentTime);
 
                 var sort = Builders<Event>.Sort.Ascending("StartTime");
 
@@ -126,9 +126,9 @@ namespace VenimusAPIs.Services
                 var viewModels = nextEvents.ToEnumerable().Select(e => new ListFutureEvents
                 {
                     EventDescription = e.Description,
-                    EventFinishesUTC = e.EndTime,
+                    EventFinishesUTC = e.EndTimeUTC,
                     EventSlug = e.Id.ToString(),
-                    EventStartsUTC = e.StartTime,
+                    EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
                     GroupName = group.Name,
                 });

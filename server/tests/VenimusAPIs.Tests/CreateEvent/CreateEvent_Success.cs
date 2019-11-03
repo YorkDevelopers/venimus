@@ -84,8 +84,8 @@ namespace VenimusAPIs.Tests.CreateEvent
             Assert.Equal(_event.Slug, actualEvent.Slug);
             Assert.Equal(_event.Title, actualEvent.Title);
             Assert.Equal(_event.Description, actualEvent.Description);
-            Assert.Equal(_event.StartTime, actualEvent.StartTime);
-            Assert.Equal(_event.EndTime, actualEvent.EndTime);
+            Assert.Equal(_event.StartTimeUTC, actualEvent.StartTimeUTC);
+            Assert.Equal(_event.EndTimeUTC, actualEvent.EndTimeUTC);
             Assert.Equal(_event.Location, actualEvent.Location);
             Assert.Equal(_group.Id, actualEvent.GroupId);
             Assert.Equal(_group.Slug, actualEvent.GroupSlug);

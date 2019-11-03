@@ -104,7 +104,7 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
-            if (theEvent.EndTime < DateTime.UtcNow)
+            if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
                 return ValidationProblem(new ValidationProblemDetails
                 {

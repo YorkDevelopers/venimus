@@ -33,7 +33,7 @@ namespace VenimusAPIs.Tests.PublicGroups
         private async Task GivenThereAreSomeGroups()
         {
             var pastEvent = Data.Create<Models.Event>();
-            pastEvent.StartTime = DateTime.UtcNow.AddDays(-1);
+            pastEvent.StartTimeUTC = DateTime.UtcNow.AddDays(-1);
 
             _group1 = Data.Create<Models.Group>();
             _group1.IsActive = false;

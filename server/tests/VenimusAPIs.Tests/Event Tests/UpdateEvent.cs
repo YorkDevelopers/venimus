@@ -74,8 +74,8 @@ namespace VenimusAPIs.Tests
             Assert.Equal(_amendedEvent.Slug, actualGroup.Slug);
             Assert.Equal(_amendedEvent.Title, actualGroup.Title);
             Assert.Equal(_amendedEvent.Description, actualGroup.Description);
-            Assert.Equal(_amendedEvent.StartTime, actualGroup.StartTime);
-            Assert.Equal(_amendedEvent.EndTime, actualGroup.EndTime);
+            Assert.Equal(_amendedEvent.StartTimeUTC, actualGroup.StartTimeUTC);
+            Assert.Equal(_amendedEvent.EndTimeUTC, actualGroup.EndTimeUTC);
             Assert.Equal(_amendedEvent.Location, actualGroup.Location);
         }
     }

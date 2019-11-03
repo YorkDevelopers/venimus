@@ -145,8 +145,8 @@ namespace VenimusAPIs.Controllers
             model.Description = amendedEvent.Description ?? model.Description;
             model.Title = amendedEvent.Title ?? model.Title;
             model.Location = amendedEvent.Location ?? model.Location;
-            model.StartTime = amendedEvent.StartTime ?? model.StartTime;
-            model.EndTime = amendedEvent.EndTime ?? model.EndTime;
+            model.StartTimeUTC = amendedEvent.StartTimeUTC ?? model.StartTimeUTC;
+            model.EndTimeUTC = amendedEvent.EndTimeUTC ?? model.EndTimeUTC;
 
             await _mongo.UpdateEvent(model);
             return Ok();

@@ -197,12 +197,12 @@
             The location of the event, for example York Minster,  Room 201 York St John University
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Event.StartTime">
+        <member name="P:VenimusAPIs.Models.Event.StartTimeUTC">
             <summary>
             Date and time the event starts
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Event.EndTime">
+        <member name="P:VenimusAPIs.Models.Event.EndTimeUTC">
             <summary>
             Date and time the event ends.  Must be after the StartTime
             </summary>
@@ -437,12 +437,12 @@
             The location of the event, for example York Minster,  Room 201 York St John University
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateEvent.StartTime">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.StartTimeUTC">
             <summary>
             Date and time the event starts
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.CreateEvent.EndTime">
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.EndTimeUTC">
             <summary>
             Date and time the event ends.  Must be after the StartTime
             </summary>
@@ -647,12 +647,12 @@
             The location of the event, for example York Minster,  Room 201 York St John University
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.StartTime">
+        <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.StartTimeUTC">
             <summary>
             Date and time the event starts
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.EndTime">
+        <member name="P:VenimusAPIs.ViewModels.PartiallyUpdateEvent.EndTimeUTC">
             <summary>
             Date and time the event ends.  Must be after the StartTime
             </summary>
@@ -677,12 +677,12 @@
             The location of the event, for example York Minster,  Room 201 York St John University
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.StartTime">
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.StartTimeUTC">
             <summary>
             Date and time the event starts
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.EndTime">
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.EndTimeUTC">
             <summary>
             Date and time the event ends.  Must be after the StartTime
             </summary>
