@@ -58,10 +58,9 @@ namespace VenimusAPIs.Tests.CreateGroup
 
         private void ThenTheLocationOfTheNewGroupIsReturned()
         {
-            var location = Response.Headers.Location;
-            var actualGroupName = location.Segments.Last();
+            var location = Response.Headers.Location.ToString();
 
-            Assert.Equal(_group.Name, actualGroupName);
+            Assert.Equal($"http://localhost/api/Groups/{_group.Slug}", location);
         }
     }
 }

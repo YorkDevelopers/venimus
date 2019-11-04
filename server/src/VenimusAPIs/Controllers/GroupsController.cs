@@ -57,7 +57,7 @@ namespace VenimusAPIs.Controllers
 
             await _mongo.StoreGroup(model);
 
-            return CreatedAtRoute("Groups", new { groupName = model.Name }, group);
+            return CreatedAtRoute("Groups", new { groupSlug = model.Slug }, group);
         }
 
         [Authorize(Roles = "SystemAdministrator")]
