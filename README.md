@@ -339,3 +339,11 @@ Users can :  Change their Details
 ### PUT /api/User - update their details
 
 Rename GroupName or Slug needed to update events
+
+Logic around banned users
+
+Logging (driven by events?)
+
+Automatically call /user/connected from Auth0
+
+Include user's profile picture.

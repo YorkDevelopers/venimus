@@ -81,6 +81,10 @@ namespace VenimusAPIs.UserControllers
             {
                 Identities = new List<string> { uniqueID },
                 EmailAddress = userInfo.Email,
+                Bio = string.Empty,
+                DisplayName = string.Empty,
+                Fullname = userInfo.Name,
+                Pronoun = string.Empty,
             };
 
             await _mongo.InsertUser(newUser);

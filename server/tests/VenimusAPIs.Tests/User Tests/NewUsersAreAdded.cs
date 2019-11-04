@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
+using VenimusAPIs.Services.Auth0Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -13,7 +14,6 @@ namespace VenimusAPIs.Tests
     {
         private string _uniqueID;
         private string _token;
-        private string _expectedEmailAddress;
 
         private HttpResponseMessage _response;
 
@@ -35,8 +35,7 @@ namespace VenimusAPIs.Tests
 
         private void GivenIExistInAuth0()
         {
-            _expectedEmailAddress = Guid.NewGuid().ToString();
-            Fixture.MockAuth0.EmailAddress = _expectedEmailAddress;
+            Fixture.MockAuth0.UserProfile = Data.Create<UserProfile>();
         }
 
         private async Task WhenICallTheUserLoggedInAPI()
@@ -54,7 +53,13 @@ namespace VenimusAPIs.Tests
             var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, _uniqueID);
             var actualUser = await users.Find(filter).SingleAsync();
 
-            Assert.Equal(_expectedEmailAddress, actualUser.EmailAddress);
+            Assert.Equal(Fixture.MockAuth0.UserProfile.Email, actualUser.EmailAddress);
+            Assert.Equal(string.Empty, actualUser.Pronoun);
+            Assert.Equal(Fixture.MockAuth0.UserProfile.Name, actualUser.Fullname);
+            Assert.Equal(string.Empty, actualUser.DisplayName);
+            Assert.Equal(string.Empty, actualUser.Bio);
+
+            // Assert.Equal(Fixture.MockAuth0.UserProfile.Picture, actualUser.ProfilePicture);
         }
     }
 }

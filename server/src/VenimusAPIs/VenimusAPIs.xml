@@ -297,6 +297,48 @@
                 The name of this groups slack channel
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.User.Id">
+            <summary>
+                The internal ID for the user.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.ProfilePicture">
+            <summary>
+                The user's profile picture
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.Identities">
+            <summary>
+                The user's social media identities
+            </summary>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
@@ -311,6 +353,19 @@
              </remarks>
              <returns>The route to the user</returns>
              <response code="201">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Get">
+             <summary>
+                 Allows the current user to retrieve their personal profile
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user
+            
+             </remarks>
+             <returns>ViewMyDetails view model</returns>
+             <response code="200">Success</response>
         </member>
         <member name="M:VenimusAPIs.UserControllers.UserEventsController.Get">
              <summary>
@@ -823,6 +878,38 @@
         <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventFinishesUTC">
             <summary>
                 When does the event finish, in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.ProfilePictureAsBase64">
+            <summary>
+                The user's profile picture in base64
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.NumberOfGuests">

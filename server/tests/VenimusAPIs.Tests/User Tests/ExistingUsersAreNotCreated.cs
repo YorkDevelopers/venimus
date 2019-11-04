@@ -37,7 +37,7 @@ namespace VenimusAPIs.Tests
         private void GivenIExistInAuth0()
         {
             _expectedEmailAddress = Guid.NewGuid().ToString();
-            Fixture.MockAuth0.EmailAddress = _expectedEmailAddress;
+            Fixture.MockAuth0.UserProfile.Email = _expectedEmailAddress;
         }
 
         private async Task GivenIAlreadyExistInTheDatabase()

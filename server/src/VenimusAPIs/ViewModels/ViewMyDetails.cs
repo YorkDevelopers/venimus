@@ -1,15 +1,7 @@
-﻿using System.Collections.Generic;
-using MongoDB.Bson;
-
-namespace VenimusAPIs.Models
+﻿namespace VenimusAPIs.ViewModels
 {
-    public class User
+    public class ViewMyDetails
     {
-        /// <summary>
-        ///     The internal ID for the user.
-        /// </summary>
-        public ObjectId Id { get; set; }
-
         /// <summary>
         ///     The email address which also links all the social media accounts together.
         /// </summary>
@@ -38,13 +30,8 @@ namespace VenimusAPIs.Models
         public string Bio { get; set; }
 
         /// <summary>
-        ///     The user's profile picture
+        ///     The user's profile picture in base64
         /// </summary>
-        public byte[] ProfilePicture { get; set; }
-
-        /// <summary>
-        ///     The user's social media identities
-        /// </summary>
-        public List<string> Identities { get; set; }
+        public string ProfilePictureAsBase64 { get; set; }
     }
 }
