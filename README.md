@@ -348,17 +348,29 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * The user must be a member of the sysadmin administrators role.  (NEEDS TEST)
 
+### DELETE /api/Groups/{groupslug}
+
+Allows a group to be deleted if it has no events.
+
+#### Business Rules
+
+* The user must have the System Administrator role
+* The group can not have any events
+* If the group is successfully deleted then 204 is returned.
+* If the group does not exist then 204 is returned.
+  
 ---
 
 TODO!
 
-System adminstrators can :  Delete Groups / Ban Users
-### DELETE /api/Groups/{groupslug}
+System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
 Group administrators can : List (including people) / Create / Edit / Delete Events / View Event Members
 ### GET /api/Groups/{GroupSlug}/Members
+### GET /api/Groups/{GroupSlug}/Events/{EventSlug}/Members
+
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
@@ -373,3 +385,5 @@ Automatically call /user/connected from Auth0?   Or should /user/connected indic
 Include user's profile picture.
 
 Allow an email address to be changed.  What should happen?  Confirm via email?
+
+Localise error messages

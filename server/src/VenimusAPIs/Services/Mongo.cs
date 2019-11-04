@@ -166,6 +166,16 @@ namespace VenimusAPIs.Services
             return result;
         }
 
+        internal async Task<bool> DoEventsExistForGroup(string groupSlug)
+        {
+            var events = EventsCollection();
+
+            var filter = Builders<Event>.Filter.Eq(ent => ent.GroupSlug, groupSlug);
+            var eventsExist = await events.Find(filter).AnyAsync();
+
+            return eventsExist;
+        }
+
         internal async Task InsertUser(User newUser)
         {
             var users = UsersCollection();
@@ -228,6 +238,13 @@ namespace VenimusAPIs.Services
             var groups = GroupsCollection();
 
             await groups.ReplaceOneAsync(grp => grp.Id == group.Id, group);
+        }
+
+        internal async Task DeleteGroup(Group group)
+        {
+            var groups = GroupsCollection();
+
+            await groups.DeleteOneAsync(grp => grp.Id == group.Id);
         }
     }
 }

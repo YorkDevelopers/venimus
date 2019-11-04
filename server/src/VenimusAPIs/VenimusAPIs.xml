@@ -136,6 +136,20 @@
              <returns>An array of ListGroup view models</returns>
              <response code="200">Success</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Delete(System.String)">
+             <summary>
+                 Allows you to delete an existing group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/groups/YorkCodeDojo
+            
+             </remarks>
+             <returns>Nothing</returns>
+             <response code="204">NoContent</response>
+             <response code="401">User is not authorized.</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.ActiveGroupsController.Get">
              <summary>
                  Allows you request the list of active groups

@@ -62,11 +62,11 @@ namespace VenimusAPIs.Controllers
 
         [Authorize(Roles = "SystemAdministrator")]
         [HttpPut]
-        [Route("{groupName}")]
+        [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Put([FromRoute]string groupName, [FromBody] UpdateGroup newDetails)
+        public async Task<IActionResult> Put([FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
-            var group = await _mongo.RetrieveGroup(groupName);
+            var group = await _mongo.RetrieveGroup(groupSlug);
 
             if (group == null)
             {
@@ -93,13 +93,13 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Group does not exist.</response>
         [Authorize]
-        [Route("{groupName}", Name = "Groups")]
+        [Route("{groupSlug}", Name = "Groups")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetGroup>> Get(string groupName)
+        public async Task<ActionResult<GetGroup>> Get(string groupSlug)
         {
-            var group = await _mongo.RetrieveGroup(groupName);
+            var group = await _mongo.RetrieveGroup(groupSlug);
 
             if (group == null)
             {
@@ -128,10 +128,45 @@ namespace VenimusAPIs.Controllers
         public async Task<ActionResult<ListGroups[]>> Get()
         {
             var groups = await _mongo.RetrieveAllGroups();
-           
+
             var viewModels = _mapper.Map<ListGroups[]>(groups);
 
             return viewModels;
+        }
+
+        /// <summary>
+        ///     Allows you to delete an existing group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/groups/YorkCodeDojo
+        ///
+        /// </remarks>
+        /// <returns>Nothing</returns>
+        /// <response code="204">NoContent</response>
+        /// <response code="401">User is not authorized.</response>
+        [Authorize(Roles = "SystemAdministrator")]
+        [HttpDelete]
+        [Route("{groupSlug}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Delete([FromRoute] string groupSlug)
+        {
+            var group = await _mongo.RetrieveGroup(groupSlug);
+
+            if (group != null)
+            {
+                var eventsExistForGroup = await _mongo.DoEventsExistForGroup(groupSlug);
+                if (eventsExistForGroup)
+                {
+                    var details = new ValidationProblemDetails { Detail = "The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." };
+                    return ValidationProblem(details);
+                }
+
+                await _mongo.DeleteGroup(group);
+            }
+
+            return NoContent();
         }
     }
 }
