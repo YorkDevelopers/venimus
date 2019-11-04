@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -12,7 +10,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update some of the details of an existing event", SoThat = "People are kept informed")]
     public class PartiallyUpdateEvent : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Event _event;
         private Group _group;
@@ -58,12 +55,12 @@ namespace VenimusAPIs.Tests
             _amendedEvent.EndTimeUTC = null;
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PatchAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
+            Response = await Fixture.APIClient.PatchAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenTheEventIsUpdatedInTheDatabase()

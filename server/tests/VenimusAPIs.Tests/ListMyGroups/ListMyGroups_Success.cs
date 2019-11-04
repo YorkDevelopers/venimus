@@ -16,7 +16,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to see what groups I'm a member of", SoThat = "I can belong to the communities")]
     public class ListMyGroups_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _inGroup1;
         private Group _inGroup2;
@@ -88,17 +87,17 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/User/Groups");
+            Response = await Fixture.APIClient.GetAsync($"api/User/Groups");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenTheListOfActiveGroupsTheUserBelongsToAreReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var groups = JsonSerializer.Deserialize<ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, groups.Length);

@@ -11,7 +11,6 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_NoPermission : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateEvent _event;
         private Group _group;
@@ -45,12 +44,12 @@ namespace VenimusAPIs.Tests.CreateEvent
             _event = Data.Create<ViewModels.CreateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
+            Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
         private void ThenAForbiddenResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Forbidden, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Forbidden, Response.StatusCode);
         }
 
         private async Task AndTheEventIsNotAddedToTheDatabase()

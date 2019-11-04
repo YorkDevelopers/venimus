@@ -16,7 +16,6 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
     [Story(AsA = "User", IWant = "To be able to see the details of a single group I'm a member of", SoThat = "I can belong to the community")]
     public class ViewSingleGroupMembership_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _theGroup;
         private string _uniqueID;
@@ -68,17 +67,17 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/User/Groups/{_theGroup.Slug}");
+            Response = await Fixture.APIClient.GetAsync($"api/User/Groups/{_theGroup.Slug}");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenTheListOfActiveGroupsTheUserBelongsToAreReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var actualMembership = JsonSerializer.Deserialize<ViewMyGroupMembership>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(_theGroup.Slug, actualMembership.GroupSlug);

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace VenimusAPIs.Tests.Infrastucture
@@ -8,6 +11,8 @@ namespace VenimusAPIs.Tests.Infrastucture
     public abstract class BaseTest : IClassFixture<Fixture>
     {
         protected Fixture Fixture { get; }
+
+        protected HttpResponseMessage Response { get; set; }
 
         protected Data Data { get; }
 
@@ -57,6 +62,26 @@ namespace VenimusAPIs.Tests.Infrastucture
         protected void AssertDateTime(DateTime dateTime1, DateTime dateTime2)
         {
             Assert.Equal(TrimMilliseconds(dateTime1), TrimMilliseconds(dateTime2));
+        }
+
+        protected async Task AssertBadRequest(string fieldName, string expectedErrorMessage)
+        {
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, Response.StatusCode);
+
+            var json = await Response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { IgnoreReadOnlyProperties = true };
+            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, options);
+            Assert.Equal(expectedErrorMessage, validationProblemDetails.Errors[fieldName].GetValue(0));
+        }
+
+        protected async Task AssertBadRequestDetail(string expectedErrorMessage)
+        {
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, Response.StatusCode);
+
+            var json = await Response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { IgnoreReadOnlyProperties = true };
+            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, options);
+            Assert.Equal(expectedErrorMessage, validationProblemDetails.Detail);
         }
     }
 }

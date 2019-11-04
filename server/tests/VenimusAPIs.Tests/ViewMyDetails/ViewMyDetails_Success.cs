@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests.ViewMyDetails
@@ -14,7 +13,6 @@ namespace VenimusAPIs.Tests.ViewMyDetails
     [Story(AsA = "User", IWant = "To be able to view my profile details", SoThat = "I can check they are upto date")]
     public class ViewMyDetails_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private string _uniqueID;
         private User _user;
@@ -49,17 +47,17 @@ namespace VenimusAPIs.Tests.ViewMyDetails
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/user");
+            Response = await Fixture.APIClient.GetAsync($"api/user");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenMyDetailsAreReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var actualDetails = JsonSerializer.Deserialize<ViewModels.ViewMyDetails>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(_user.Bio, actualDetails.Bio);

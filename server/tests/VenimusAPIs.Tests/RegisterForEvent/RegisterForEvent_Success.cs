@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests.RegisterForEvent
@@ -14,7 +12,6 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class RegisterForEvent_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -74,17 +71,17 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _signUpToEvent.EventSlug = _existingEvent.Slug;
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
+            Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
         }
 
         private void ThenThePathToTheEventRegistrationIsReturned()
         {
-            Assert.Equal($"http://localhost/api/user/groups/{_existingGroup.Slug}/events/{_existingEvent.Slug}", _response.Headers.Location.ToString());
+            Assert.Equal($"http://localhost/api/user/groups/{_existingGroup.Slug}/events/{_existingEvent.Slug}", Response.Headers.Location.ToString());
         }
 
         private async Task ThenTheUserIsNowAMemberOfTheEvent()

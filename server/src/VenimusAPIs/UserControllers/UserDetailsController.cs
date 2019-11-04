@@ -48,5 +48,58 @@ namespace VenimusAPIs.UserControllers
                 ProfilePictureAsBase64 = Convert.ToBase64String(user.ProfilePicture),
             };
         }
+
+        /// <summary>
+        ///     Allows the current user to update their personal profile
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /api/user
+        ///     {
+        ///         "pronoun" : "Him"
+        ///         "Fullname" : "David Betteridge",
+        ///         "DisplayName" : "David B",
+        ///         "Bio" : "I am me",
+        ///         "profilePictureAsBase64" : "123123123",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>NoContent</returns>
+        /// <response code="204">Success</response>
+        [Authorize]
+        [Route("api/user")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult<ViewMyDetails>> Put([FromBody] UpdateMyDetails updateMyDetails)
+        {
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var user = await _mongo.GetUserByID(uniqueID);
+
+            if (!user.DisplayName.Equals(updateMyDetails.DisplayName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var duplicateUser = await _mongo.GetUserByDisplayName(updateMyDetails.DisplayName);
+                if (duplicateUser != null)
+                {
+                    ModelState.AddModelError(nameof(updateMyDetails.DisplayName), "A user with this display name already exists.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            user.Bio = updateMyDetails.Bio;
+            user.Pronoun = updateMyDetails.Pronoun;
+            user.DisplayName = updateMyDetails.DisplayName;
+            user.Fullname = updateMyDetails.Fullname;
+            user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
+
+            await _mongo.UpdateUser(user);
+
+            return NoContent();
+        }
     }
 }

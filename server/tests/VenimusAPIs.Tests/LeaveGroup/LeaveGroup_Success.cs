@@ -13,7 +13,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to leave groups that I'm a member of", SoThat = "I can leave the community")]
     public class LeaveGroup_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -59,12 +58,12 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/User/Groups/{_existingGroup.Slug}");
+            Response = await Fixture.APIClient.DeleteAsync($"api/User/Groups/{_existingGroup.Slug}");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
         }
 
         private async Task ThenTheUserIsNoLongerAMemberOfTheGroup()

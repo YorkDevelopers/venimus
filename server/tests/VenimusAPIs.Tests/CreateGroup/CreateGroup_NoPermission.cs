@@ -10,7 +10,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_NoPermission : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateGroup _group;
 
@@ -34,12 +33,12 @@ namespace VenimusAPIs.Tests.CreateGroup
             _group = Data.Create<ViewModels.CreateGroup>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
+            Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
         private void ThenAForbiddenResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Forbidden, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Forbidden, Response.StatusCode);
         }
 
         private async Task ThenTheGroupIsNotAddedToTheDatabase()

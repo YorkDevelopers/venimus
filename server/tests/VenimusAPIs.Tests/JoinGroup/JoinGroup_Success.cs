@@ -13,7 +13,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to join existing groups", SoThat = "I can join the community")]
     public class JoinGroup_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.JoinGroup _group;
         private Group _existingGroup;
@@ -62,17 +61,17 @@ namespace VenimusAPIs.Tests
             _group.GroupSlug = _existingGroup.Slug;
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/User/Groups", _group);
+            Response = await Fixture.APIClient.PostAsJsonAsync($"api/User/Groups", _group);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
         }
 
         private void ThenThePathToGroupIsReturned()
         {
-            Assert.Equal($"http://localhost/api/User/Groups/{_existingGroup.Slug}", _response.Headers.Location.ToString());
+            Assert.Equal($"http://localhost/api/User/Groups/{_existingGroup.Slug}", Response.Headers.Location.ToString());
         }
 
         private async Task ThenTheUserIsNowAMemberOfTheGroup()

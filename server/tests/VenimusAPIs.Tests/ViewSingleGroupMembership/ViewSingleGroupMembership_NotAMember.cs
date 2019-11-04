@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -14,7 +13,6 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
     [Story(AsA = "User", IWant = "To be able to see the details of a single group I'm a member of", SoThat = "I can belong to the community")]
     public class ViewSingleGroupMembership_NotAMember : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _theGroup;
         private string _uniqueID;
@@ -66,12 +64,12 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/User/Groups/{_theGroup.Slug}");
+            Response = await Fixture.APIClient.GetAsync($"api/User/Groups/{_theGroup.Slug}");
         }
 
         private void ThenA404ResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, Response.StatusCode);
         }
     }
 }

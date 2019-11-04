@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -17,8 +16,6 @@ namespace VenimusAPIs.Tests
         private string _originalUniqueID;
         private string _token;
         private string _expectedEmailAddress;
-
-        private HttpResponseMessage _response;
 
         public UsersCanBeMerged(Fixture fixture) : base(fixture)
         {
@@ -58,9 +55,9 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheUserLoggedInAPI()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsync("api/Users/Connected");
+            Response = await Fixture.APIClient.PostAsync("api/Users/Connected");
 
-            _response.EnsureSuccessStatusCode();
+            Response.EnsureSuccessStatusCode();
         }
 
         private async Task ThenIAmMergedInTheDatabase()

@@ -16,8 +16,6 @@ namespace VenimusAPIs.Tests
         private string _token;
         private string _expectedEmailAddress;
 
-        private HttpResponseMessage _response;
-
         public ExistingUsersAreNotCreated(Fixture fixture) : base(fixture)
         {
         }
@@ -54,9 +52,9 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheUserLoggedInAPI()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsync("api/Users/Connected");
+            Response = await Fixture.APIClient.PostAsync("api/Users/Connected");
 
-            _response.EnsureSuccessStatusCode();
+            Response.EnsureSuccessStatusCode();
         }
 
         private async Task ThenIAmNotAddedToTheDatabase()

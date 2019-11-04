@@ -14,7 +14,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to retrieve the list of all groups", SoThat = "I can join a community")]
     public class ListGroups : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _expectedGroup1;
         private Group _expectedGroup2;
@@ -52,14 +51,14 @@ namespace VenimusAPIs.Tests
         private async Task WhenICallTheGetGroupApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/Groups");
+            Response = await Fixture.APIClient.GetAsync($"api/Groups");
 
-            _response.EnsureSuccessStatusCode();
+            Response.EnsureSuccessStatusCode();
         }
 
         private async Task ThenTheListOfGroupsIsReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var actualGroups = JsonSerializer.Deserialize<ViewModels.ListGroups[]>(json, options);
 

@@ -18,8 +18,6 @@ namespace VenimusAPIs.Tests
          * No permission
          * Group name not unique
          */
-
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
@@ -55,12 +53,12 @@ namespace VenimusAPIs.Tests
             _amendedGroup.LogoInBase64 = Convert.ToBase64String(logo);
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
         }
 
         private async Task ThenTheGroupDetailsAreUpdated()

@@ -15,7 +15,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_DuplicateSlug : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateGroup _group;
         private Group _existingGroup;
@@ -53,16 +52,12 @@ namespace VenimusAPIs.Tests.CreateGroup
             _group.Slug = _existingGroup.Slug;
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
+            Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
-        private async Task ThenABadRequestResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, _response.StatusCode);
-
-            var json = await _response.Content.ReadAsStringAsync();
-            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, new JsonSerializerOptions { IgnoreReadOnlyProperties = true });
-            Assert.Equal("A group using this slug already exists", validationProblemDetails.Errors["Slug"].GetValue(0));
+            return AssertBadRequest("Slug", "A group using this slug already exists");
         }
 
         private async Task ThenTheDuplicateGroupIsNotAddedToTheDatabase()

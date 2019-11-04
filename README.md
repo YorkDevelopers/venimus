@@ -121,6 +121,35 @@ Schedules a new event for a group.  The following needs to be provided.
 
 The following APIs can be called by normal users once they have authenticated.
 
+### GET /api/User
+
+Allows a user to view their profile details.  The following properties are returned:
+
+* EmailAddress - The email address which also links all the social media accounts together.
+* Pronoun - The users preferred personal pronon.  e.g. Him
+* Fullname - The user's fullname.  e.g David Betteridge
+* DisplayName - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
+* Bio -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
+* ProfilePictureAsBase64 - The user's profile picture in base64
+
+#### Note to implementers
+
+It is recommended that the user gets a chance to review their profile as part of the sign-up process.
+
+### PUT /api/User
+
+Allows a user to update their profile.  The following properties must be supplied
+
+* Pronoun - The users preferred personal pronon.  e.g. Him
+* Fullname - The user's fullname.  e.g David Betteridge
+* DisplayName - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
+* Bio -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
+* ProfilePictureAsBase64 - The user's profile picture in base64
+
+#### Business Rules
+
+* The `DisplayName` must be unique.
+
 ### GET /api/user/events
 
 Allows the user to view all the future events they have signed up to.  The following properties are returned:
@@ -328,15 +357,10 @@ System adminstrators can :  Delete Groups / Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
-Group administrators can : List (including people) / Create / Edit / Delete Events
+Group administrators can : List (including people) / Create / Edit / Delete Events / View Event Members
 ### GET /api/Groups/{GroupSlug}/Members
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
-
-Users can :  Change their Details
-
-### GET /api/User - view their details
-### PUT /api/User - update their details
 
 Rename GroupName or Slug needed to update events
 
@@ -344,6 +368,8 @@ Logic around banned users
 
 Logging (driven by events?)
 
-Automatically call /user/connected from Auth0
+Automatically call /user/connected from Auth0?   Or should /user/connected indicate if this is a new user?
 
 Include user's profile picture.
+
+Allow an email address to be changed.  What should happen?  Confirm via email?

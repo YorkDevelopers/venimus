@@ -1,4 +1,3 @@
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -11,7 +10,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Event _event;
         private Group _group;
@@ -54,19 +52,19 @@ namespace VenimusAPIs.Tests
             _amendedEvent = Data.Create<ViewModels.UpdateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenTheEventIsUpdatedInTheDatabase()
         {
             var events = EventsCollection();
             var actualGroup = await events.Find(u => u.Id == _event.Id).SingleOrDefaultAsync();
-            
+
             Assert.Equal(_amendedEvent.Slug, actualGroup.Slug);
             Assert.Equal(_amendedEvent.Title, actualGroup.Title);
             Assert.Equal(_amendedEvent.Description, actualGroup.Description);

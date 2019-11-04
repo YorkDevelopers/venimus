@@ -1,20 +1,18 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
-using Microsoft.AspNetCore.Mvc;
 
 namespace VenimusAPIs.Tests.CreateGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_InvalidSlug : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateGroup _group;
 
@@ -42,16 +40,12 @@ namespace VenimusAPIs.Tests.CreateGroup
             _group.Slug = "Has a space";
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
+            Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
-        private async Task ThenABadRequestResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, _response.StatusCode);
-
-            var json = await _response.Content.ReadAsStringAsync();
-            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, new JsonSerializerOptions { IgnoreReadOnlyProperties = true });
-            Assert.Equal("Slugs cannot contain spaces", validationProblemDetails.Errors["Slug"].GetValue(0));
+            return AssertBadRequest("Slug", "Slugs cannot contain spaces");
         }
 
         private async Task ThenTheNewGroupIsNotAddedToTheDatabase()

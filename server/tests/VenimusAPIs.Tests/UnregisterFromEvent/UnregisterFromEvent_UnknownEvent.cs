@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -12,7 +11,6 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
     public class UnregisterFromEvent_UnknownEvent : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -58,12 +56,12 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/MADEUP");
+            Response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/MADEUP");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, Response.StatusCode);
         }
     }
 }

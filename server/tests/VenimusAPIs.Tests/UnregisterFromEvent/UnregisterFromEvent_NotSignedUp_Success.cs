@@ -13,7 +13,6 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
     public class UnregisterFromEvent_NotSignedUp_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -72,12 +71,12 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
+            Response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
         }
 
         private async Task ThenTheUserIsRecordedAsNotGoingToTheEvent()

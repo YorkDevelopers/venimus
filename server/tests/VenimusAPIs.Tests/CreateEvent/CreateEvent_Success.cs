@@ -13,7 +13,6 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _uniqueID;
         private string _token;
         private ViewModels.CreateEvent _event;
@@ -62,17 +61,17 @@ namespace VenimusAPIs.Tests.CreateEvent
             _event = Data.Create<ViewModels.CreateEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
+            Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
         }
 
         private void ThenTheLocationOfTheNewEventIsReturned()
         {
-            var location = _response.Headers.Location.ToString();
+            var location = Response.Headers.Location.ToString();
             Assert.Equal($"http://localhost/api/groups/{_group.Slug}/events/{_event.Slug}", location);
         }
 

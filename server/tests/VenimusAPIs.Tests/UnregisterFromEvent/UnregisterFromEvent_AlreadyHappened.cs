@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -15,7 +12,6 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
     public class UnregisterFromEvent_AlreadyHappened : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -74,16 +70,12 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
+            Response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 
-        private async Task ThenABadRequestResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, _response.StatusCode);
-
-            var json = await _response.Content.ReadAsStringAsync();
-            var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, new JsonSerializerOptions { IgnoreReadOnlyProperties = true });
-            Assert.Equal("This event has already taken place", validationProblemDetails.Detail);
+            return AssertBadRequestDetail("This event has already taken place");
         }
 
         private async Task ThenTheUserIsNotRecordedAsNotGoingToTheEvent()

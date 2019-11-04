@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Net.Http;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
-using VenimusAPIs.Tests.Infrastucture;
-using Xunit;
-using System.Text.Json;
-using VenimusAPIs.ViewModels;
-using System.Linq;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Infrastucture;
+using VenimusAPIs.ViewModels;
+using Xunit;
 
 namespace VenimusAPIs.Tests.PublicFutureEvents
 {
     [Story(AsA = "An unauthenticated user", IWant = "To be able to view current events", SoThat = "I learn about local groups and events")]
     public class ListEvents : BaseTest
     {
-        private HttpResponseMessage _response;
         private Group _group1;
         private Group _group2;
         private Group _group3;
@@ -66,14 +64,14 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private async Task WhenICallTheAPI()
         {
             Fixture.APIClient.ClearBearerToken();
-            _response = await Fixture.APIClient.GetAsync("public/FutureEvents");
+            Response = await Fixture.APIClient.GetAsync("public/FutureEvents");
 
-            _response.EnsureSuccessStatusCode();
+            Response.EnsureSuccessStatusCode();
         }
 
         private async Task ThenTheNext10FutureEventsForEachGroupAreReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var events = JsonSerializer.Deserialize<ListFutureEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(12, events.Length);

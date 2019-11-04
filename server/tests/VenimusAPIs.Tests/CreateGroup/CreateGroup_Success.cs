@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -13,7 +12,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private ViewModels.CreateGroup _group;
 
@@ -39,12 +37,12 @@ namespace VenimusAPIs.Tests.CreateGroup
             _group.LogoInBase64 = Convert.ToBase64String(logo);
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
+            Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
         }
 
         private async Task ThenANewGroupIsAddedToTheDatabase()
@@ -60,7 +58,7 @@ namespace VenimusAPIs.Tests.CreateGroup
 
         private void ThenTheLocationOfTheNewGroupIsReturned()
         {
-            var location = _response.Headers.Location;
+            var location = Response.Headers.Location;
             var actualGroupName = location.Segments.Last();
 
             Assert.Equal(_group.Name, actualGroupName);

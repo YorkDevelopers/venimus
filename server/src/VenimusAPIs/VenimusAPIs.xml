@@ -367,6 +367,26 @@
              <returns>ViewMyDetails view model</returns>
              <response code="200">Success</response>
         </member>
+        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Put(VenimusAPIs.ViewModels.UpdateMyDetails)">
+             <summary>
+                 Allows the current user to update their personal profile
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 PUT /api/user
+                 {
+                     "pronoun" : "Him"
+                     "Fullname" : "David Betteridge",
+                     "DisplayName" : "David B",
+                     "Bio" : "I am me",
+                     "profilePictureAsBase64" : "123123123",
+                 }
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserEventsController.Get">
              <summary>
                  Allows the current user to retrieve all the future events they have signed up to.
@@ -843,6 +863,33 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.LogoInBase64">
             <summary>
                 The group's logo.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.ProfilePictureAsBase64">
+            <summary>
+                The user's profile picture in base64
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupSlug">

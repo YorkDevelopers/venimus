@@ -182,6 +182,15 @@ namespace VenimusAPIs.Services
             return existingUser;
         }
 
+        internal async Task<Models.User> GetUserByDisplayName(string displayName)
+        {
+            var users = UsersCollection();
+
+            var existingUser = await users.Find(u => u.DisplayName == displayName).SingleOrDefaultAsync();
+
+            return existingUser;
+        }
+
         internal async Task<Models.User> GetUserByID(string uniqueId)
         {
             var users = UsersCollection();

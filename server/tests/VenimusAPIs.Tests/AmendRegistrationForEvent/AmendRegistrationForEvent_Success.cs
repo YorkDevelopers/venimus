@@ -13,7 +13,6 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class AmendRegistrationForEvent_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
@@ -86,12 +85,12 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
         }
 
         private async Task ThenTheUsersRegistrationIsUpdated()

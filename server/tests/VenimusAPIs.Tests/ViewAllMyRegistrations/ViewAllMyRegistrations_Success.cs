@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
@@ -15,7 +14,6 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class ViewAllMyRegistrations_Success : BaseTest
     {
-        private HttpResponseMessage _response;
         private string _token;
         private Group _group1;
         private Group _group2;
@@ -143,17 +141,17 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
         private async Task WhenICallTheApi()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            _response = await Fixture.APIClient.GetAsync($"api/user/Events");
+            Response = await Fixture.APIClient.GetAsync($"api/user/Events");
         }
 
         private void ThenASuccessResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, _response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
         }
 
         private async Task ThenTheDetailsOfMyRegistrationAreReturned()
         {
-            var json = await _response.Content.ReadAsStringAsync();
+            var json = await Response.Content.ReadAsStringAsync();
             var actualEvents = JsonSerializer.Deserialize<ViewAllMyEventRegistrations[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, actualEvents.Length);
