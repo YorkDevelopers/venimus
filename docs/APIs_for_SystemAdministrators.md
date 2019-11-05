@@ -57,9 +57,9 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * The description is required,  and should be in markdown format
 
-* The group must exist  (NEEDS TEST)
+* The group must exist  
 
-* The user must be a member of the sysadmin administrators role.  (NEEDS TEST)
+* The user must be a member of the sysadmin administrators role.  
 
 * If the Slug or Name changes then the events must also be updated (NEEDS TEST)
 
