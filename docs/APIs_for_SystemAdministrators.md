@@ -29,7 +29,7 @@ Creates a new group.  The body of the request must include the following informa
 
 * The description is required,  and should be in markdown format
 
-* The user must be a member of the sysadmin administrators role. (NEEDS TEST)
+* The user must be a member of the sysadmin administrators role. 
 
 ---
 
@@ -51,7 +51,7 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 ### Business Rules
 
-* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters. (NEEDS TEST)
+* The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.  
 
 * The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
 
@@ -60,6 +60,8 @@ Updates an existing group with the matching `slug`. The body of the request must
 * The group must exist  (NEEDS TEST)
 
 * The user must be a member of the sysadmin administrators role.  (NEEDS TEST)
+
+* If the Slug or Name changes then the events must also be updated (NEEDS TEST)
 
 ---
 

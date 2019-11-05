@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -8,21 +6,16 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.UpdateGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to update existing groups", SoThat = "People can build communities")]
-    public class UpdateGroup_Success : BaseTest
+    public class UpdateGroup_InvalidSlug : BaseTest
     {
-        /*
-         * Group does not exist
-         * No permission
-         * Group name not unique
-         */
         private string _token;
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
 
-        public UpdateGroup_Success(Fixture fixture) : base(fixture)
+        public UpdateGroup_InvalidSlug(Fixture fixture) : base(fixture)
         {
         }
 
@@ -46,31 +39,31 @@ namespace VenimusAPIs.Tests
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task WhenICallTheEditGroupApi()
+        private async Task WhenICallTheEditGroupApiWithAnInvalidSlug()
         {
             _amendedGroup = Data.Create<ViewModels.UpdateGroup>();
-            var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
-            _amendedGroup.LogoInBase64 = Convert.ToBase64String(logo);
+            _amendedGroup.LogoInBase64 = Convert.ToBase64String(_existingGroup.Logo);
+            _amendedGroup.Slug = "NOT VALID";
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
+            return AssertBadRequest("Slug", "Slugs cannot contain spaces");
         }
 
-        private async Task ThenTheGroupDetailsAreUpdated()
+        private async Task ThenTheGroupDetailsAreNotUpdated()
         {
             var groups = GroupsCollection();
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
-            Assert.Equal(_amendedGroup.Slug, actualGroup.Slug);
-            Assert.Equal(_amendedGroup.Name, actualGroup.Name);
-            Assert.Equal(_amendedGroup.Description, actualGroup.Description);
-            Assert.Equal(_amendedGroup.SlackChannelName, actualGroup.SlackChannelName);
-            Assert.Equal(_amendedGroup.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));
+            Assert.Equal(_existingGroup.Slug, actualGroup.Slug);
+            Assert.Equal(_existingGroup.Name, actualGroup.Name);
+            Assert.Equal(_existingGroup.Description, actualGroup.Description);
+            Assert.Equal(_existingGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(_existingGroup.Logo, actualGroup.Logo);
         }
     }
 }

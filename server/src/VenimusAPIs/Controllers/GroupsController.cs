@@ -73,6 +73,20 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
+            if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                var duplicateGroup = await _mongo.RetrieveGroup(newDetails.Slug);
+                if (duplicateGroup != null)
+                {
+                    ModelState.AddModelError("Slug", "A group using this slug already exists");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
             _mapper.Map(newDetails, group);
 
             await _mongo.UpdateGroup(group);
