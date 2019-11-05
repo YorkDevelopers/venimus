@@ -103,6 +103,8 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
+            var updateEvents = false;
+
             if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
             {
                 var duplicateGroup = await _mongo.RetrieveGroupBySlug(newDetails.Slug);
@@ -110,6 +112,8 @@ namespace VenimusAPIs.Controllers
                 {
                     ModelState.AddModelError("Slug", "A group using this slug already exists");
                 }
+
+                updateEvents = true;
             }
 
             if (!group.Name.Equals(newDetails.Name, System.StringComparison.InvariantCultureIgnoreCase))
@@ -119,6 +123,8 @@ namespace VenimusAPIs.Controllers
                 {
                     ModelState.AddModelError("Name", "A group using this name already exists");
                 }
+
+                updateEvents = true;
             }
 
             if (!ModelState.IsValid)
@@ -129,6 +135,11 @@ namespace VenimusAPIs.Controllers
             _mapper.Map(newDetails, group);
 
             await _mongo.UpdateGroup(group);
+
+            if (updateEvents)
+            {
+                await _mongo.UpdateGroupDetailsInEvents(group);
+            }
 
             return NoContent();
         }

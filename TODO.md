@@ -12,8 +12,6 @@ Group administrators can : List (including people) / Create / Edit / Delete Even
 ### PUT /api/Groups/{GroupSlug}/Events
 ### DELETE /api/Groups/{GroupSlug}/Events
 
-Rename GroupName or Slug needed to update events
-
 Logic around banned users
 
 Logging (driven by events?)
@@ -25,3 +23,7 @@ Include user's profile picture.
 Allow an email address to be changed.  What should happen?  Confirm via email?
 
 Localise error messages
+
+Add events to process actions,  such as updating events after a group slug/name changes.
+
+Base64 images  as per Kevin's suggestion

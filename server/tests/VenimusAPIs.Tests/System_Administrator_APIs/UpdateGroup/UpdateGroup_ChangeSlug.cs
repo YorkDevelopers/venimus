@@ -10,13 +10,15 @@ using Xunit;
 namespace VenimusAPIs.Tests.UpdateGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to update existing groups", SoThat = "People can build communities")]
-    public class UpdateGroup_Success : BaseTest
+    public class UpdateGroup_ChangeSlug : BaseTest
     {
         private string _token;
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
+        private Event _event1;
+        private Event _event2;
 
-        public UpdateGroup_Success(Fixture fixture) : base(fixture)
+        public UpdateGroup_ChangeSlug(Fixture fixture) : base(fixture)
         {
         }
 
@@ -40,14 +42,23 @@ namespace VenimusAPIs.Tests.UpdateGroup
             await groups.InsertOneAsync(_existingGroup);
         }
 
+        private async Task GivenSomeEventsForTheGroup()
+        {
+            _event1 = Data.CreateEvent(_existingGroup);
+            _event2 = Data.CreateEvent(_existingGroup);
+
+            var events = EventsCollection();
+
+            await events.InsertOneAsync(_event1);
+            await events.InsertOneAsync(_event2);
+        }
+
         private async Task WhenICallTheEditGroupApi()
         {
             _amendedGroup = Data.Create<ViewModels.UpdateGroup>();
             var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
             _amendedGroup.LogoInBase64 = Convert.ToBase64String(logo);
-
-            _amendedGroup.Slug = _existingGroup.Slug;       // Fix for 
-            _amendedGroup.Name = _existingGroup.Name;       // this test
+            _amendedGroup.Name = _existingGroup.Name; // Fix name for this test
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
@@ -58,16 +69,17 @@ namespace VenimusAPIs.Tests.UpdateGroup
             Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
         }
 
-        private async Task ThenTheGroupDetailsAreUpdated()
+        private async Task ThenTheEventDetailsAreUpdated()
         {
-            var groups = GroupsCollection();
-            var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
+            var events = EventsCollection();
 
-            Assert.Equal(_amendedGroup.Slug, actualGroup.Slug);
-            Assert.Equal(_amendedGroup.Name, actualGroup.Name);
-            Assert.Equal(_amendedGroup.Description, actualGroup.Description);
-            Assert.Equal(_amendedGroup.SlackChannelName, actualGroup.SlackChannelName);
-            Assert.Equal(_amendedGroup.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));
+            var actualEvent1 = await events.Find(u => u.Id == _event1.Id).SingleAsync();
+            Assert.Equal(_amendedGroup.Slug, actualEvent1.GroupSlug);
+            Assert.Equal(_amendedGroup.Name, actualEvent1.GroupName);
+
+            var actualEvent2 = await events.Find(u => u.Id == _event2.Id).SingleAsync();
+            Assert.Equal(_amendedGroup.Slug, actualEvent2.GroupSlug);
+            Assert.Equal(_amendedGroup.Name, actualEvent2.GroupName);
         }
     }
 }

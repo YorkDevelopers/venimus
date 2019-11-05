@@ -174,6 +174,18 @@ namespace VenimusAPIs.Services
             return result;
         }
 
+        internal async Task UpdateGroupDetailsInEvents(Group group)
+        {
+            var events = EventsCollection();
+
+            var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id);
+            var update = Builders<Event>.Update
+                                        .Set(e => e.GroupName, group.Name)
+                                        .Set(e => e.GroupSlug, group.Slug);
+            
+            await events.UpdateManyAsync(filter, update);
+        }
+
         internal async Task<bool> DoEventsExistForGroup(string groupSlug)
         {
             var events = EventsCollection();

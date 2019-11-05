@@ -61,7 +61,7 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * The user must be a member of the sysadmin administrators role.  
 
-* If the Slug or Name changes then the events must also be updated (NEEDS TEST)
+* If the Slug or Name changes then the events must also be updated
 
 ---
 
