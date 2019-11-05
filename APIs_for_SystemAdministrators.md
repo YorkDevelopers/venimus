@@ -5,7 +5,7 @@ The following APIs can only be called by sysadmin administrators.
 
 ---
 
-### POST /api/Groups
+## POST /api/Groups
 
 Creates a new group.  The body of the request must include the following information.
 
@@ -21,7 +21,7 @@ Creates a new group.  The body of the request must include the following informa
 
 * __LogoInBase64__ - The group's logo.
 
-#### Business Rules
+### Business Rules
 
 * The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.
 
@@ -33,7 +33,7 @@ Creates a new group.  The body of the request must include the following informa
 
 ---
 
-### PUT /api/Groups/{slug}
+## PUT /api/Groups/{slug}
 
 Updates an existing group with the matching `slug`. The body of the request must include the following information.
 
@@ -49,7 +49,7 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * __LogoInBase64__ - The group's logo.
 
-#### Business Rules
+### Business Rules
 
 * The slug is required,  cannot contain spaces, must be unique and no more than 100 characters. (NEEDS TEST)
 
@@ -63,11 +63,11 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 ---
 
-### DELETE /api/Groups/{groupslug}
+## DELETE /api/Groups/{groupslug}
 
 Allows a group to be deleted if it has no events.
 
-#### Business Rules
+### Business Rules
 
 * The user must have the System Administrator role
 
