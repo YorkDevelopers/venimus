@@ -49,12 +49,12 @@ It is recommended that rather than editing the existing `appsettings.json` file 
 
 In addition to the generated swagger documentation,  a summary of the APIs is below.
 
-[APIs for System Administrators](APIs_for_SystemAdministrators.md)
+[APIs for System Administrators](docs/APIs_for_SystemAdministrators.md)
 
-[APIs for Group Administrators](APIs_for_GroupAdministrators.md)
+[APIs for Group Administrators](docs/APIs_for_GroupAdministrators.md)
 
-[APIs for Normal Users](APIs_for_NormalUsers.md)
+[APIs for Normal Users](docs/APIs_for_NormalUsers.md)
 
-[APIs for Unauthenticated Users](APIs_for_ThePublic.md)
+[APIs for Unauthenticated Users](docs/APIs_for_ThePublic.md)
 
 ---
