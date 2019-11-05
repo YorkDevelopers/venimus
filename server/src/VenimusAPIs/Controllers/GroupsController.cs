@@ -29,7 +29,11 @@ namespace VenimusAPIs.Controllers
         ///
         ///     POST /api/groups
         ///     {
-        ///         "name" : "YorkCodeDojo",
+        ///         "slug" : "YorkCodeDojo",
+        ///         "name" : "York Cod eDojo",
+        ///         "isActive" : true,
+        ///         "slackChannelName" : "YorkCodeDojo",
+        ///         "logoInBase64" : "1111",
         ///         "description" : "Improve your code by practice."
         ///     }
         ///
@@ -42,10 +46,16 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateGroup group)
         {
-            var duplicateGroup = await _mongo.RetrieveGroup(group.Slug);
+            var duplicateGroup = await _mongo.RetrieveGroupBySlug(group.Slug);
             if (duplicateGroup != null)
             {
                 ModelState.AddModelError("Slug", "A group using this slug already exists");
+            }
+
+            duplicateGroup = await _mongo.RetrieveGroupByName(group.Name);
+            if (duplicateGroup != null)
+            {
+                ModelState.AddModelError("Name", "A group using this name already exists");
             }
 
             if (!ModelState.IsValid)
@@ -60,13 +70,33 @@ namespace VenimusAPIs.Controllers
             return CreatedAtRoute("Groups", new { groupSlug = model.Slug }, group);
         }
 
+        /// <summary>
+        ///     Allows you to update an existing group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /api/groups/YorkCodeDojo
+        ///     {
+        ///         "slug" : "YorkCodeDojo",
+        ///         "name" : "York Cod eDojo",
+        ///         "isActive" : true,
+        ///         "slackChannelName" : "YorkCodeDojo",
+        ///         "logoInBase64" : "1111",
+        ///         "description" : "Improve your code by practice."
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The route to the created group</returns>
+        /// <response code="201">Success</response>
+        /// <response code="401">User is not authorized.</response>
         [Authorize(Roles = "SystemAdministrator")]
         [HttpPut]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
-            var group = await _mongo.RetrieveGroup(groupSlug);
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
 
             if (group == null)
             {
@@ -75,10 +105,19 @@ namespace VenimusAPIs.Controllers
 
             if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateGroup = await _mongo.RetrieveGroup(newDetails.Slug);
+                var duplicateGroup = await _mongo.RetrieveGroupBySlug(newDetails.Slug);
                 if (duplicateGroup != null)
                 {
                     ModelState.AddModelError("Slug", "A group using this slug already exists");
+                }
+            }
+
+            if (!group.Name.Equals(newDetails.Name, System.StringComparison.InvariantCultureIgnoreCase))
+            {
+                var duplicateGroup = await _mongo.RetrieveGroupByName(newDetails.Name);
+                if (duplicateGroup != null)
+                {
+                    ModelState.AddModelError("Name", "A group using this name already exists");
                 }
             }
 
@@ -113,7 +152,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetGroup>> Get(string groupSlug)
         {
-            var group = await _mongo.RetrieveGroup(groupSlug);
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
 
             if (group == null)
             {
@@ -166,7 +205,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete([FromRoute] string groupSlug)
         {
-            var group = await _mongo.RetrieveGroup(groupSlug);
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
 
             if (group != null)
             {

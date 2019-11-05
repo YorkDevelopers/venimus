@@ -53,7 +53,7 @@ Updates an existing group with the matching `slug`. The body of the request must
 
 * The slug is required,  cannot contain spaces, must be unique and no more than 100 characters.  
 
-* The name is required, must be unique and no more than 100 characters. (NEEDS TEST)
+* The name is required, must be unique and no more than 100 characters.
 
 * The description is required,  and should be in markdown format
 

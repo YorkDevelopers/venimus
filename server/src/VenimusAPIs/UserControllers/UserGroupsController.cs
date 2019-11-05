@@ -41,7 +41,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyGroupMembership>> Get(string groupSlug)
         {
-            var group = await _mongo.RetrieveGroup(groupSlug);
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
             if (group == null || !(await DoesUserBelongToTheGroup(group)))
             {
                 return NotFound();
@@ -111,7 +111,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromBody] JoinGroup group)
         {
-            var model = await _mongo.RetrieveGroup(group.GroupSlug);
+            var model = await _mongo.RetrieveGroupBySlug(group.GroupSlug);
             if (model == null)
             {
                 return NotFound();
@@ -154,7 +154,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DELETE([FromRoute] string groupSlug)
         {
-            var model = await _mongo.RetrieveGroup(groupSlug);
+            var model = await _mongo.RetrieveGroupBySlug(groupSlug);
             if (model == null)
             {
                 return NotFound();

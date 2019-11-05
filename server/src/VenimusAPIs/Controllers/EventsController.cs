@@ -49,7 +49,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromRoute] string groupSlug, [FromBody] CreateEvent newEvent)
         {
-            var group = await _mongo.RetrieveGroup(groupSlug);
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
             if (group == null)
             {
                 return NotFound();

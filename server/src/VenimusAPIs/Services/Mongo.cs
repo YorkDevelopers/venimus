@@ -101,10 +101,18 @@ namespace VenimusAPIs.Services
             return theEvent;
         }
 
-        public async Task<Models.Group> RetrieveGroup(string groupSlug)
+        public async Task<Models.Group> RetrieveGroupBySlug(string groupSlug)
         {
             var groups = GroupsCollection();
             var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync();
+
+            return group;
+        }
+
+        public async Task<Models.Group> RetrieveGroupByName(string groupName)
+        {
+            var groups = GroupsCollection();
+            var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
 
             return group;
         }

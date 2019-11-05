@@ -100,7 +100,33 @@
             
                  POST /api/groups
                  {
-                     "name" : "YorkCodeDojo",
+                     "slug" : "YorkCodeDojo",
+                     "name" : "York Cod eDojo",
+                     "isActive" : true,
+                     "slackChannelName" : "YorkCodeDojo",
+                     "logoInBase64" : "1111",
+                     "description" : "Improve your code by practice."
+                 }
+            
+             </remarks>
+             <returns>The route to the created group</returns>
+             <response code="201">Success</response>
+             <response code="401">User is not authorized.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Put(System.String,VenimusAPIs.ViewModels.UpdateGroup)">
+             <summary>
+                 Allows you to update an existing group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 PUT /api/groups/YorkCodeDojo
+                 {
+                     "slug" : "YorkCodeDojo",
+                     "name" : "York Cod eDojo",
+                     "isActive" : true,
+                     "slackChannelName" : "YorkCodeDojo",
+                     "logoInBase64" : "1111",
                      "description" : "Improve your code by practice."
                  }
             
