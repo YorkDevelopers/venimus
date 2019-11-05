@@ -37,14 +37,44 @@ Schedules a new event for a group.  The following needs to be provided.
 
 ---
 
-## PUT /api/groups/YorkCodeDojo/events/12345
+## PUT /api/groups/{GroupSlug}/events/{EventSlug}
 
-## PATCH /api/groups/YorkCodeDojo/events/12345
+Allows a group administrator to update the details of an event.
 
-## GET /api/groups/YorkCodeDojo/events/1234
+The following needs to be provided.
 
-## GET /api/groups/YorkCodeDojo/events/1234/members  (any member of the group can call this)
+* __Slug__ - The unique external ID for the event. _For example Nov2019_
 
-## DELETE /api/groups/YorkCodeDojo/events/1234
+* __Title__ - The title of the event.
+
+* __Description__ - The full description of the event in markdown format.
+
+* __Location__ - Where will the event be held?
+
+* __StartTime__  - When will the event start?
+
+* __EndTime__ - When will the event end?
+
+### Business Rules
+
+* If the group or event does not exist then 404 will be returned. (NEEDS TEST)
+
+* If the user is not an administrator for the group then Forbidden will be returned.
+
+* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters.  (NEEDS TEST)
+
+* The end time must be after the start time. (NEEDS TEST)
+
+### Note to developers
+
+* The UI should warn the user if the event is in the past.  The API will allow it as the user could be correcting the details of an event which has already happened.
+
+---
+
+## GET /api/groups/{GroupSlug}/events/{EventSlug}
+
+## GET /api/groups/{GroupSlug}/events/{EventSlug}/members  (any member of the group can call this)
+
+## DELETE /api/groups/{GroupSlug}/events/{EventSlug}
 
 
