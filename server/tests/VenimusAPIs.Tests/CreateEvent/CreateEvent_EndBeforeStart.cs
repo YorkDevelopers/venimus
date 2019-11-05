@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -11,7 +10,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.CreateEvent
 {
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
-    public class CreateEvent_Success : BaseTest
+    public class CreateEvent_EndBeforeStart : BaseTest
     {
         private string _uniqueID;
         private string _token;
@@ -19,7 +18,7 @@ namespace VenimusAPIs.Tests.CreateEvent
         private Group _group;
         private User _user;
 
-        public CreateEvent_Success(Fixture fixture) : base(fixture)
+        public CreateEvent_EndBeforeStart(Fixture fixture) : base(fixture)
         {
         }
 
@@ -57,43 +56,29 @@ namespace VenimusAPIs.Tests.CreateEvent
             await collection.InsertOneAsync(_group);
         }
 
-        private async Task WhenICallTheCreateEventApi()
+        private async Task WhenICallTheCreateEventApiForAnEventWhichEndsBeforeItStarts()
         {
             _event = Data.Create<ViewModels.CreateEvent>(e =>
             {
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
-                e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+                e.EndTimeUTC = DateTime.UtcNow.AddDays(-2);
             });
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
+            return AssertBadRequest("EndTimeUTC", "You cannot create an event which ends before it starts.");
         }
 
-        private void ThenTheLocationOfTheNewEventIsReturned()
-        {
-            var location = Response.Headers.Location.ToString();
-            Assert.Equal($"http://localhost/api/groups/{_group.Slug}/events/{_event.Slug}", location);
-        }
-
-        private async Task AndANewEventIsAddedToTheDatabase()
+        private async Task ThenTheEventIsNotAddedToTheDatabase()
         {
             var events = EventsCollection();
-            var actualEvent = await events.Find(u => u.Slug == _event.Slug).SingleAsync();
+            var actualEvent = await events.Find(u => u.Slug == _event.Slug).SingleOrDefaultAsync();
 
-            Assert.Equal(_event.Slug, actualEvent.Slug);
-            Assert.Equal(_event.Title, actualEvent.Title);
-            Assert.Equal(_event.Description, actualEvent.Description);
-            AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
-            AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
-            Assert.Equal(_event.Location, actualEvent.Location);
-            Assert.Equal(_group.Id, actualEvent.GroupId);
-            Assert.Equal(_group.Slug, actualEvent.GroupSlug);
-            Assert.Equal(_group.Name, actualEvent.GroupName);
+            Assert.Null(actualEvent);
         }
     }
 }

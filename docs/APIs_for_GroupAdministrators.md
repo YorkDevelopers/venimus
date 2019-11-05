@@ -25,12 +25,26 @@ Schedules a new event for a group.  The following needs to be provided.
 
 * If the event is successfully created then a URL to the event will be returned.
 
-* If the group does not exist then 404 will be returned. (NEEDS TEST)
+* If the group does not exist then 404 will be returned.
 
 * If the user is not an administrator for the group then Forbidden will be returned.
 
-* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters. (NEEDS TEST)
+* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters.
 
-* The start time must be in the future. (NEEDS TEST)
+* The start time must be in the future.
 
-* The end time must be after the start time (NEEDS TEST)
+* The end time must be after the start time.
+
+---
+
+## PUT /api/groups/YorkCodeDojo/events/12345
+
+## PATCH /api/groups/YorkCodeDojo/events/12345
+
+## GET /api/groups/YorkCodeDojo/events/1234
+
+## GET /api/groups/YorkCodeDojo/events/1234/members  (any member of the group can call this)
+
+## DELETE /api/groups/YorkCodeDojo/events/1234
+
+

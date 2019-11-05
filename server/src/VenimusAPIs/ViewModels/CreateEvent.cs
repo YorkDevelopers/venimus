@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using VenimusAPIs.Validation;
 
 namespace VenimusAPIs.ViewModels
 {
@@ -10,6 +11,7 @@ namespace VenimusAPIs.ViewModels
         /// </summary>
         [Required]
         [MaxLength(100)]
+        [Slug]
         public string Slug { get; set; }
 
         /// <summary>

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -11,15 +10,16 @@ using Xunit;
 namespace VenimusAPIs.Tests.CreateEvent
 {
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
-    public class CreateEvent_Success : BaseTest
+    public class CreateEvent_DuplicateSlugForGroup : BaseTest
     {
         private string _uniqueID;
         private string _token;
         private ViewModels.CreateEvent _event;
         private Group _group;
         private User _user;
+        private Event _existingEvent;
 
-        public CreateEvent_Success(Fixture fixture) : base(fixture)
+        public CreateEvent_DuplicateSlugForGroup(Fixture fixture) : base(fixture)
         {
         }
 
@@ -57,10 +57,20 @@ namespace VenimusAPIs.Tests.CreateEvent
             await collection.InsertOneAsync(_group);
         }
 
-        private async Task WhenICallTheCreateEventApi()
+        private async Task GivenAnEventAlreadyExistsForTheGroup()
+        {
+            _existingEvent = Data.CreateEvent(_group);
+
+            var collection = EventsCollection();
+
+            await collection.InsertOneAsync(_existingEvent);
+        }
+
+        private async Task WhenICallTheCreateEventApiWithADuplicateSlug()
         {
             _event = Data.Create<ViewModels.CreateEvent>(e =>
             {
+                e.Slug = _existingEvent.Slug;
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
@@ -69,31 +79,17 @@ namespace VenimusAPIs.Tests.CreateEvent
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
+            return AssertBadRequest("Slug", "An event with this slug already exists for this group.");
         }
 
-        private void ThenTheLocationOfTheNewEventIsReturned()
-        {
-            var location = Response.Headers.Location.ToString();
-            Assert.Equal($"http://localhost/api/groups/{_group.Slug}/events/{_event.Slug}", location);
-        }
-
-        private async Task AndANewEventIsAddedToTheDatabase()
+        private async Task ThenTheEventIsNotAddedToTheDatabase()
         {
             var events = EventsCollection();
-            var actualEvent = await events.Find(u => u.Slug == _event.Slug).SingleAsync();
+            var numberOfActualEvents = await events.Find(u => u.Slug == _event.Slug).CountDocumentsAsync();
 
-            Assert.Equal(_event.Slug, actualEvent.Slug);
-            Assert.Equal(_event.Title, actualEvent.Title);
-            Assert.Equal(_event.Description, actualEvent.Description);
-            AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
-            AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
-            Assert.Equal(_event.Location, actualEvent.Location);
-            Assert.Equal(_group.Id, actualEvent.GroupId);
-            Assert.Equal(_group.Slug, actualEvent.GroupSlug);
-            Assert.Equal(_group.Name, actualEvent.GroupName);
+            Assert.Equal(1, numberOfActualEvents);
         }
     }
 }

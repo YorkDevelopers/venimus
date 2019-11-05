@@ -36,6 +36,7 @@ namespace VenimusAPIs.Tests.Infrastucture
                 evt.GroupId = group.Id;
                 evt.GroupSlug = group.Slug;
                 evt.GroupName = group.Name;
+                evt.StartTimeUTC = DateTime.UtcNow.AddDays(1);
             });
 
             if (modifier != null)

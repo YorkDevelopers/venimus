@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -62,6 +63,27 @@ namespace VenimusAPIs.Controllers
             if (group.Administrators == null || !group.Administrators.Contains(existingUser.Id))
             {
                 return Forbid();
+            }
+
+            if (newEvent.StartTimeUTC < DateTime.UtcNow)
+            {
+                ModelState.AddModelError(nameof(newEvent.StartTimeUTC), "You cannot create an event in the past.");
+            }
+
+            if (newEvent.StartTimeUTC >= newEvent.EndTimeUTC)
+            {
+                ModelState.AddModelError(nameof(newEvent.EndTimeUTC), "You cannot create an event which ends before it starts.");
+            }
+
+            var duplicate = await _mongo.GetEvent(groupSlug, newEvent.Slug);
+            if (duplicate != null)
+            {
+                ModelState.AddModelError(nameof(newEvent.Slug), "An event with this slug already exists for this group.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
             }
 
             var model = _mapper.Map<Models.Event>(newEvent);
