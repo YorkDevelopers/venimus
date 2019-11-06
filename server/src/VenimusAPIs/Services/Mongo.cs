@@ -79,7 +79,9 @@ namespace VenimusAPIs.Services
         {
             var groups = GroupsCollection();
 
-            var filter = Builders<Group>.Filter.AnyEq(x => x.Members, userID) &
+            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.Id, userID);
+
+            var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch) &
                          Builders<Group>.Filter.Eq(ent => ent.IsActive, true);
             var matchingGroups = await groups.Find(filter).ToListAsync();
 
@@ -231,7 +233,7 @@ namespace VenimusAPIs.Services
             return existingUser;
         }
 
-        internal async Task<List<Models.User>> GetUsersByIds(ObjectId[] memberIds)
+        internal async Task<List<Models.User>> GetUsersByIds(IEnumerable<ObjectId> memberIds)
         {
             var users = UsersCollection();
 

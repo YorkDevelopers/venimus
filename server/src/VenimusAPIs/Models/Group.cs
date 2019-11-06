@@ -38,16 +38,24 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Members of this group
         /// </summary>
-        public List<ObjectId> Members { get; set; }
-
-        /// <summary>
-        /// Administrators of this group
-        /// </summary>
-        public List<ObjectId> Administrators { get; set; }
+        public List<GroupMember> Members { get; set; }
 
         /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
         public string SlackChannelName { get; set; }
+
+        public class GroupMember
+        {
+            /// <summary>
+            ///     Unique ID of the user
+            /// </summary>
+            public ObjectId Id { get; set; }
+
+            /// <summary>
+            ///     Are they an administrator of the group?
+            /// </summary>
+            public bool IsAdministrator { get; set; }
+        }
     }
 }

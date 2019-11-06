@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -61,7 +62,7 @@ namespace VenimusAPIs.Controllers
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            if (group.Administrators == null || !group.Administrators.Contains(existingUser.Id))
+            if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
             {
                 return Forbid();
             }
@@ -136,7 +137,7 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            if (group.Administrators == null || !group.Administrators.Contains(existingUser.Id))
+            if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
             {
                 return Forbid();
             }

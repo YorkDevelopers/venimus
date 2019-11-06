@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Tests.Infrastucture
 {
@@ -156,6 +157,34 @@ namespace VenimusAPIs.Tests.Infrastucture
             }
 
             return obj;
+        }
+
+        internal void AddGroupMember(Group group, User user)
+        {
+            if (group.Members == null)
+            {
+                group.Members = new System.Collections.Generic.List<Group.GroupMember>();
+            }
+
+            group.Members.Add(new Group.GroupMember
+            {
+                Id = user.Id,
+                IsAdministrator = false,
+            });
+        }
+
+        internal void AddGroupAdministrator(Group group, User user)
+        {
+            if (group.Members == null)
+            {
+                group.Members = new System.Collections.Generic.List<Group.GroupMember>();
+            }
+
+            group.Members.Add(new Group.GroupMember
+            {
+                Id = user.Id,
+                IsAdministrator = true,
+            });
         }
 
         internal string CreateString(int requiredLength) => CreateStringLongerThan(requiredLength).Substring(0, requiredLength);

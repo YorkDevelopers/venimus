@@ -51,7 +51,6 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
 
             _theGroup = Data.Create<Models.Group>(g =>
             {
-                g.Members = new List<MongoDB.Bson.ObjectId>() { };
                 g.IsActive = true;
                 g.Logo = logo;
             });

@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.Models;
+using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class Groups_MembersController : ControllerBase
+    public class Groups_MembersController : BaseUserController
     {
         private readonly Services.Mongo _mongo;
 
@@ -43,10 +46,29 @@ namespace VenimusAPIs.Controllers
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            if (group == null)
+            {
+                return NotFound(); 
+            }
+
+            if (group.Members == null)
+            {
+                group.Members = new List<Group.GroupMember>();
+            }
 
             var memberIds = group.Members.ToArray();
 
-            var members = await _mongo.GetUsersByIds(memberIds);
+            if (!User.IsInRole("SystemAdministrator"))
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+                var user = await _mongo.GetUserByID(uniqueID);
+                if (!memberIds.Any(u => u.Id == user.Id))
+                {
+                    return Forbid();
+                }
+            }
+
+            var members = await _mongo.GetUsersByIds(memberIds.Select(m => m.Id));
 
             return members.Select(m => new ListGroupMembers
             {

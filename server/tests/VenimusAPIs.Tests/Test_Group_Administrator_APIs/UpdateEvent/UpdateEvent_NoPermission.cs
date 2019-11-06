@@ -44,7 +44,6 @@ namespace VenimusAPIs.Tests.UpdateEvent
         private async Task GivenIAmNotAnAdminstratorForTheGroup()
         {
             _group = Data.Create<Models.Group>();
-            _group.Administrators = new List<MongoDB.Bson.ObjectId> { };
 
             var collection = GroupsCollection();
 

@@ -49,7 +49,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
         private async Task GivenAGroupExistsOfWhichIAmAMember()
         {
             _existingGroup = Data.Create<Models.Group>();
-            _existingGroup.Members = new List<MongoDB.Bson.ObjectId> { _user.Id };
+            Data.AddGroupMember(_existingGroup, _user);
 
             var groups = GroupsCollection();
 

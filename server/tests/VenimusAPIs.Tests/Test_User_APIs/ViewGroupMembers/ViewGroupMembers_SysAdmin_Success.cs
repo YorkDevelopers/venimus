@@ -13,18 +13,16 @@ using Xunit;
 namespace VenimusAPIs.Tests.ViewGroupMembers
 {
     [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
-    public class ViewGroupMembers_Success : BaseTest
+    public class ViewGroupMembers_SysAdmin_Success : BaseTest
     {
         private string _token;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
 
-        public ViewGroupMembers_Success(Fixture fixture) : base(fixture)
+        public ViewGroupMembers_SysAdmin_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -34,18 +32,9 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
+        private async Task GivenIAmASystemAdministrator()
         {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
+            _token = await Fixture.GetTokenForSystemAdministrator();
         }
 
         private async Task GivenThereAreOtherUsers()
@@ -60,12 +49,11 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             await collection.InsertManyAsync(new[] { _otherUserInGroup1, _otherUserInGroup2, _otherUserInGroup3, _otherUserNotInGroup1 });
         }
 
-        private async Task GivenIAndSomeOthersBelongToTheGroup()
+        private async Task GivenIDoNotBelongToTheGroupButOthersDo()
         {
             _existingGroup = Data.Create<Models.Group>();
             _existingGroup.Members = new List<Group.GroupMember>()
             {
-                new Group.GroupMember { Id = _user.Id },
                 new Group.GroupMember { Id = _otherUserInGroup1.Id },
                 new Group.GroupMember { Id = _otherUserInGroup2.Id },
                 new Group.GroupMember { Id = _otherUserInGroup3.Id },
@@ -93,9 +81,8 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var actualMembers = JsonSerializer.Deserialize<ViewModels.ListGroupMembers[]>(json, options);
 
-            Assert.Equal(4, actualMembers.Length);
+            Assert.Equal(3, actualMembers.Length);
 
-            AssertMember(_user, actualMembers);
             AssertMember(_otherUserInGroup1, actualMembers);
             AssertMember(_otherUserInGroup2, actualMembers);
             AssertMember(_otherUserInGroup3, actualMembers);

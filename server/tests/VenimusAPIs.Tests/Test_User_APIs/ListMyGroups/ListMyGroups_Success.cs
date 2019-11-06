@@ -55,14 +55,14 @@ namespace VenimusAPIs.Tests
         {
             _inGroup1 = Data.Create<Models.Group>(g =>
             {
-                g.Members = new List<MongoDB.Bson.ObjectId>() { _user.Id };
                 g.IsActive = true;
+                Data.AddGroupMember(g, _user);
             });
 
             _groupNotActive = Data.Create<Models.Group>(g =>
             {
-                g.Members = new List<MongoDB.Bson.ObjectId>() { _user.Id };
                 g.IsActive = false;
+                Data.AddGroupMember(g, _user);
             });
 
             _notInGroup = Data.Create<Models.Group>(g =>
@@ -72,7 +72,7 @@ namespace VenimusAPIs.Tests
 
             _inGroup2 = Data.Create<Models.Group>(g =>
             {
-                g.Members = new List<MongoDB.Bson.ObjectId>() { _user.Id };
+                Data.AddGroupMember(g, _user);
                 g.IsActive = true;
             });
 

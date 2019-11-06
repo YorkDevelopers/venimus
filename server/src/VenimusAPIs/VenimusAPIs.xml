@@ -318,14 +318,19 @@
             Members of this group
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.Administrators">
-            <summary>
-            Administrators of this group
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.Models.Group.SlackChannelName">
             <summary>
                 The name of this groups slack channel
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.Id">
+            <summary>
+                Unique ID of the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.IsAdministrator">
+            <summary>
+                Are they an administrator of the group?
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.User.Id">

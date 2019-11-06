@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.Models;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.UserControllers
@@ -58,7 +60,7 @@ namespace VenimusAPIs.UserControllers
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            return group.Members != null && group.Members.Contains(existingUser.Id);
+            return group.Members != null && group.Members.Exists(u => u.Id == existingUser.Id);
         }
 
         /// <summary>
@@ -119,14 +121,14 @@ namespace VenimusAPIs.UserControllers
 
             if (model.Members == null)
             {
-                model.Members = new List<MongoDB.Bson.ObjectId>();
+                model.Members = new List<Group.GroupMember>();
             }
 
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            model.Members.Add(existingUser.Id);
+            model.Members.Add(new Group.GroupMember { Id = existingUser.Id });
 
             await _mongo.UpdateGroup(model);
 
@@ -166,7 +168,7 @@ namespace VenimusAPIs.UserControllers
 
                 var existingUser = await _mongo.GetUserByID(uniqueID);
 
-                model.Members.RemoveAll(m => m == existingUser.Id);
+                model.Members.RemoveAll(m => m.Id == existingUser.Id);
 
                 await _mongo.UpdateGroup(model);
             }

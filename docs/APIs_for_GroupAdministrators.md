@@ -63,7 +63,7 @@ The following needs to be provided.
 
 * The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters. 
 
-* The end time must be after the start time. (NEEDS TEST)
+* The end time must be after the start time.
 
 ### Note to developers
 
@@ -72,9 +72,30 @@ The following needs to be provided.
 ---
 
 ## GET /api/groups/{GroupSlug}/Members
-No Permission
-Group does not exist
 
+Retrieves the list of members of the supplied group.  For the following array of properties are returned:
+
+* __Slug__ - The external ID for the user.
+
+* __EmailAddress__ - The email address which also links all the social media accounts together.
+
+* __Pronoun__ - The users preferred personal pronon.  e.g. Him
+
+* __Fullname__ - The user's fullname.  e.g David Betteridge
+
+* __DisplayName__ - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+
+* __Bio__ - The user's biography.  This can include their place of work/student,  any interests etc.
+
+* __ProfilePictureInBase64__ - The user's profile picture
+
+### Business Rules
+
+* The user must be either a sysadmin administrator or a member of the group to retrieve the members list.
+
+* 404 is returned if the group does not exist.
+
+---
 
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}
 

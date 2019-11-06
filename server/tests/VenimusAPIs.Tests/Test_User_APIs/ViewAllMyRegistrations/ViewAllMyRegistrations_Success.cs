@@ -52,10 +52,10 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
         private async Task GivenSomeGroupsExistsOfWhichIAmAMember()
         {
             _group1 = Data.Create<Models.Group>();
-            _group1.Members = new List<MongoDB.Bson.ObjectId> { _user.Id };
+            Data.AddGroupMember(_group1, _user);
 
             _group2 = Data.Create<Models.Group>();
-            _group2.Members = new List<MongoDB.Bson.ObjectId> { _user.Id };
+            Data.AddGroupMember(_group2, _user);
 
             var groups = GroupsCollection();
 
