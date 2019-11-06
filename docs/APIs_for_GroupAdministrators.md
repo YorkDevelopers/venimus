@@ -72,6 +72,8 @@ The following needs to be provided.
 ---
 
 ## GET /api/groups/{GroupSlug}/Members
+No Permission
+Group does not exist
 
 
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}
