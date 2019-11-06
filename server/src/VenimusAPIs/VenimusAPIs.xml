@@ -773,6 +773,11 @@
                 The user's profile picture
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.IsAdministrator">
+            <summary>
+                Is the user a group administrator?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Slug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo

@@ -38,5 +38,10 @@
         ///     The user's profile picture
         /// </summary>
         public string ProfilePictureInBase64 { get; set; }
+
+        /// <summary>
+        ///     Is the user a group administrator?
+        /// </summary>
+        public bool IsAdministrator { get; set; }
     }
 }

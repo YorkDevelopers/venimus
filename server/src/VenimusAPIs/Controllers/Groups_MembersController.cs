@@ -56,21 +56,21 @@ namespace VenimusAPIs.Controllers
                 group.Members = new List<Group.GroupMember>();
             }
 
-            var memberIds = group.Members.ToArray();
+            var members = group.Members.ToArray();
 
             if (!User.IsInRole("SystemAdministrator"))
             {
                 var uniqueID = UniqueIDForCurrentUser;
                 var user = await _mongo.GetUserByID(uniqueID);
-                if (!memberIds.Any(u => u.Id == user.Id))
+                if (!members.Any(u => u.Id == user.Id))
                 {
                     return Forbid();
                 }
             }
 
-            var members = await _mongo.GetUsersByIds(memberIds.Select(m => m.Id));
+            var users = await _mongo.GetUsersByIds(members.Select(m => m.Id));
 
-            return members.Select(m => new ListGroupMembers
+            return users.Select(m => new ListGroupMembers
             {
                 Bio = m.Bio,
                 DisplayName = m.DisplayName,
@@ -79,6 +79,7 @@ namespace VenimusAPIs.Controllers
                 Pronoun = m.Pronoun,
                 Slug = m.Id.ToString(),
                 ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
+                IsAdministrator = members.Single(x => x.Id == m.Id).IsAdministrator,
             }).ToArray();
         }
     }

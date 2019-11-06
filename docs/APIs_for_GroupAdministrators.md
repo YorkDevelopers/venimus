@@ -77,6 +77,8 @@ Retrieves the list of members of the supplied group.  For the following array of
 
 * __Slug__ - The external ID for the user.
 
+* __IsAdministrator__ - Is the user a group administrator?
+
 * __EmailAddress__ - The email address which also links all the social media accounts together.
 
 * __Pronoun__ - The users preferred personal pronon.  e.g. Him
@@ -102,5 +104,4 @@ Retrieves the list of members of the supplied group.  For the following array of
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}/members  (any member of the group can call this)
 
 ## DELETE /api/groups/{GroupSlug}/events/{EventSlug}
-
 

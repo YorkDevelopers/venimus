@@ -62,14 +62,13 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
         private async Task GivenIAndSomeOthersBelongToTheGroup()
         {
-            _existingGroup = Data.Create<Models.Group>();
-            _existingGroup.Members = new List<Group.GroupMember>()
+            _existingGroup = Data.Create<Models.Group>(g =>
             {
-                new Group.GroupMember { Id = _user.Id },
-                new Group.GroupMember { Id = _otherUserInGroup1.Id },
-                new Group.GroupMember { Id = _otherUserInGroup2.Id },
-                new Group.GroupMember { Id = _otherUserInGroup3.Id },
-            };
+                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, _otherUserInGroup1);
+                Data.AddGroupMember(g, _otherUserInGroup2);
+                Data.AddGroupAdministrator(g, _otherUserInGroup3);
+            });
 
             var groups = GroupsCollection();
 
@@ -95,13 +94,13 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
             Assert.Equal(4, actualMembers.Length);
 
-            AssertMember(_user, actualMembers);
-            AssertMember(_otherUserInGroup1, actualMembers);
-            AssertMember(_otherUserInGroup2, actualMembers);
-            AssertMember(_otherUserInGroup3, actualMembers);
+            AssertMember(_user, actualMembers, false);
+            AssertMember(_otherUserInGroup1, actualMembers, false);
+            AssertMember(_otherUserInGroup2, actualMembers, false);
+            AssertMember(_otherUserInGroup3, actualMembers, true);
         }
 
-        private void AssertMember(User user, ListGroupMembers[] actualMembers)
+        private void AssertMember(User user, ListGroupMembers[] actualMembers, bool isAdministrator)
         {
             var actualMember = actualMembers.Single(m => m.Slug == user.Id.ToString());
 
@@ -110,6 +109,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             Assert.Equal(user.Fullname, actualMember.Fullname);
             Assert.Equal(user.Bio, actualMember.Bio);
             Assert.Equal(user.Pronoun, actualMember.Pronoun);
+            Assert.Equal(isAdministrator, actualMember.IsAdministrator);
             Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualMember.ProfilePictureInBase64));
         }
     }
