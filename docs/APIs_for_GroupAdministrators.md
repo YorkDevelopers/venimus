@@ -57,11 +57,11 @@ The following needs to be provided.
 
 ### Business Rules
 
-* If the group or event does not exist then 404 will be returned. (NEEDS TEST)
+* If the group or event does not exist then 404 will be returned.
 
 * If the user is not an administrator for the group then Forbidden will be returned.
 
-* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters.  (NEEDS TEST)
+* The slug is required,  cannot contain spaces, must be unique for the group and no more than 100 characters. 
 
 * The end time must be after the start time. (NEEDS TEST)
 
@@ -70,6 +70,9 @@ The following needs to be provided.
 * The UI should warn the user if the event is in the past.  The API will allow it as the user could be correcting the details of an event which has already happened.
 
 ---
+
+## GET /api/groups/{GroupSlug}/Members
+
 
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}
 

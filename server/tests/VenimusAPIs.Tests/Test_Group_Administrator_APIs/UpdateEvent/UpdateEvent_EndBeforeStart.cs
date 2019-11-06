@@ -10,7 +10,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.UpdateEvent
 {
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
-    public class UpdateEvent_Success : BaseTest
+    public class UpdateEvent_EndBeforeStart : BaseTest
     {
         private string _uniqueID;
         private string _token;
@@ -19,7 +19,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
         private ViewModels.UpdateEvent _amendedEvent;
         private User _user;
 
-        public UpdateEvent_Success(Fixture fixture) : base(fixture)
+        public UpdateEvent_EndBeforeStart(Fixture fixture) : base(fixture)
         {
         }
 
@@ -62,37 +62,37 @@ namespace VenimusAPIs.Tests.UpdateEvent
             await events.InsertOneAsync(_event);
         }
 
-        private async Task WhenICallTheUpdateEventApi()
+        private async Task WhenICallTheUpdateEventApiWithAnInvalidSlug()
         {
             _amendedEvent = Data.Create<ViewModels.UpdateEvent>(e =>
             {
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
-                e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+                e.EndTimeUTC = DateTime.UtcNow.AddDays(-2);
             });
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
+            return AssertBadRequest("EndTimeUTC", "You cannot create an event which ends before it starts.");
         }
 
-        private async Task ThenTheEventIsUpdatedInTheDatabase()
+        private async Task ThenTheEventIsNotUpdatedInTheDatabase()
         {
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _event.Id).SingleOrDefaultAsync();
 
-            Assert.Equal(_amendedEvent.Slug, actualEvent.Slug);
-            Assert.Equal(_amendedEvent.Title, actualEvent.Title);
-            Assert.Equal(_amendedEvent.Description, actualEvent.Description);
-            AssertDateTime(_amendedEvent.StartTimeUTC, actualEvent.StartTimeUTC);
-            AssertDateTime(_amendedEvent.EndTimeUTC, actualEvent.EndTimeUTC);
-            Assert.Equal(_amendedEvent.Location, actualEvent.Location);
-            Assert.Equal(_group.Id, actualEvent.GroupId);
-            Assert.Equal(_group.Name, actualEvent.GroupName);
-            Assert.Equal(_group.Slug, actualEvent.GroupSlug);
+            Assert.Equal(_event.Slug, actualEvent.Slug);
+            Assert.Equal(_event.Title, actualEvent.Title);
+            Assert.Equal(_event.Description, actualEvent.Description);
+            AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
+            AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
+            Assert.Equal(_event.Location, actualEvent.Location);
+            Assert.Equal(_event.GroupId, actualEvent.GroupId);
+            Assert.Equal(_event.GroupName, actualEvent.GroupName);
+            Assert.Equal(_event.GroupSlug, actualEvent.GroupSlug);
         }
     }
 }

@@ -62,7 +62,11 @@ namespace VenimusAPIs.Tests.UpdateEvent
 
         private async Task WhenICallTheUpdateEventApi()
         {
-            _amendedEvent = Data.Create<ViewModels.UpdateEvent>();
+            _amendedEvent = Data.Create<ViewModels.UpdateEvent>(e =>
+            {
+                e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
+                e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+            });
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);

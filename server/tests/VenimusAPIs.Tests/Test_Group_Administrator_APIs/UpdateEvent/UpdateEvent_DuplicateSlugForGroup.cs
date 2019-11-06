@@ -10,7 +10,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.UpdateEvent
 {
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
-    public class UpdateEvent_Success : BaseTest
+    public class UpdateEvent_DuplicateSlugForGroup : BaseTest
     {
         private string _uniqueID;
         private string _token;
@@ -18,8 +18,9 @@ namespace VenimusAPIs.Tests.UpdateEvent
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
         private User _user;
+        private Event _otherEvent;
 
-        public UpdateEvent_Success(Fixture fixture) : base(fixture)
+        public UpdateEvent_DuplicateSlugForGroup(Fixture fixture) : base(fixture)
         {
         }
 
@@ -62,37 +63,47 @@ namespace VenimusAPIs.Tests.UpdateEvent
             await events.InsertOneAsync(_event);
         }
 
-        private async Task WhenICallTheUpdateEventApi()
+        private async Task GivenAnotherEventExistsForTheGroup()
+        {
+            _otherEvent = Data.CreateEvent(_group);
+
+            var events = EventsCollection();
+
+            await events.InsertOneAsync(_otherEvent);
+        }
+
+        private async Task WhenICallTheUpdateEventApiWithADuplicateSlug()
         {
             _amendedEvent = Data.Create<ViewModels.UpdateEvent>(e =>
             {
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+                e.Slug = _otherEvent.Slug;
             });
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NoContent, Response.StatusCode);
+            return AssertBadRequest("Slug", "An event with this slug already exists for this group.");
         }
 
-        private async Task ThenTheEventIsUpdatedInTheDatabase()
+        private async Task ThenTheEventIsNotUpdatedInTheDatabase()
         {
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _event.Id).SingleOrDefaultAsync();
 
-            Assert.Equal(_amendedEvent.Slug, actualEvent.Slug);
-            Assert.Equal(_amendedEvent.Title, actualEvent.Title);
-            Assert.Equal(_amendedEvent.Description, actualEvent.Description);
-            AssertDateTime(_amendedEvent.StartTimeUTC, actualEvent.StartTimeUTC);
-            AssertDateTime(_amendedEvent.EndTimeUTC, actualEvent.EndTimeUTC);
-            Assert.Equal(_amendedEvent.Location, actualEvent.Location);
-            Assert.Equal(_group.Id, actualEvent.GroupId);
-            Assert.Equal(_group.Name, actualEvent.GroupName);
-            Assert.Equal(_group.Slug, actualEvent.GroupSlug);
+            Assert.Equal(_event.Slug, actualEvent.Slug);
+            Assert.Equal(_event.Title, actualEvent.Title);
+            Assert.Equal(_event.Description, actualEvent.Description);
+            AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
+            AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
+            Assert.Equal(_event.Location, actualEvent.Location);
+            Assert.Equal(_event.GroupId, actualEvent.GroupId);
+            Assert.Equal(_event.GroupName, actualEvent.GroupName);
+            Assert.Equal(_event.GroupSlug, actualEvent.GroupSlug);
         }
     }
 }

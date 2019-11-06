@@ -131,6 +131,10 @@ namespace VenimusAPIs.Controllers
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            if (group == null)
+            {
+                return NotFound();
+            }
 
             if (group.Administrators == null || !group.Administrators.Contains(existingUser.Id))
             {
@@ -141,6 +145,25 @@ namespace VenimusAPIs.Controllers
             if (model == null)
             {
                 return NotFound();
+            }
+
+            if (!model.Slug.Equals(amendedEvent.Slug, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var duplicate = await _mongo.GetEvent(groupSlug, amendedEvent.Slug);
+                if (duplicate != null)
+                {
+                    ModelState.AddModelError(nameof(amendedEvent.Slug), "An event with this slug already exists for this group.");
+                }
+            }
+
+            if (amendedEvent.StartTimeUTC >= amendedEvent.EndTimeUTC)
+            {
+                ModelState.AddModelError(nameof(amendedEvent.EndTimeUTC), "You cannot create an event which ends before it starts.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
             }
 
             _mapper.Map(amendedEvent, model);
