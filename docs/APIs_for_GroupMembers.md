@@ -129,6 +129,20 @@ Retrieves the list of signed up attendees of the supplied event.  For the follow
 
 ---
 
-## GET /api/groups/{GroupSlug}/events/{EventSlug}
-
 ## DELETE /api/groups/{GroupSlug}/events/{EventSlug}
+
+Allows an administrator to delete an event.
+
+### Business Rules
+
+* The user must be either a sysadmin administrator or an administrator of the group to delete the event. [NEEDS TEST]
+
+* 204 is returned if event is successfully deleted.
+
+* 204 is returned if event does not exist. [NEEDS TEST]
+
+* An event cannot be delete if it has already taken place. [NEEDS TEST]
+
+---
+
+## GET /api/groups/{GroupSlug}/events/{EventSlug}

@@ -174,6 +174,30 @@ namespace VenimusAPIs.Controllers
         }
 
         /// <summary>
+        ///     Allows an administrator to delete an event
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/groups/YorkCodeDojo/events/1234
+        ///
+        /// </remarks>
+        /// <returns>NoContent</returns>
+        /// <response code="204">Success</response>
+        [Authorize]
+        [Route("api/groups/{groupSlug}/events/{eventSlug}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Delete([FromRoute] string groupSlug, [FromRoute] string eventSlug)
+        {
+            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+
+            await _mongo.DeleteEvent(model);
+
+            return NoContent();
+        }
+
+        /// <summary>
         ///     Allows you to retrieve the details of an event
         /// </summary>
         /// <remarks>

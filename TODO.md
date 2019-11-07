@@ -5,7 +5,6 @@ System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
-Group administrators can : List (including people) / Create / Edit / Delete Events / View Event Members
 ### DELETE /api/Groups/{GroupSlug}/Events
 
 Logic around banned users

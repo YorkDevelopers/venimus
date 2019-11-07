@@ -278,5 +278,12 @@ namespace VenimusAPIs.Services
 
             await groups.DeleteOneAsync(grp => grp.Id == group.Id);
         }
+
+        internal async Task DeleteEvent(Event theEvent)
+        {
+            var events = EventsCollection();
+
+            await events.DeleteOneAsync(e => e.Id == theEvent.Id);
+        }
     }
 }

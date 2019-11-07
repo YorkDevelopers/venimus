@@ -52,6 +52,19 @@
              <response code="401">User is not authorized.</response>
              <response code="404">The group or event does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.EventsController.Delete(System.String,System.String)">
+             <summary>
+                 Allows an administrator to delete an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/groups/YorkCodeDojo/events/1234
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.String,System.String)">
              <summary>
                  Allows you to retrieve the details of an event
