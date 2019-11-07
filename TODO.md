@@ -6,7 +6,6 @@ System adminstrators can :  Ban Users
 ### DELETE /api/BannedUsers/{userslug}
 
 Group administrators can : List (including people) / Create / Edit / Delete Events / View Event Members
-### GET /api/Groups/{GroupSlug}/Events/{EventSlug}/Members
 ### DELETE /api/Groups/{GroupSlug}/Events
 
 Logic around banned users
@@ -26,3 +25,7 @@ Add events to process actions,  such as updating events after a group slug/name 
 Base64 images  as per Kevin's suggestion
 
 Add Blob storage
+
+Rename Group.Member.ID 
+
+Denormalise Group.Member
