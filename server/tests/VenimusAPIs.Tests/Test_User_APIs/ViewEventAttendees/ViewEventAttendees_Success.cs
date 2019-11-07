@@ -12,7 +12,7 @@ using Xunit;
 
 namespace VenimusAPIs.Tests.ViewEventAttendees
 {
-    [Story(AsA = "User", IWant = "to be able to view the other sifgned up attendees of an event", SoThat = "I can belong to the community")]
+    [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_Success : BaseTest
     {
         private string _token;
@@ -38,7 +38,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private async Task GivenIAmUser()
         {
             _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
+            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
 
             _user = Data.Create<Models.User>();
 

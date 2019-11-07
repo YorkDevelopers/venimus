@@ -1,7 +1,7 @@
 <!-- markdownlint-disable no-duplicate-heading -->
-# Project Venimus - APIs For Group Administrators
+# Project Venimus - APIs For Group Members
 
-The following APIs can only be called by community group administrators.
+The following APIs can only be called by members of the groups.
 
 ---
 
@@ -99,9 +99,36 @@ Retrieves the list of members of the supplied group.  For the following array of
 
 ---
 
+## GET /api/groups/{GroupSlug}/Events/{EventSlug}Members
+
+Retrieves the list of signed up attendees of the supplied event.  For the following array of properties are returned:
+
+* __Slug__ - The external ID for the user.
+
+* __IsHost__ - Is the user hosting the event?
+
+* __IsSpeaker__ - Is the user speaking at the event?
+
+* __EmailAddress__ - The email address which also links all the social media accounts together.
+
+* __Pronoun__ - The users preferred personal pronon.  e.g. Him
+
+* __Fullname__ - The user's fullname.  e.g David Betteridge
+
+* __DisplayName__ - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+
+* __Bio__ - The user's biography.  This can include their place of work/student,  any interests etc.
+
+* __ProfilePictureInBase64__ - The user's profile picture
+
+### Business Rules
+
+* The user must be either a sysadmin administrator or a member of the group to retrieve the members list.
+
+* 404 is returned if the group or event does not exist.
+
+---
+
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}
 
-## GET /api/groups/{GroupSlug}/events/{EventSlug}/members  (any member of the group can call this)
-
 ## DELETE /api/groups/{GroupSlug}/events/{EventSlug}
-

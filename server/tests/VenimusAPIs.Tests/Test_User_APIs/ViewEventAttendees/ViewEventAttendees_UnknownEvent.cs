@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ViewGroupMembers
+namespace VenimusAPIs.Tests.ViewEventAttendees
 {
-    [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
-    public class ViewGroupMembers_Success : BaseTest
+    [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
+    public class ViewEventAttendees_UnknownEvent : BaseTest
     {
         private string _token;
         private Group _existingGroup;
@@ -24,7 +20,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
 
-        public ViewGroupMembers_Success(Fixture fixture) : base(fixture)
+        public ViewEventAttendees_UnknownEvent(Fixture fixture) : base(fixture)
         {
         }
 
@@ -75,42 +71,15 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task WhenICallTheApi()
+        private async Task WhenICallTheApiForAnUnknownEvent()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Members");
+            Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Events/MADEUP/Members");
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private void ThenNotFoundIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
-        }
-
-        private async Task ThenTheMembersAreReturned()
-        {
-            var json = await Response.Content.ReadAsStringAsync();
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var actualMembers = JsonSerializer.Deserialize<ViewModels.ListGroupMembers[]>(json, options);
-
-            Assert.Equal(4, actualMembers.Length);
-
-            AssertMember(_user, actualMembers, false);
-            AssertMember(_otherUserInGroup1, actualMembers, false);
-            AssertMember(_otherUserInGroup2, actualMembers, false);
-            AssertMember(_otherUserInGroup3, actualMembers, true);
-        }
-
-        private void AssertMember(User user, ListGroupMembers[] actualMembers, bool isAdministrator)
-        {
-            var actualMember = actualMembers.Single(m => m.Slug == user.Id.ToString());
-
-            Assert.Equal(user.DisplayName, actualMember.DisplayName);
-            Assert.Equal(user.EmailAddress, actualMember.EmailAddress);
-            Assert.Equal(user.Fullname, actualMember.Fullname);
-            Assert.Equal(user.Bio, actualMember.Bio);
-            Assert.Equal(user.Pronoun, actualMember.Pronoun);
-            Assert.Equal(isAdministrator, actualMember.IsAdministrator);
-            Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualMember.ProfilePictureInBase64));
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, Response.StatusCode);
         }
     }
 }

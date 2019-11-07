@@ -51,7 +51,7 @@ In addition to the generated swagger documentation,  a summary of the APIs is be
 
 [APIs for System Administrators](docs/APIs_for_SystemAdministrators.md)
 
-[APIs for Group Administrators](docs/APIs_for_GroupAdministrators.md)
+[APIs for Group Members](docs/APIs_for_GroupMembers.md)
 
 [APIs for Normal Users](docs/APIs_for_NormalUsers.md)
 

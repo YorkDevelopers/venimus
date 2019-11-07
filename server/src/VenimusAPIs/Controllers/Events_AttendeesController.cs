@@ -46,10 +46,26 @@ namespace VenimusAPIs.Controllers
         public async Task<ActionResult<ListEventAttendees[]>> Get([FromRoute, Slug]string groupSlug, [FromRoute, Slug]string eventSlug)
         {
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
-            
-            var members = theEvent.Members.ToArray();
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
 
-            var users = await _mongo.GetUsersByIds(members.Select(m => m.UserId));
+            if (!User.IsInRole("SystemAdministrator"))
+            {
+                var groupMembers = await GetGroupMembers(groupSlug);
+
+                var uniqueID = UniqueIDForCurrentUser;
+                var user = await _mongo.GetUserByID(uniqueID);
+                if (!groupMembers.Any(u => u.Id == user.Id))
+                {
+                    return Forbid();
+                }
+            }
+
+            var attendees = theEvent.Members.ToArray();
+
+            var users = await _mongo.GetUsersByIds(attendees.Select(m => m.UserId));
 
             return users.Select(m => new ListEventAttendees
             {
@@ -60,9 +76,22 @@ namespace VenimusAPIs.Controllers
                 Pronoun = m.Pronoun,
                 Slug = m.Id.ToString(),
                 ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
-                IsHost = members.Single(x => x.UserId == m.Id).Host,
-                IsSpeaker = members.Single(x => x.UserId == m.Id).Speaker,
+                IsHost = attendees.Single(x => x.UserId == m.Id).Host,
+                IsSpeaker = attendees.Single(x => x.UserId == m.Id).Speaker,
             }).ToArray();
+        }
+
+        private async Task<Group.GroupMember[]> GetGroupMembers(string groupSlug)
+        {
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+
+            if (group.Members == null)
+            {
+                group.Members = new List<Group.GroupMember>();
+            }
+
+            var members = group.Members.ToArray();
+            return members;
         }
     }
 }

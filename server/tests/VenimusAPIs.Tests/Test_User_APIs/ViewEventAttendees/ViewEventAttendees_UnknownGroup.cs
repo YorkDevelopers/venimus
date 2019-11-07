@@ -4,14 +4,14 @@ using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ViewGroupMembers
+namespace VenimusAPIs.Tests.ViewEventAttendees
 {
-    [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
-    public class ViewGroupMembers_UnknownGroup : BaseTest
+    [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
+    public class ViewEventAttendees_UnknownGroup : BaseTest
     {
         private string _token;
 
-        public ViewGroupMembers_UnknownGroup(Fixture fixture) : base(fixture)
+        public ViewEventAttendees_UnknownGroup(Fixture fixture) : base(fixture)
         {
         }
 
@@ -30,7 +30,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
         private async Task WhenICallTheApiForAnUnknownGroup()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            Response = await Fixture.APIClient.GetAsync($"api/Groups/MADEUP/Members");
+            Response = await Fixture.APIClient.GetAsync($"api/Groups/MADEUP/Events/MADEUP/Members");
         }
 
         private void ThenNotFoundIsReturned()
