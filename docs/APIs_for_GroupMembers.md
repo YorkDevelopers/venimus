@@ -99,7 +99,7 @@ Retrieves the list of members of the supplied group.  For the following array of
 
 ---
 
-## GET /api/groups/{GroupSlug}/Events/{EventSlug}Members
+## GET /api/groups/{GroupSlug}/Events/{EventSlug}/Members
 
 Retrieves the list of signed up attendees of the supplied event.  For the following array of properties are returned:
 
@@ -135,11 +135,13 @@ Allows an administrator to delete an event.
 
 ### Business Rules
 
-* The user must be either a sysadmin administrator or an administrator of the group to delete the event. [NEEDS TEST]
+* The user must be either a sysadmin administrator or an administrator of the group to delete the event.
 
 * 204 is returned if event is successfully deleted.
 
-* 204 is returned if event does not exist. [NEEDS TEST]
+* 204 is returned if the event does not exist.
+
+* 404 is returned if the group does not exist.
 
 * An event cannot be delete if it has already taken place. [NEEDS TEST]
 

@@ -5,7 +5,6 @@ System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
-### DELETE /api/Groups/{GroupSlug}/Events
 
 Logic around banned users
 
@@ -28,3 +27,11 @@ Add Blob storage
 Rename Group.Member.ID 
 
 Denormalise Group.Member
+
+Add IsAttending to GET /api/groups/{GroupSlug}/Events/{EventSlug}/Members
+
+Notify members when things happen
+
+
+
+dotnet test --filter "VenimusAPIs.Tests.DeleteEvent"

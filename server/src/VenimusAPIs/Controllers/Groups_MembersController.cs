@@ -58,7 +58,7 @@ namespace VenimusAPIs.Controllers
 
             var members = group.Members.ToArray();
 
-            if (!User.IsInRole("SystemAdministrator"))
+            if (!UserIsASystemAdministrator)
             {
                 var uniqueID = UniqueIDForCurrentUser;
                 var user = await _mongo.GetUserByID(uniqueID);

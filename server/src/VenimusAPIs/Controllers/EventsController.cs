@@ -190,9 +190,35 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (!UserIsASystemAdministrator)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
 
-            await _mongo.DeleteEvent(model);
+                var existingUser = await _mongo.GetUserByID(uniqueID);
+
+                var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
+                {
+                    return Forbid();
+                }
+            }
+
+            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (model != null)
+            {
+                if (model.EndTimeUTC < DateTime.UtcNow)
+                {
+                    var details = new ValidationProblemDetails { Detail = "The event cannot be deleted as it has already taken place." };
+                    return ValidationProblem(details);
+                }
+
+                await _mongo.DeleteEvent(model);
+            }
 
             return NoContent();
         }

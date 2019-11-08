@@ -8,5 +8,7 @@ namespace VenimusAPIs.UserControllers
     public abstract class BaseUserController : ControllerBase
     {
         protected string UniqueIDForCurrentUser => User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+        protected bool UserIsASystemAdministrator => User.IsInRole("SystemAdministrator");
     }
 }

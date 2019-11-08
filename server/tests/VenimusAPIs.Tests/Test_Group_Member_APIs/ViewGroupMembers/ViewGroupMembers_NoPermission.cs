@@ -23,10 +23,10 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
+        private async Task GivenIAmUser()
         {
             var uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(uniqueID);
+            _token = await Fixture.GetTokenForNormalUser(uniqueID);
         }
 
         private async Task GivenIGroupIDoNotBelongTo()
