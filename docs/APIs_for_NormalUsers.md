@@ -1,5 +1,5 @@
 <!-- markdownlint-disable no-duplicate-heading -->
-# Project Venimus - Nornmal User APIs
+# Project Venimus - Normal User APIs
 
 The following APIs can be called by normal users once they have authenticated.
 
@@ -59,16 +59,16 @@ Allows the user to sign up for an event.  The following details must be provided
 * DietaryRequirements - any dietary requirements
 * MessageToOrganiser - free format message
 
-### Business Rules (not implemented)
+### Business Rules
 
-Group does not exist
-Event does not belong to the group
-Event is full
-Event is in the past
-NumberOfGuests is positive
-Guests not allowed
-User is not a member of the group
-A user can only sign up once
+* Group does not exist
+* Event does not belong to the group
+* Event is in the past
+* Event is full  (not implemented)
+* NumberOfGuests is positive  (not implemented)
+* Guests not allowed  (not implemented)
+* User is not a member of the group  (not implemented)
+* A user can only sign up once  (not implemented)
 
 ---
 

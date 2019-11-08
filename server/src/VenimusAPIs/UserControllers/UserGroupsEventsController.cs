@@ -51,9 +51,27 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
         {
+            var theGroup = await _mongo.RetrieveGroupBySlug(groupSlug);
+            if (theGroup == null)
+            {
+                return NotFound();
+            }
+
             var eventSlug = signUpDetails.EventSlug;
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
 
+            if (theEvent.EndTimeUTC < DateTime.UtcNow)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "This event has already taken place",
+                });
+            }
+            
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
