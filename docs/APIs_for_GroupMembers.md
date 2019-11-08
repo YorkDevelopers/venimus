@@ -143,8 +143,30 @@ Allows an administrator to delete an event.
 
 * 404 is returned if the group does not exist.
 
-* An event cannot be delete if it has already taken place. [NEEDS TEST]
+* An event cannot be delete if it has already taken place.
 
 ---
 
 ## GET /api/groups/{GroupSlug}/events/{EventSlug}
+
+Allows a member of a group to retrieve the full details of an event.  The following details are returned:
+
+* __EventSlug__ - The unique external ID for the event.
+
+* __GroupName__ - The name of the group hosting the event.  _For example YorkCodeDojo_
+
+* __EventTitle__ - The title of the event.  _For example Monthly meeting - October_
+
+* __EventDescription__ - A description of the event in markdown.
+
+* __EventStartsUTC__ - When does the event start,  in UTC time?
+
+* __EventFinishesUTC__ - When does the event finish, in UTC time?
+
+* __EventLocation__ - Where will the event take place?
+
+### Business Rules
+
+* The user must be either a system administrator or a member of the group
+
+* If the event or group does not exist then 404 will be returned.

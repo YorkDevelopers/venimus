@@ -135,7 +135,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetEvent>> Delete([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
+        public async Task<ActionResult> Delete([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)

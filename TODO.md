@@ -32,6 +32,11 @@ Add IsAttending to GET /api/groups/{GroupSlug}/Events/{EventSlug}/Members
 
 Notify members when things happen
 
+Improve permissions model.
 
 
 dotnet test --filter "VenimusAPIs.Tests.DeleteEvent"
+
+
+        [CallerMustBeGroupAdministrator]  -> returns 404 if the group does not exist.   returns 403 if not an admin
+        [CallerMustBelongToGroup] -> returns 404 if the group does not exist.   returns 403 if not a member

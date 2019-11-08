@@ -240,9 +240,42 @@ namespace VenimusAPIs.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<GetEvent> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
+        public async Task<ActionResult<GetEvent>> Get([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            return NotFound();
+            if (!UserIsASystemAdministrator)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+
+                var existingUser = await _mongo.GetUserByID(uniqueID);
+
+                var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id))
+                {
+                    return Forbid();
+                }
+            }
+
+            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return new GetEvent
+            {
+                EventDescription = model.Description,
+                EventFinishesUTC = model.EndTimeUTC,
+                EventSlug = eventSlug,
+                EventStartsUTC = model.StartTimeUTC,
+                EventTitle = model.Title,
+                GroupName = model.GroupName,
+                EventLocation = model.Location,
+            };
         }
     }
 }

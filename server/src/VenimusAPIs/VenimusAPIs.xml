@@ -670,9 +670,39 @@
                 The group's logo.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.GetEvent.Slug">
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventSlug">
             <summary>
-                The unique external id for the event.  For example May2019
+                The unique external ID for the event.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.GroupName">
+            <summary>
+                The name of the group hosting the event.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventTitle">
+            <summary>
+                The title of the event.  Monthly meeting - October
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventDescription">
+            <summary>
+                A description of the event in markdown.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventStartsUTC">
+            <summary>
+                When does the event start,  in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventFinishesUTC">
+            <summary>
+                When does the event finish, in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.EventLocation">
+            <summary>
+                Where is the event being held?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Slug">

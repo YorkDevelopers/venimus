@@ -4,6 +4,10 @@ namespace VenimusAPIs.ViewModels
 {
     public class ListFutureEvents
     {
+        /*
+         * Important! - Do not add location to this public view model - only members of a group can see the location of event.
+         */
+
         /// <summary>
         ///     The unique external ID for the event.
         /// </summary>
