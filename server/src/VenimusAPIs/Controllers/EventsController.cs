@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
@@ -47,26 +46,12 @@ namespace VenimusAPIs.Controllers
         /// <response code="404">The group does not exist.</response>
         [Route("api/groups/{groupSlug}/events")]
         [Authorize]
+        [CallerMustBeGroupAdministrator]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] CreateEvent newEvent)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (group == null)
-            {
-                return NotFound();
-            }
-
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
-            {
-                return Forbid();
-            }
-
             if (newEvent.StartTimeUTC < DateTime.UtcNow)
             {
                 ModelState.AddModelError(nameof(newEvent.StartTimeUTC), "You cannot create an event in the past.");
@@ -87,6 +72,8 @@ namespace VenimusAPIs.Controllers
             {
                 return ValidationProblem(ModelState);
             }
+
+            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
 
             var model = _mapper.Map<Models.Event>(newEvent);
             model.GroupSlug = groupSlug;
@@ -122,26 +109,12 @@ namespace VenimusAPIs.Controllers
         /// <response code="404">The group or event does not exist.</response>
         [Route("api/groups/{groupSlug}/events/{eventSlug}")]
         [Authorize]
+        [CallerMustBeGroupAdministrator]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] UpdateEvent amendedEvent)
         {
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (group == null)
-            {
-                return NotFound();
-            }
-
-            if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
-            {
-                return Forbid();
-            }
-
             var model = await _mongo.GetEvent(groupSlug, eventSlug);
             if (model == null)
             {
@@ -187,27 +160,10 @@ namespace VenimusAPIs.Controllers
         [Authorize]
         [Route("api/groups/{groupSlug}/events/{eventSlug}")]
         [HttpDelete]
+        [CallerMustBeGroupAdministrator]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            if (!UserIsASystemAdministrator)
-            {
-                var uniqueID = UniqueIDForCurrentUser;
-
-                var existingUser = await _mongo.GetUserByID(uniqueID);
-
-                var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-                if (group == null)
-                {
-                    return NotFound();
-                }
-
-                if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && m.IsAdministrator))
-                {
-                    return Forbid();
-                }
-            }
-
             var model = await _mongo.GetEvent(groupSlug, eventSlug);
             if (model != null)
             {
@@ -236,30 +192,13 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
+        [CallerMustBeGroupMember]
         [Route("api/groups/{groupSlug}/events/{eventSlug}", Name = "Events")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetEvent>> Get([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            if (!UserIsASystemAdministrator)
-            {
-                var uniqueID = UniqueIDForCurrentUser;
-
-                var existingUser = await _mongo.GetUserByID(uniqueID);
-
-                var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-                if (group == null)
-                {
-                    return NotFound();
-                }
-
-                if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id))
-                {
-                    return Forbid();
-                }
-            }
-
             var model = await _mongo.GetEvent(groupSlug, eventSlug);
             if (model == null)
             {

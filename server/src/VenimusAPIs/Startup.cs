@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using VenimusAPIs.Registration;
+using VenimusAPIs.Validation;
 
 namespace VenimusAPIs
 {
@@ -65,6 +66,14 @@ namespace VenimusAPIs
                     },
                 };
             });
+
+            services.AddMvc(options =>
+            {
+                options.Filters.AddService<CheckSecurity>();
+            }
+            );
+
+            services.AddSingleton<CheckSecurity>();
 
             services.AddSingleton<Services.Mongo>();
 
