@@ -610,6 +610,11 @@
             If the caller doesn't have access to the group then we return NotFound(404) rather than Forbid(403)
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.CanBeSystemAdministratorInstead">
+            <summary>
+            The caller doesn't need to be a member of the group if they have the System Administrator role.
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.AmendRegistrationForEvent.NumberOfGuests">
             <summary>
                 The number of unregistered guests joining the user

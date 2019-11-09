@@ -1,32 +1,31 @@
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.RegisterForEvent
+namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
-    public class RegisterForEvent_AlreadyHappened : BaseTest
+    public class AmendRegistrationForEvent_NotSignedUp : BaseTest
     {
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
         private User _user;
         private Event _existingEvent;
-        private ViewModels.RegisterForEvent _signUpToEvent;
+        private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
-        public RegisterForEvent_AlreadyHappened(Fixture fixture) : base(fixture)
+        public AmendRegistrationForEvent_NotSignedUp(Fixture fixture) : base(fixture)
         {
         }
 
         [Fact]
-        public async Task Execute()
+        public void Execute()
         {
-            await ResetDatabase();
             this.BDDfy();
         }
 
@@ -36,8 +35,11 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _token = Fixture.GetTokenForNewUser(_uniqueID);
 
             _user = Data.Create<Models.User>();
+
             var collection = UsersCollection();
+
             _user.Identities = new List<string> { _uniqueID };
+
             await collection.InsertOneAsync(_user);
         }
 
@@ -51,12 +53,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenAnEventExistsWhichHasAlreadyTakenPlace()
+        private async Task GivenAnEventExistsForThatGroupAndIAmNotSignedUp()
         {
-            _existingEvent = Data.CreateEvent(_existingGroup, evt =>
-            {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(-10);
-            });
+            _existingEvent = Data.CreateEvent(_existingGroup);
 
             var events = EventsCollection();
 
@@ -65,25 +64,35 @@ namespace VenimusAPIs.Tests.RegisterForEvent
 
         private async Task WhenICallTheApi()
         {
-            _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.EventSlug = _existingEvent.Slug;
-            _signUpToEvent.NumberOfGuests = 0;
+            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
 
             Fixture.APIClient.SetBearerToken(_token);
-            Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
-        private Task ThenABadRequestResponseIsReturned()
+        private void ThenASuccessResponseIsReturned()
         {
-            return AssertBadRequestDetail("This event has already taken place");
+            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
         }
 
-        private async Task ThenTheUserIsNotAMemberOfTheEvent()
+        private void ThenThePathToTheEventRegistrationIsReturned()
+        {
+            Assert.Equal($"http://localhost/api/user/groups/{_existingGroup.Slug}/events/{_existingEvent.Slug}", Response.Headers.Location.ToString());
+        }
+
+        private async Task ThenTheUserIsNowAMemberOfTheEvent()
         {
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _existingEvent.Id).SingleAsync();
 
-            Assert.Empty(actualEvent.Members);
+            Assert.Single(actualEvent.Members);
+
+            var member = actualEvent.Members[0];
+            Assert.Equal(_user.Id.ToString(), member.UserId.ToString());
+            Assert.Equal(_amendedDetails.DietaryRequirements, member.DietaryRequirements);
+            Assert.Equal(_amendedDetails.MessageToOrganiser, member.MessageToOrganiser);
+            Assert.Equal(_amendedDetails.NumberOfGuests, member.NumberOfGuests);
+            Assert.True(member.SignedUp);
         }
     }
 }

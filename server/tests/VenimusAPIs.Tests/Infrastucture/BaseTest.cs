@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.Models;
 using Xunit;
 
 namespace VenimusAPIs.Tests.Infrastucture
@@ -10,6 +12,12 @@ namespace VenimusAPIs.Tests.Infrastucture
     [Collection("Serial")]
     public abstract class BaseTest : IClassFixture<Fixture>
     {
+        protected string UniqueID { get; set; }
+
+        protected string Token { get; set; }
+
+        protected User User { get; set; }
+
         protected Fixture Fixture { get; }
 
         protected HttpResponseMessage Response { get; set; }
@@ -82,6 +90,36 @@ namespace VenimusAPIs.Tests.Infrastucture
             var options = new JsonSerializerOptions { IgnoreReadOnlyProperties = true };
             var validationProblemDetails = JsonSerializer.Deserialize<ValidationProblemDetails>(json, options);
             Assert.Equal(expectedErrorMessage, validationProblemDetails.Detail);
+        }
+
+        public async Task IAmASystemAdministrator()
+        {
+            UniqueID = Guid.NewGuid().ToString();
+            Token = await Fixture.GetTokenForSystemAdministrator(UniqueID);
+
+            User = Data.Create<Models.User>();
+            User.Identities = new List<string> { UniqueID };
+
+            var collection = UsersCollection();
+
+            await collection.InsertOneAsync(User);
+
+            Fixture.APIClient.SetBearerToken(Token);
+        }
+
+        public async Task IAmANormalUser()
+        {
+            UniqueID = Guid.NewGuid().ToString();
+            Token = await Fixture.GetTokenForNormalUser(UniqueID);
+
+            User = Data.Create<Models.User>();
+            User.Identities = new List<string> { UniqueID };
+
+            var collection = UsersCollection();
+
+            await collection.InsertOneAsync(User);
+
+            Fixture.APIClient.SetBearerToken(Token);
         }
     }
 }

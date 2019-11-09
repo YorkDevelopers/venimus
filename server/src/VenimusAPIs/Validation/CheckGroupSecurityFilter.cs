@@ -20,18 +20,23 @@ namespace VenimusAPIs.Validation
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var user = context.HttpContext.User;
-            if (!user.IsInRole("SystemAdministrator"))
-            {
-                var mustBeAGroupAdministrator = RequiresGroupAdministrator(context.ActionDescriptor);
-                var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var useNotFoundRatherThanForbidden);
+            var mustBeAGroupAdministrator = RequiresGroupAdministrator(context.ActionDescriptor);
+            var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var useNotFoundRatherThanForbidden, out var canBeSystemAdministratorInstead);
 
-                if (mustBeAGroupAdministrator || mustBeAGroupMember)
+            if (mustBeAGroupAdministrator || mustBeAGroupMember)
+            {
+                if (!canBeSystemAdministratorInstead || !user.IsInRole("SystemAdministrator"))
                 {
                     var groupSlug = context.ActionArguments["groupSlug"].ToString();
 
                     var uniqueID = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
                     var existingUser = await _mongo.GetUserByID(uniqueID);
+                    if (existingUser == null)
+                    {
+                        context.Result = new ForbidResult();
+                        return;
+                    }
 
                     var group = await _mongo.RetrieveGroupBySlug(groupSlug);
                     if (group == null)
@@ -71,7 +76,7 @@ namespace VenimusAPIs.Validation
             return false;
         }
 
-        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out bool useNotFoundRatherThanForbidden)
+        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out bool useNotFoundRatherThanForbidden, out bool canBeSystemAdministratorInstead)
         {
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
@@ -80,11 +85,13 @@ namespace VenimusAPIs.Validation
                 if (attribute != null)
                 {
                     useNotFoundRatherThanForbidden = attribute.UseNotFoundRatherThanForbidden;
+                    canBeSystemAdministratorInstead = attribute.CanBeSystemAdministratorInstead;
                     return true;
                 }
             }
 
             useNotFoundRatherThanForbidden = false;
+            canBeSystemAdministratorInstead = true;
             return false;
         }
     }

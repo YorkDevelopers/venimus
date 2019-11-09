@@ -1,26 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
-    public class ViewMyRegistrationForEvent_Success : BaseTest
+    public class ViewMyRegistrationForEvent_NotAGroupMember : BaseTest
     {
         private string _token;
         private Group _existingGroup;
         private string _uniqueID;
         private User _user;
         private Event _existingEvent;
-        private Event.EventAttendees _registrationDetails;
 
-        public ViewMyRegistrationForEvent_Success(Fixture fixture) : base(fixture)
+        public ViewMyRegistrationForEvent_NotAGroupMember(Fixture fixture) : base(fixture)
         {
         }
 
@@ -42,13 +39,11 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             await collection.InsertOneAsync(_user);
         }
 
-        private async Task GivenAGroupExistsOfWhichIAmAMember()
+        private async Task GivenAGroupExistsOfWhichIAmNotAMember()
         {
             _existingGroup = Data.Create<Models.Group>();
-            Data.AddGroupMember(_existingGroup, _user);
 
             var groups = GroupsCollection();
-
             await groups.InsertOneAsync(_existingGroup);
         }
 
@@ -56,7 +51,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
         {
             _existingEvent = Data.CreateEvent(_existingGroup, evt =>
             {
-                _registrationDetails = Data.AddEventAttendee(evt, _user, numberOfGuests: 10);
+                Data.AddEventAttendee(evt, _user, numberOfGuests: 10);
             });
 
             var events = EventsCollection();
@@ -70,20 +65,9 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             Response = await Fixture.APIClient.GetAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private void ThenAForbiddenResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.OK, Response.StatusCode);
-        }
-
-        private async Task ThenTheDetailsOfTheRegistrationAreReturned()
-        {
-            var json = await Response.Content.ReadAsStringAsync();
-            var actualRegistration = JsonSerializer.Deserialize<ViewMyEventRegistration>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            Assert.Equal(_registrationDetails.MessageToOrganiser, actualRegistration.MessageToOrganiser);
-            Assert.Equal(10, actualRegistration.NumberOfGuests);
-            Assert.Equal(_registrationDetails.DietaryRequirements, actualRegistration.DietaryRequirements);
-            Assert.True(actualRegistration.Attending);
+            Assert.Equal(System.Net.HttpStatusCode.Forbidden, Response.StatusCode);
         }
     }
 }

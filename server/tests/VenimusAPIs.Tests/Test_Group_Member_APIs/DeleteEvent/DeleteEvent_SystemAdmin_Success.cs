@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -12,10 +10,8 @@ namespace VenimusAPIs.Tests.DeleteEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to delete an existing event", SoThat = "People are kept informed")]
     public class DeleteEvent_SystemAdmin_Success : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _group;
-        private User _user;
 
         public DeleteEvent_SystemAdmin_Success(Fixture fixture) : base(fixture)
         {
@@ -29,22 +25,15 @@ namespace VenimusAPIs.Tests.DeleteEvent
 
         private async Task GivenIAmASystemAdministrator()
         {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            await collection.InsertOneAsync(_user);
+            await IAmASystemAdministrator();
         }
 
         private async Task GivenIAmNotAnAdminstratorForTheGroup()
         {
             _group = Data.Create<Models.Group>();
-            Data.AddGroupMember(_group, _user);
+            Data.AddGroupMember(_group, User);
 
             var collection = GroupsCollection();
-
             await collection.InsertOneAsync(_group);
         }
 
@@ -53,13 +42,12 @@ namespace VenimusAPIs.Tests.DeleteEvent
             _event = Data.CreateEvent(_group);
 
             var events = EventsCollection();
-
             await events.InsertOneAsync(_event);
         }
 
         private async Task WhenICallTheDeleteEventApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
+            Fixture.APIClient.SetBearerToken(Token);
             Response = await Fixture.APIClient.DeleteAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}");
         }
 

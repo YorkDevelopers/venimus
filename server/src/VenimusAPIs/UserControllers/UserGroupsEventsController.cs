@@ -58,6 +58,19 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
+            var uniqueID = UniqueIDForCurrentUser;
+
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (member != null)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "You are already signed up to this event.",
+                });
+            }
+
             if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
                 ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
@@ -69,7 +82,7 @@ namespace VenimusAPIs.UserControllers
             }
 
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
-            if (numberAttending + 1 + signUpDetails.NumberOfGuests > theEvent.MaximumNumberOfAttendees)
+            if ((numberAttending + 1 + signUpDetails.NumberOfGuests) > theEvent.MaximumNumberOfAttendees)
             {
                 return ValidationProblem(new ValidationProblemDetails
                 {
@@ -82,19 +95,6 @@ namespace VenimusAPIs.UserControllers
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = "This event has already taken place",
-                });
-            }
-
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
-            if (member != null)
-            {
-                return ValidationProblem(new ValidationProblemDetails
-                {
-                    Detail = "You are already signed up to this event.",
                 });
             }
 
@@ -163,15 +163,38 @@ namespace VenimusAPIs.UserControllers
                 });
             }
 
-            var member = await GetUsersRegistrationForThisEvent(theEvent);
+            var uniqueID = UniqueIDForCurrentUser;
 
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            var created = false;
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (member == null)
+            {
+                member = new Models.Event.EventAttendees
+                {
+                    UserId = existingUser.Id,
+                };
+
+                theEvent.Members.Add(member);
+                created = true;
+            }
+
+            member.SignedUp = true;
             member.DietaryRequirements = newDetails.DietaryRequirements;
             member.NumberOfGuests = newDetails.NumberOfGuests;
             member.MessageToOrganiser = newDetails.MessageToOrganiser;
 
             await _mongo.UpdateEvent(theEvent);
 
-            return NoContent();
+            if (created)
+            {
+                return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
 
         /// <summary>
@@ -252,12 +275,17 @@ namespace VenimusAPIs.UserControllers
         /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
         [Route("api/user/groups/{groupSlug}/events/{eventSlug}", Name = "EventRegistration")]
+        [CallerMustBeGroupMember(CanBeSystemAdministratorInstead = false)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
 
             var member = await GetUsersRegistrationForThisEvent(theEvent);
 

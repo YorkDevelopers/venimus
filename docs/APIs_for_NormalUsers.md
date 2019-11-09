@@ -88,8 +88,8 @@ Allows the user to amend their registration for an event.  The following details
 * Event is in the past
 * NumberOfGuests is positive
 * Guests not allowed
-* The user isn't signed up (not implemented)
-* Too many people (not implemented)
+* The user isn't signed up then a record is created
+* Too many people (**not implemented**)
 
 ---
 
@@ -101,10 +101,12 @@ Allows the user to view their registration details for any event.  Returns the f
 * DietaryRequirements - any dietary requirements
 * MessageToOrganiser - free format message
 
-### Business Rules (not implemented)
+### Business Rules
 
-Event does not exist
-Not signed up
+* Event does not exist
+* Group does not exist
+* Not a member of the group
+* Not signed up (**not implemented**)
 
 ---
 
@@ -172,9 +174,9 @@ Allows the user to join a group.  The supplied model must contain:
 
 * If the user is successfully added to the group then 201 is returned with location to retrieve the groups details.
 
-* If the group does not exist then 404 is returned.  (NEEDS TEST)
+* If the group does not exist then 404 is returned.  (**not implemented**)
 
-* If the user is already a member of a group then 204 will still be returned but they will only be added once (NEEDS TEST)
+* If the user is already a member of a group then 204 will still be returned but they will only be added once (**not implemented**)
 
 ---
 
@@ -186,8 +188,8 @@ Allows the user to leave a group.
 
 * If the user is successfully removed from the group then 204 is returned.
 
-* If the group does not exist then 404 is returned. (NEEDS TEST)
+* If the group does not exist then 404 is returned. (**not implemented**)
 
-* If the user is not a member of a group then 204 will still be returned.  (NEEDS TEST)
+* If the user is not a member of a group then 204 will still be returned.  (**not implemented**)
 
 ---

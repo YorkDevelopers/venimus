@@ -79,12 +79,12 @@ namespace VenimusAPIs.Tests
             return await Task.FromResult(token);
         }
 
-        public async Task<string> GetTokenForSystemAdministrator()
+        public async Task<string> GetTokenForSystemAdministrator(string uniqueID = "")
         {
             IdentityModelEventSource.ShowPII = true;
 
             // var token = await CreateAuth0Token();
-            var token = CreateMockToken(string.Empty, "SystemAdministrator");
+            var token = CreateMockToken(uniqueID, "SystemAdministrator");
             return await Task.FromResult(token);
         }
 

@@ -11,8 +11,6 @@ namespace VenimusAPIs.Tests.UpdateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent_UnknownGroup : BaseTest
     {
-        private string _token;
-
         public UpdateEvent_UnknownGroup(Fixture fixture) : base(fixture)
         {
         }
@@ -25,8 +23,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
 
         private async Task GivenIAmAUser()
         {
-            var uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(uniqueID);
+            await IAmANormalUser();
         }
 
         private async Task WhenICallTheUpdateEventApiForAnUnknownGroup()
@@ -37,7 +34,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
 
-            Fixture.APIClient.SetBearerToken(_token);
+            Fixture.APIClient.SetBearerToken(Token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/MADEUP/Events/MADEUP", amendedEvent);
         }
 
