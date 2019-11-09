@@ -11,7 +11,6 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_NoPermission : BaseTest
     {
-        private string _token;
         private ViewModels.CreateEvent _event;
         private Group _group;
 
@@ -25,12 +24,12 @@ namespace VenimusAPIs.Tests.CreateEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmNotTheGroupAdministrator()
+        private async Task GivenIAmANormalUser()
         {
-            _token = await Fixture.GetTokenForNormalUser();
+            await IAmANormalUser();
         }
 
-        private async Task GivenAGroupExists()
+        private async Task GivenAGroupExistsButIAmNotTheAdministrator()
         {
             _group = Data.Create<Models.Group>();
 
@@ -43,7 +42,6 @@ namespace VenimusAPIs.Tests.CreateEvent
         {
             _event = Data.Create<ViewModels.CreateEvent>();
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
-using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -11,10 +9,7 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_UnknownGroup : BaseTest
     {
-        private string _uniqueID;
-        private string _token;
         private ViewModels.CreateEvent _event;
-        private User _user;
 
         public CreateEvent_UnknownGroup(Fixture fixture) : base(fixture)
         {
@@ -26,21 +21,9 @@ namespace VenimusAPIs.Tests.CreateEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmAGroupAdministrator()
+        private async Task GivenIAmANormalUser()
         {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-        }
-
-        private async Task GivenIExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
+            await IAmANormalUser();
         }
 
         private async Task WhenICallTheCreateEventApiForAnUnknownGroup()
@@ -51,7 +34,6 @@ namespace VenimusAPIs.Tests.CreateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/MADEUP/events", _event);
         }
 

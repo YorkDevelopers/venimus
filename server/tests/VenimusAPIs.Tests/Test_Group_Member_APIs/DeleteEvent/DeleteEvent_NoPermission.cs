@@ -12,11 +12,8 @@ namespace VenimusAPIs.Tests.DeleteEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to delete an existing event", SoThat = "People are kept informed")]
     public class DeleteEvent_NoPermission : BaseTest
     {
-        private string _uniqueID;
-        private string _token;
         private Event _event;
         private Group _group;
-        private User _user;
 
         public DeleteEvent_NoPermission(Fixture fixture) : base(fixture)
         {
@@ -28,24 +25,15 @@ namespace VenimusAPIs.Tests.DeleteEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmAUser()
+        private async Task GivenIAmANormalUser()
         {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
+            await IAmANormalUser();
         }
 
         private async Task GivenIAmNotAnAdminstratorForTheGroup()
         {
             _group = Data.Create<Models.Group>();
-            Data.AddGroupMember(_group, _user);
+            Data.AddGroupMember(_group, User);
 
             var collection = GroupsCollection();
 
@@ -63,7 +51,6 @@ namespace VenimusAPIs.Tests.DeleteEvent
 
         private async Task WhenICallTheDeleteEventApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.DeleteAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}");
         }
 

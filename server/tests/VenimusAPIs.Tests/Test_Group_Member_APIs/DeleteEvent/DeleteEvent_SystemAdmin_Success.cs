@@ -47,7 +47,6 @@ namespace VenimusAPIs.Tests.DeleteEvent
 
         private async Task WhenICallTheDeleteEventApi()
         {
-            Fixture.APIClient.SetBearerToken(Token);
             Response = await Fixture.APIClient.DeleteAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}");
         }
 
