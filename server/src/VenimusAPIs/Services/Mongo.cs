@@ -108,6 +108,14 @@ namespace VenimusAPIs.Services
             var groups = GroupsCollection();
             var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync();
 
+            if (group != null)
+            {
+                if (group.Members == null)
+                {
+                    group.Members = new List<Group.GroupMember>();
+                }
+            }
+
             return group;
         }
 
@@ -184,7 +192,7 @@ namespace VenimusAPIs.Services
             var update = Builders<Event>.Update
                                         .Set(e => e.GroupName, group.Name)
                                         .Set(e => e.GroupSlug, group.Slug);
-            
+
             await events.UpdateManyAsync(filter, update);
         }
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VenimusAPIs.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
@@ -43,30 +41,11 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [CallerMustBeGroupMember]
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (group == null)
-            {
-                return NotFound(); 
-            }
-
-            if (group.Members == null)
-            {
-                group.Members = new List<Group.GroupMember>();
-            }
-
             var members = group.Members.ToArray();
-
-            if (!UserIsASystemAdministrator)
-            {
-                var uniqueID = UniqueIDForCurrentUser;
-                var user = await _mongo.GetUserByID(uniqueID);
-                if (!members.Any(u => u.Id == user.Id))
-                {
-                    return Forbid();
-                }
-            }
 
             var users = await _mongo.GetUsersByIds(members.Select(m => m.Id));
 
