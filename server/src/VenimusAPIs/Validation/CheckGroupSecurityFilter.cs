@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace VenimusAPIs.Validation
 {
-    public class CheckSecurity : IAsyncActionFilter
+    public class CheckGroupSecurityFilter : IAsyncActionFilter
     {
         private readonly Services.Mongo _mongo;
 
-        public CheckSecurity(Services.Mongo mongo)
+        public CheckGroupSecurityFilter(Services.Mongo mongo)
         {
             _mongo = mongo;
         }
@@ -23,7 +23,7 @@ namespace VenimusAPIs.Validation
             if (!user.IsInRole("SystemAdministrator"))
             {
                 var mustBeAGroupAdministrator = RequiresGroupAdministrator(context.ActionDescriptor);
-                var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor);
+                var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var useNotFoundRatherThanForbidden);
 
                 if (mustBeAGroupAdministrator || mustBeAGroupMember)
                 {
@@ -42,7 +42,15 @@ namespace VenimusAPIs.Validation
 
                     if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && (!mustBeAGroupAdministrator || m.IsAdministrator)))
                     {
-                        context.Result = new ForbidResult();
+                        if (useNotFoundRatherThanForbidden)
+                        {
+                            context.Result = new NotFoundResult();
+                        }
+                        else
+                        {
+                            context.Result = new ForbidResult();
+                        }
+
                         return;
                     }
                 }
@@ -56,22 +64,27 @@ namespace VenimusAPIs.Validation
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupAdministratorAttribute), true).FirstOrDefault();
+                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupAdministratorAttribute), true).SingleOrDefault();
                 return attribute != null;
             }
 
             return false;
         }
 
-        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor)
+        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out bool useNotFoundRatherThanForbidden)
         {
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupMemberAttribute), true).FirstOrDefault();
-                return attribute != null;
+                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupMemberAttribute), true).SingleOrDefault() as CallerMustBeGroupMemberAttribute;
+                if (attribute != null)
+                {
+                    useNotFoundRatherThanForbidden = attribute.UseNotFoundRatherThanForbidden;
+                    return true;
+                }
             }
 
+            useNotFoundRatherThanForbidden = false;
             return false;
         }
     }

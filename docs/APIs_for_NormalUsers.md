@@ -80,16 +80,16 @@ Allows the user to amend their registration for an event.  The following details
 * DietaryRequirements - any dietary requirements
 * MessageToOrganiser - free format message
 
-### Business Rules (not implemented)
+### Business Rules
 
-Group does not exist
-Event does not belong to the group
-Event is full
-Event is in the past
-NumberOfGuests is positive
-Guests not allowed
-User is not a member of the group
-The user isn't signed up
+* Group does not exist (not implemented)
+* Event does not belong to the group (not implemented)
+* Event is full (not implemented)
+* Event is in the past (not implemented)
+* NumberOfGuests is positive (not implemented)
+* Guests not allowed (not implemented)
+* User is not a member of the group (not implemented)
+* The user isn't signed up (not implemented)
 
 ---
 
@@ -174,7 +174,7 @@ Allows the user to join a group.  The supplied model must contain:
 
 * If the group does not exist then 404 is returned.  (NEEDS TEST)
 
-* If the user is already a member of a group then 204 will still be returned. (NEEDS TEST)
+* If the user is already a member of a group then 204 will still be returned but they will only be added once (NEEDS TEST)
 
 ---
 

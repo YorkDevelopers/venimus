@@ -69,11 +69,11 @@ namespace VenimusAPIs
 
             services.AddMvc(options =>
             {
-                options.Filters.AddService<CheckSecurity>();
+                options.Filters.AddService<CheckGroupSecurityFilter>();
             }
             );
 
-            services.AddSingleton<CheckSecurity>();
+            services.AddSingleton<CheckGroupSecurityFilter>();
 
             services.AddSingleton<Services.Mongo>();
 

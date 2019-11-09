@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using VenimusAPIs.Models;
+using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.UserControllers
@@ -37,30 +37,18 @@ namespace VenimusAPIs.UserControllers
         /// <response code="200">Success</response>
         /// <response code="404">Group does not exist or the user is not a member</response>
         [Authorize]
+        [CallerMustBeGroupMember(UseNotFoundRatherThanForbidden = true)]
         [Route("{groupSlug}", Name = "GroupMembership")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ViewMyGroupMembership>> Get(string groupSlug)
+        public async Task<ActionResult<ViewMyGroupMembership>> Get([FromRoute, Slug]string groupSlug)
         {
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (group == null || !(await DoesUserBelongToTheGroup(group)))
-            {
-                return NotFound();
-            }
 
             var viewModel = _mapper.Map<ViewMyGroupMembership>(group);
 
             return viewModel;
-        }
-
-        private async Task<bool> DoesUserBelongToTheGroup(Models.Group group)
-        {
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            return group.Members != null && group.Members.Exists(u => u.Id == existingUser.Id);
         }
 
         /// <summary>
@@ -117,11 +105,6 @@ namespace VenimusAPIs.UserControllers
             if (model == null)
             {
                 return NotFound();
-            }
-
-            if (model.Members == null)
-            {
-                model.Members = new List<Group.GroupMember>();
             }
 
             var uniqueID = UniqueIDForCurrentUser;
