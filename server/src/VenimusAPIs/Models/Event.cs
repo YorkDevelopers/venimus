@@ -109,11 +109,6 @@ namespace VenimusAPIs.Models
             ///     The number of unregistered guest the person is bringing
             /// </summary>
             public int NumberOfGuests { get; set; }
-
-            /// <summary>
-            ///     Are members allowed to bring guests to this event?
-            /// </summary>
-            public bool GuestsAllowed { get; set; }
         }
     }
 }

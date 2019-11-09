@@ -30,14 +30,11 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
+        private async Task GivenIAmUser()
         {
             _uniqueID = Guid.NewGuid().ToString();
             _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
 
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
             _user = Data.Create<Models.User>();
 
             var collection = UsersCollection();
@@ -61,18 +58,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         {
             _existingEvent = Data.CreateEvent(_existingGroup, evt =>
             {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    new Event.EventAttendees
-                    {
-                        SignedUp = true,
-                        UserId = _user.Id,
-                        DietaryRequirements = "milk free",
-                        MessageToOrganiser = "My first time",
-                        NumberOfGuests = 10,
-                    },
-                };
+                Data.AddEventAttendee(evt, _user, numberOfGuests: 5);
             });
 
             var events = EventsCollection();

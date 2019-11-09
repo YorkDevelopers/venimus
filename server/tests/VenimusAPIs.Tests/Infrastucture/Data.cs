@@ -192,33 +192,43 @@ namespace VenimusAPIs.Tests.Infrastucture
             });
         }
 
-        internal void AddEventAttendee(Event theEvent, User user, int numberOfGuests = 0)
+        internal Event.EventAttendees AddEventAttendee(Event theEvent, User user, int numberOfGuests = 0)
         {
             if (theEvent.Members == null)
             {
                 theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
             }
 
-            theEvent.Members.Add(new Event.EventAttendees
+            var newAttendee = new Event.EventAttendees
             {
                 UserId = user.Id,
                 NumberOfGuests = numberOfGuests,
                 SignedUp = true,
-            });
+                DietaryRequirements = Guid.NewGuid().ToString(),
+                MessageToOrganiser = Guid.NewGuid().ToString(),
+            };
+
+            theEvent.Members.Add(newAttendee);
+
+            return newAttendee;
         }
 
-        internal void AddGroupMember(Group group, User user)
+        internal Group.GroupMember AddGroupMember(Group group, User user)
         {
             if (group.Members == null)
             {
                 group.Members = new System.Collections.Generic.List<Group.GroupMember>();
             }
 
-            group.Members.Add(new Group.GroupMember
+            var newMember = new Group.GroupMember
             {
                 Id = user.Id,
                 IsAdministrator = false,
-            });
+            };
+
+            group.Members.Add(newMember);
+
+            return newMember;
         }
 
         internal void AddGroupAdministrator(Group group, User user)

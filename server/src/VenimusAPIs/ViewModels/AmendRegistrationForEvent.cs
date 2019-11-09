@@ -1,10 +1,13 @@
-﻿namespace VenimusAPIs.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VenimusAPIs.ViewModels
 {
     public class AmendRegistrationForEvent
     {
         /// <summary>
         ///     The number of unregistered guests joining the user
         /// </summary>
+        [Range(0, int.MaxValue)]
         public int NumberOfGuests { get; set; }
 
         /// <summary>

@@ -7,12 +7,12 @@ The following APIs can be called by normal users once they have authenticated.
 
 Allows a user to view their profile details.  The following properties are returned:
 
-* EmailAddress - The email address which also links all the social media accounts together.
-* Pronoun - The users preferred personal pronon.  e.g. Him
-* Fullname - The user's fullname.  e.g David Betteridge
-* DisplayName - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
-* Bio -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
-* ProfilePictureAsBase64 - The user's profile picture in base64
+* __EmailAddress__ - The email address which also links all the social media accounts together.
+* __Pronoun__ - The users preferred personal pronon.  e.g. Him
+* __Fullname__ - The user's fullname.  e.g David Betteridge
+* __DisplayName__ - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
+* __Bio__ -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
+* __ProfilePictureAsBase64__ - The user's profile picture in base64
 
 ### Note to implementers
 
@@ -24,11 +24,11 @@ It is recommended that the user gets a chance to review their profile as part of
 
 Allows a user to update their profile.  The following properties must be supplied
 
-* Pronoun - The users preferred personal pronon.  e.g. Him
-* Fullname - The user's fullname.  e.g David Betteridge
-* DisplayName - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
-* Bio -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
-* ProfilePictureAsBase64 - The user's profile picture in base64
+* __Pronoun__ - The users preferred personal pronon.  e.g. Him
+* __Fullname__ - The user's fullname.  e.g David Betteridge
+* __DisplayName__ - The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB   (Has to be unique)
+* __Bio__ -  The user's biography.  This can include their place of work/student,  any interests etc. (Visible to all signed in members)
+* __ProfilePictureAsBase64__ - The user's profile picture in base64
 
 ### Business Rules
 
@@ -40,13 +40,13 @@ Allows a user to update their profile.  The following properties must be supplie
 
 Allows the user to view all the future events they have signed up to.  The following properties are returned:
 
-* GroupSlug - the ID of the group.
-* GroupName - the name of the group.
-* EventSlug - the ID of the event within the group.
-* EventTitle - the title of the event
-* EventDescription - the full description of the event in markdown
-* EventStartsUTC - Date and time the event starts
-* EventFinishesUTC - Date and time the event ends
+* __GroupSlug__ - the ID of the group.
+* __GroupName__ - the name of the group.
+* __EventSlug__ - the ID of the event within the group.
+* __EventTitle__ - the title of the event
+* __EventDescription__ - the full description of the event in markdown
+* __EventStartsUTC__ - Date and time the event starts
+* __EventFinishesUTC__ - Date and time the event ends
 
 ---
 
@@ -54,10 +54,10 @@ Allows the user to view all the future events they have signed up to.  The follo
 
 Allows the user to sign up for an event.  The following details must be provided:
 
-* EventSlug - the ID of the event within the group.
-* NumberOfGuests - the number of unregistered guests
-* DietaryRequirements - any dietary requirements
-* MessageToOrganiser - free format message
+* __EventSlug__ - the ID of the event within the group.
+* __NumberOfGuests__ - the number of unregistered guests
+* __DietaryRequirements__ - any dietary requirements
+* __MessageToOrganiser__ - free format message
 
 ### Business Rules
 
@@ -76,20 +76,20 @@ Allows the user to sign up for an event.  The following details must be provided
 
 Allows the user to amend their registration for an event.  The following details must be provided:
 
-* NumberOfGuests - the number of unregistered guests
-* DietaryRequirements - any dietary requirements
-* MessageToOrganiser - free format message
+* __NumberOfGuests__ - the number of unregistered guests
+* __DietaryRequirements__ - any dietary requirements
+* __MessageToOrganiser__ - free format message
 
 ### Business Rules
 
-* Group does not exist (not implemented)
-* Event does not belong to the group (not implemented)
-* Event is full (not implemented)
-* Event is in the past (not implemented)
-* NumberOfGuests is positive (not implemented)
-* Guests not allowed (not implemented)
-* User is not a member of the group (not implemented)
+* Group does not exist
+* Event does not belong to the group
+* User is not a member of the group.
+* Event is in the past
+* NumberOfGuests is positive
+* Guests not allowed
 * The user isn't signed up (not implemented)
+* Too many people (not implemented)
 
 ---
 

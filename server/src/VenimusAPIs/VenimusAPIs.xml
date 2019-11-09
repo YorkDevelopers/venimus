@@ -322,11 +322,6 @@
                 The number of unregistered guest the person is bringing
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.GuestsAllowed">
-            <summary>
-                Are members allowed to bring guests to this event?
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
             <summary>
                 The unique internal ID of this group
@@ -609,6 +604,11 @@
              <returns>The GetEvent view model</returns>
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
+        </member>
+        <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden">
+            <summary>
+            If the caller doesn't have access to the group then we return NotFound(404) rather than Forbid(403)
+            </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.AmendRegistrationForEvent.NumberOfGuests">
             <summary>

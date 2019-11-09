@@ -69,7 +69,7 @@ namespace VenimusAPIs.UserControllers
             }
 
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
-            if (numberAttending >= theEvent.MaximumNumberOfAttendees)
+            if (numberAttending + 1 + signUpDetails.NumberOfGuests > theEvent.MaximumNumberOfAttendees)
             {
                 return ValidationProblem(new ValidationProblemDetails
                 {
@@ -132,6 +132,7 @@ namespace VenimusAPIs.UserControllers
         /// <response code="404">Group does not exist</response>
         [Authorize]
         [HttpPut]
+        [CallerMustBeGroupMember]
         [Route("api/User/Groups/{groupSlug}/Events/{eventSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -139,6 +140,28 @@ namespace VenimusAPIs.UserControllers
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] AmendRegistrationForEvent newDetails)
         {
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
+
+            if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
+            {
+                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            if (theEvent.EndTimeUTC < DateTime.UtcNow)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "This event has already taken place",
+                });
+            }
 
             var member = await GetUsersRegistrationForThisEvent(theEvent);
 
