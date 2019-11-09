@@ -83,7 +83,7 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _existingEvent.Id).SingleAsync();
 
-            Assert.Null(actualEvent.Members);
+            Assert.Empty(actualEvent.Members);
         }
     }
 }

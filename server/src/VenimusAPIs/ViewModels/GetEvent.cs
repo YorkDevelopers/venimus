@@ -38,5 +38,15 @@ namespace VenimusAPIs.ViewModels
         ///     Where is the event being held?
         /// </summary>
         public string EventLocation { get; set; }
+
+        /// <summary>
+        ///     How many people + guests are allowed to sign up.  This includes hosts and speakers
+        /// </summary>
+        public int MaximumNumberOfAttendees { get; set; }
+
+        /// <summary>
+        ///     Are members allowed to bring guests to this event?
+        /// </summary>
+        public bool GuestsAllowed { get; set; }
     }
 }

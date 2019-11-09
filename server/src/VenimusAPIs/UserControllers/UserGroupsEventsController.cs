@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -44,6 +43,7 @@ namespace VenimusAPIs.UserControllers
         /// <response code="401">User is not authorized.</response>
         /// <response code="404">Group does not exist</response>
         [Authorize]
+        [CallerMustBeGroupMember]
         [HttpPost]
         [Route("api/User/Groups/{groupSlug}/Events")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -51,17 +51,30 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
         {
-            var theGroup = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (theGroup == null)
-            {
-                return NotFound();
-            }
-
             var eventSlug = signUpDetails.EventSlug;
             var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
+            }
+
+            if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
+            {
+                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
+            if (numberAttending >= theEvent.MaximumNumberOfAttendees)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "Sorry this is event is full.",
+                });
             }
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
@@ -71,14 +84,18 @@ namespace VenimusAPIs.UserControllers
                     Detail = "This event has already taken place",
                 });
             }
-            
+
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            if (theEvent.Members == null)
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (member != null)
             {
-                theEvent.Members = new List<Models.Event.EventAttendees>();
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "You are already signed up to this event.",
+                });
             }
 
             theEvent.Members.Add(new Models.Event.EventAttendees
@@ -183,11 +200,6 @@ namespace VenimusAPIs.UserControllers
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
-
-            if (theEvent.Members == null)
-            {
-                theEvent.Members = new List<Models.Event.EventAttendees>();
-            }
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)

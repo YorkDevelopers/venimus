@@ -57,6 +57,16 @@ namespace VenimusAPIs.Models
         public DateTime EndTimeUTC { get; set; }
 
         /// <summary>
+        ///     How many people + guests are allowed to sign up.  This includes hosts and speakers
+        /// </summary>
+        public int MaximumNumberOfAttendees { get; set; }
+
+        /// <summary>
+        ///     Are members allowed to bring guests to this event?
+        /// </summary>
+        public bool GuestsAllowed { get; set; }
+
+        /// <summary>
         /// Attendees of this group
         /// </summary>
         public List<EventAttendees> Members { get; set; }
@@ -99,6 +109,11 @@ namespace VenimusAPIs.Models
             ///     The number of unregistered guest the person is bringing
             /// </summary>
             public int NumberOfGuests { get; set; }
+
+            /// <summary>
+            ///     Are members allowed to bring guests to this event?
+            /// </summary>
+            public bool GuestsAllowed { get; set; }
         }
     }
 }

@@ -10,7 +10,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.RegisterForEvent
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
-    public class RegisterForEvent_Success : BaseTest
+    public class RegisterForEvent_GuestsNotAllowed : BaseTest
     {
         private string _token;
         private Group _existingGroup;
@@ -19,7 +19,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private Event _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
 
-        public RegisterForEvent_Success(Fixture fixture) : base(fixture)
+        public RegisterForEvent_GuestsNotAllowed(Fixture fixture) : base(fixture)
         {
         }
 
@@ -50,48 +50,39 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenAnEventExistsForThatGroup()
+        private async Task GivenAnEventExistsWhichDoesNotAllowGuests()
         {
-            _existingEvent = Data.CreateEvent(_existingGroup);
+            _existingEvent = Data.CreateEvent(_existingGroup, e =>
+            {
+                e.GuestsAllowed = false;
+            });
 
             var events = EventsCollection();
 
             await events.InsertOneAsync(_existingEvent);
         }
 
-        private async Task WhenICallTheApi()
+        private async Task WhenICallTheApiWithGuests()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
             _signUpToEvent.EventSlug = _existingEvent.Slug;
-            _signUpToEvent.NumberOfGuests = 5;
+            _signUpToEvent.NumberOfGuests = 2;
 
             Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
         }
 
-        private void ThenASuccessResponseIsReturned()
+        private Task ThenABadRequestResponseIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.Created, Response.StatusCode);
+            return AssertBadRequest("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
         }
 
-        private void ThenThePathToTheEventRegistrationIsReturned()
-        {
-            Assert.Equal($"http://localhost/api/user/groups/{_existingGroup.Slug}/events/{_existingEvent.Slug}", Response.Headers.Location.ToString());
-        }
-
-        private async Task ThenTheUserIsNowAMemberOfTheEvent()
+        private async Task ThenTheUserIsNotAMemberOfTheEvent()
         {
             var events = EventsCollection();
             var actualEvent = await events.Find(u => u.Id == _existingEvent.Id).SingleAsync();
 
-            Assert.Single(actualEvent.Members);
-
-            var member = actualEvent.Members[0];
-            Assert.Equal(_user.Id.ToString(), member.UserId.ToString());
-            Assert.Equal(_signUpToEvent.DietaryRequirements, member.DietaryRequirements);
-            Assert.Equal(_signUpToEvent.MessageToOrganiser, member.MessageToOrganiser);
-            Assert.Equal(_signUpToEvent.NumberOfGuests, member.NumberOfGuests);
-            Assert.True(member.SignedUp);
+            Assert.Empty(actualEvent.Members);
         }
     }
 }

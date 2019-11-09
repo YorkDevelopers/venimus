@@ -212,6 +212,8 @@ namespace VenimusAPIs.Controllers
                 EventSlug = eventSlug,
                 EventStartsUTC = model.StartTimeUTC,
                 EventTitle = model.Title,
+                MaximumNumberOfAttendees = model.MaximumNumberOfAttendees,
+                GuestsAllowed = model.GuestsAllowed,
                 GroupName = model.GroupName,
                 EventLocation = model.Location,
             };

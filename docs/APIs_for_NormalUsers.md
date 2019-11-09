@@ -64,11 +64,11 @@ Allows the user to sign up for an event.  The following details must be provided
 * Group does not exist
 * Event does not belong to the group
 * Event is in the past
-* Event is full  (not implemented)
-* NumberOfGuests is positive  (not implemented)
-* Guests not allowed  (not implemented)
-* User is not a member of the group  (not implemented)
-* A user can only sign up once  (not implemented)
+* Event is full
+* NumberOfGuests is positive
+* Guests not allowed  
+* User is not a member of the group
+* A user can only sign up once.
 
 ---
 

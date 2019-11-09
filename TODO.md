@@ -35,3 +35,7 @@ Notify members when things happen
 dotnet test --filter "VenimusAPIs.Tests.DeleteEvent"
 
 Groups are sometimes retrieved twice
+
+Rename controllers
+
+Tests for get group

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using VenimusAPIs.Models;
@@ -39,6 +40,9 @@ namespace VenimusAPIs.Tests.Infrastucture
                 evt.GroupName = group.Name;
                 evt.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+                evt.MaximumNumberOfAttendees = 100;
+                evt.GuestsAllowed = true;
+                evt.Members = new List<Event.EventAttendees>();
             });
 
             if (modifier != null)
@@ -188,7 +192,7 @@ namespace VenimusAPIs.Tests.Infrastucture
             });
         }
 
-        internal void AddEventAttendee(Event theEvent, User user)
+        internal void AddEventAttendee(Event theEvent, User user, int numberOfGuests = 0)
         {
             if (theEvent.Members == null)
             {
@@ -198,6 +202,8 @@ namespace VenimusAPIs.Tests.Infrastucture
             theEvent.Members.Add(new Event.EventAttendees
             {
                 UserId = user.Id,
+                NumberOfGuests = numberOfGuests,
+                SignedUp = true,
             });
         }
 

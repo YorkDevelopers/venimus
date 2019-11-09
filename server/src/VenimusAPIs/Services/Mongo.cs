@@ -100,6 +100,14 @@ namespace VenimusAPIs.Services
             var events = EventsCollection();
             var theEvent = await events.Find(u => u.Slug == eventSlug && u.GroupSlug == groupSlug).SingleOrDefaultAsync();
 
+            if (theEvent != null)
+            {
+                if (theEvent.Members == null)
+                {
+                    theEvent.Members = new List<Models.Event.EventAttendees>();
+                }
+            }
+
             return theEvent;
         }
 

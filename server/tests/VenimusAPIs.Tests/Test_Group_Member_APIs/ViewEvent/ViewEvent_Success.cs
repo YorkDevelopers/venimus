@@ -79,6 +79,8 @@ namespace VenimusAPIs.Tests.ViewEvent
             Assert.Equal(_group.Name, actualEvent.GroupName);
             Assert.Equal(_event.Slug, actualEvent.EventSlug);
             Assert.Equal(_event.Title, actualEvent.EventTitle);
+            Assert.Equal(_event.MaximumNumberOfAttendees, actualEvent.MaximumNumberOfAttendees);
+            Assert.Equal(_event.GuestsAllowed, actualEvent.GuestsAllowed);
             Assert.Equal(_event.Description, actualEvent.EventDescription);
             Assert.Equal(_event.Location, actualEvent.EventLocation);
             AssertDateTime(_event.StartTimeUTC, actualEvent.EventStartsUTC);

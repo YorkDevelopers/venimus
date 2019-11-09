@@ -86,6 +86,7 @@ namespace VenimusAPIs.Tests.CreateEvent
             var actualEvent = await events.Find(u => u.Slug == _event.Slug).SingleAsync();
 
             Assert.Equal(_event.Slug, actualEvent.Slug);
+            Assert.Equal(_event.MaximumNumberOfAttendees, actualEvent.MaximumNumberOfAttendees);
             Assert.Equal(_event.Title, actualEvent.Title);
             Assert.Equal(_event.Description, actualEvent.Description);
             AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);

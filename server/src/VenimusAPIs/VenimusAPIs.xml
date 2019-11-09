@@ -272,6 +272,16 @@
             Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Event.MaximumNumberOfAttendees">
+            <summary>
+                How many people + guests are allowed to sign up.  This includes hosts and speakers
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Event.Members">
             <summary>
             Attendees of this group
@@ -310,6 +320,11 @@
         <member name="P:VenimusAPIs.Models.Event.EventAttendees.NumberOfGuests">
             <summary>
                 The number of unregistered guest the person is bringing
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
@@ -640,6 +655,11 @@
             Date and time the event ends.  Must be after the StartTime
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.MaximumNumberOfAttendees">
+            <summary>
+                How many people + guests are allowed to sign up.  This includes hosts and speakers
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Slug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo
@@ -703,6 +723,16 @@
         <member name="P:VenimusAPIs.ViewModels.GetEvent.EventLocation">
             <summary>
                 Where is the event being held?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.MaximumNumberOfAttendees">
+            <summary>
+                How many people + guests are allowed to sign up.  This includes hosts and speakers
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Slug">
@@ -987,6 +1017,16 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateEvent.EndTimeUTC">
             <summary>
             Date and time the event ends.  Must be after the StartTime
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.MaximumNumberOfAttendees">
+            <summary>
+                How many people + guests are allowed to sign up.  This includes hosts and speakers
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Slug">
