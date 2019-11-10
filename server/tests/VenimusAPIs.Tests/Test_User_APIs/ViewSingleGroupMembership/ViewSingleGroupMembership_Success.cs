@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
@@ -16,10 +14,7 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
     [Story(AsA = "User", IWant = "To be able to see the details of a single group I'm a member of", SoThat = "I can belong to the community")]
     public class ViewSingleGroupMembership_Success : BaseTest
     {
-        private string _token;
         private Group _theGroup;
-        private string _uniqueID;
-        private User _user;
 
         public ViewSingleGroupMembership_Success(Fixture fixture) : base(fixture)
         {
@@ -31,22 +26,7 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenIBelongToAGroup()
         {
@@ -54,9 +34,9 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
 
             _theGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
                 g.IsActive = true;
-                g.Logo = logo;    
+                g.Logo = logo;
             });
 
             var groups = GroupsCollection();
@@ -66,7 +46,6 @@ namespace VenimusAPIs.Tests.ViewSingleGroupMembership
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/User/Groups/{_theGroup.Slug}");
         }
 

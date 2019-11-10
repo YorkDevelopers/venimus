@@ -13,9 +13,6 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     [Story(AsA = "User", IWant = "To be able to update my profile details", SoThat = "I can ensure they are upto date")]
     public class UpdateMyDetails_DuplicateDisplayName : BaseTest
     {
-        private string _token;
-        private string _uniqueID;
-        private User _originalUserDetails;
         private ViewModels.UpdateMyDetails _amendedUser;
         private User _otherUser;
 
@@ -29,22 +26,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _originalUserDetails = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _originalUserDetails.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_originalUserDetails);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenAnotherUserExistsInTheDatabase()
         {
@@ -63,7 +45,6 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
             _amendedUser.DisplayName = _otherUser.DisplayName;
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user", _amendedUser);
         }
 
@@ -75,13 +56,13 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
         private async Task ThenMyDetailsAreNotUpdatedInTheDatabase()
         {
             var users = UsersCollection();
-            var actualUser = await users.Find(u => u.Id == _originalUserDetails.Id).SingleAsync();
+            var actualUser = await users.Find(u => u.Id == User.Id).SingleAsync();
 
-            Assert.Equal(_originalUserDetails.Bio, actualUser.Bio);
-            Assert.Equal(_originalUserDetails.Pronoun, actualUser.Pronoun);
-            Assert.Equal(_originalUserDetails.DisplayName, actualUser.DisplayName);
-            Assert.Equal(_originalUserDetails.Fullname, actualUser.Fullname);
-            Assert.Equal(_originalUserDetails.ProfilePicture, actualUser.ProfilePicture);
+            Assert.Equal(User.Bio, actualUser.Bio);
+            Assert.Equal(User.Pronoun, actualUser.Pronoun);
+            Assert.Equal(User.DisplayName, actualUser.DisplayName);
+            Assert.Equal(User.Fullname, actualUser.Fullname);
+            Assert.Equal(User.ProfilePicture, actualUser.ProfilePicture);
         }
     }
 }

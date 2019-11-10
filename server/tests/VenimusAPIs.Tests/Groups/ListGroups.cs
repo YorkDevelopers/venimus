@@ -1,12 +1,10 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests
@@ -14,7 +12,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to retrieve the list of all groups", SoThat = "I can join a community")]
     public class ListGroups : BaseTest
     {
-        private string _token;
         private Group _expectedGroup1;
         private Group _expectedGroup2;
         private Group _expectedGroup3;
@@ -31,10 +28,7 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private async Task GivenIAmAUser()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task GivenThatSeveralGroupsExists()
         {
@@ -50,7 +44,6 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheGetGroupApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups");
 
             Response.EnsureSuccessStatusCode();

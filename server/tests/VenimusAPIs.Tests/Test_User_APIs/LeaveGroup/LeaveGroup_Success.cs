@@ -8,15 +8,12 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.LeaveGroup
 {
     [Story(AsA = "User", IWant = "To be able to leave groups that I'm a member of", SoThat = "I can leave the community")]
     public class LeaveGroup_Success : BaseTest
     {
-        private string _token;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
 
         public LeaveGroup_Success(Fixture fixture) : base(fixture)
         {
@@ -28,27 +25,12 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenAGroupWhichIBelongToExists()
         {
             _existingGroup = Data.Create<Models.Group>();
-            Data.AddGroupMember(_existingGroup, _user);
+            Data.AddGroupMember(_existingGroup, User);
 
             var groups = GroupsCollection();
 
@@ -57,7 +39,6 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.DeleteAsync($"api/User/Groups/{_existingGroup.Slug}");
         }
 

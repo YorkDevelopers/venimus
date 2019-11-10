@@ -16,13 +16,10 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "User", IWant = "To be able to see what groups I'm a member of", SoThat = "I can belong to the communities")]
     public class ListMyGroups_Success : BaseTest
     {
-        private string _token;
         private Group _inGroup1;
         private Group _inGroup2;
         private Group _groupNotActive;
         private Group _notInGroup;
-        private string _uniqueID;
-        private User _user;
 
         public ListMyGroups_Success(Fixture fixture) : base(fixture)
         {
@@ -34,35 +31,20 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenGroupsToWhichIBelongToExists()
         {
             _inGroup1 = Data.Create<Models.Group>(g =>
             {
                 g.IsActive = true;
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
             });
 
             _groupNotActive = Data.Create<Models.Group>(g =>
             {
                 g.IsActive = false;
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
             });
 
             _notInGroup = Data.Create<Models.Group>(g =>
@@ -72,7 +54,7 @@ namespace VenimusAPIs.Tests
 
             _inGroup2 = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
                 g.IsActive = true;
             });
 
@@ -86,7 +68,6 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/User/Groups");
         }
 

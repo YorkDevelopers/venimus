@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,11 +13,8 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class ViewAllMyRegistrations_Success : BaseTest
     {
-        private string _token;
         private Group _group1;
         private Group _group2;
-        private string _uniqueID;
-        private User _user;
         private Event _event1;
         private Event _event2;
 
@@ -32,30 +28,15 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenSomeGroupsExistsOfWhichIAmAMember()
         {
             _group1 = Data.Create<Models.Group>();
-            Data.AddGroupMember(_group1, _user);
+            Data.AddGroupMember(_group1, User);
 
             _group2 = Data.Create<Models.Group>();
-            Data.AddGroupMember(_group2, _user);
+            Data.AddGroupMember(_group2, User);
 
             var groups = GroupsCollection();
 
@@ -66,28 +47,12 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
         {
             _event1 = Data.CreateEvent(_group1, evt =>
             {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    new Event.EventAttendees
-                    {
-                        SignedUp = true,
-                        UserId = _user.Id,
-                    },
-                };
+                Data.AddEventAttendee(evt, User);
             });
 
             _event2 = Data.CreateEvent(_group2, evt =>
             {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    Data.Create<Event.EventAttendees>(a =>
-                    {
-                        a.SignedUp = true;
-                        a.UserId = _user.Id;
-                    }),
-                };
+                Data.AddEventAttendee(evt, User);
             });
 
             var events = EventsCollection();
@@ -99,14 +64,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
             var pastEvent = Data.CreateEvent(_group2, evt =>
             {
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(-1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    Data.Create<Event.EventAttendees>(a =>
-                    {
-                        a.SignedUp = true;
-                        a.UserId = _user.Id;
-                    }),
-                };
+                Data.AddEventAttendee(evt, User);
             });
 
             var events = EventsCollection();
@@ -118,15 +76,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
         {
             var notRegisteredEvent = Data.CreateEvent(_group2, evt =>
             {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(1);
-                evt.Members = new List<Event.EventAttendees>
-                {
-                    Data.Create<Event.EventAttendees>(a =>
-                    {
-                        a.SignedUp = false;
-                        a.UserId = _user.Id;
-                    }),
-                };
+                Data.AddEventNonAttendee(evt, User);
             });
 
             var notRegisteredEvent2 = Data.CreateEvent(_group2, evt =>
@@ -140,7 +90,6 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/user/Events");
         }
 

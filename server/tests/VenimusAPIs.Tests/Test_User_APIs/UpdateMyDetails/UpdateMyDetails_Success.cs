@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -14,9 +12,6 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     [Story(AsA = "User", IWant = "To be able to update my profile details", SoThat = "I can ensure they are upto date")]
     public class UpdateMyDetails_Success : BaseTest
     {
-        private string _token;
-        private string _uniqueID;
-        private User _user;
         private ViewModels.UpdateMyDetails _amendedUser;
 
         public UpdateMyDetails_Success(Fixture fixture) : base(fixture)
@@ -29,22 +24,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             this.BDDfy();
         }
 
-        private void GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-        }
-
-        private async Task GivenAlreadyExistInTheDatabase()
-        {
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task WhenICallTheApi()
         {
@@ -52,7 +32,6 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
             _amendedUser.ProfilePictureAsBase64 = Convert.ToBase64String(logo);
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user", _amendedUser);
         }
 
@@ -64,7 +43,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
         private async Task ThenMyDetailsAreUpdatedInTheDatabase()
         {
             var users = UsersCollection();
-            var actualUser = await users.Find(u => u.Id == _user.Id).SingleAsync();
+            var actualUser = await users.Find(u => u.Id == User.Id).SingleAsync();
 
             Assert.Equal(_amendedUser.Bio, actualUser.Bio);
             Assert.Equal(_amendedUser.Pronoun, actualUser.Pronoun);

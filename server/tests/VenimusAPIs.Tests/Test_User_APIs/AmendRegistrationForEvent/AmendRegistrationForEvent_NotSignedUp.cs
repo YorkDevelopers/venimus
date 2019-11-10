@@ -12,10 +12,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class AmendRegistrationForEvent_NotSignedUp : BaseTest
     {
-        private string _token;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private Event _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
@@ -29,24 +26,12 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenAGroupExistsOfWhichIAmAMember()
         {
             _existingGroup = Data.Create<Models.Group>();
-            Data.AddGroupMember(_existingGroup, _user);
+            Data.AddGroupMember(_existingGroup, User);
 
             var groups = GroupsCollection();
 
@@ -66,7 +51,6 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         {
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
@@ -88,7 +72,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             Assert.Single(actualEvent.Members);
 
             var member = actualEvent.Members[0];
-            Assert.Equal(_user.Id.ToString(), member.UserId.ToString());
+            Assert.Equal(User.Id.ToString(), member.UserId.ToString());
             Assert.Equal(_amendedDetails.DietaryRequirements, member.DietaryRequirements);
             Assert.Equal(_amendedDetails.MessageToOrganiser, member.MessageToOrganiser);
             Assert.Equal(_amendedDetails.NumberOfGuests, member.NumberOfGuests);

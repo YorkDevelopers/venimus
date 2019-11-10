@@ -9,7 +9,6 @@ namespace VenimusAPIs.Tests
     [Story(AsA = "SystemAdministrator", IWant = "To be able to retrieve existing groups", SoThat = "I can maintain them")]
     public class GetGroup_NotFound : BaseTest
     {
-        private string _token;
         private Models.Group _expectedGroup;
 
         public GetGroup_NotFound(Fixture fixture) : base(fixture)
@@ -22,10 +21,7 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private void GivenTheGroupDoesNotExists()
         {
@@ -34,7 +30,6 @@ namespace VenimusAPIs.Tests
 
         private async Task WhenICallTheGetGroupApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_expectedGroup.Name}");
         }
 

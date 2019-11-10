@@ -214,6 +214,27 @@ namespace VenimusAPIs.Tests.Infrastucture
             return newAttendee;
         }
 
+        internal Event.EventAttendees AddEventNonAttendee(Event theEvent, User user, int numberOfGuests = 0)
+        {
+            if (theEvent.Members == null)
+            {
+                theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
+            }
+
+            var newAttendee = new Event.EventAttendees
+            {
+                UserId = user.Id,
+                NumberOfGuests = numberOfGuests,
+                SignedUp = false,
+                DietaryRequirements = Guid.NewGuid().ToString(),
+                MessageToOrganiser = Guid.NewGuid().ToString(),
+            };
+
+            theEvent.Members.Add(newAttendee);
+
+            return newAttendee;
+        }
+        
         internal Group.GroupMember AddGroupMember(Group group, User user)
         {
             if (group.Members == null)

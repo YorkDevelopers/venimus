@@ -11,10 +11,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class ViewMyRegistrationForEvent_NotAGroupMember : BaseTest
     {
-        private string _token;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private Event _existingEvent;
 
         public ViewMyRegistrationForEvent_NotAGroupMember(Fixture fixture) : base(fixture)
@@ -27,17 +24,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-            _user.Identities = new List<string> { _uniqueID };
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmUser() => IAmANormalUser();
 
         private async Task GivenAGroupExistsOfWhichIAmNotAMember()
         {
@@ -51,7 +38,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
         {
             _existingEvent = Data.CreateEvent(_existingGroup, evt =>
             {
-                Data.AddEventAttendee(evt, _user, numberOfGuests: 10);
+                Data.AddEventAttendee(evt, User, numberOfGuests: 10);
             });
 
             var events = EventsCollection();
@@ -61,7 +48,6 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 

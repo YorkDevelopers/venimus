@@ -1,8 +1,7 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
@@ -45,7 +44,6 @@ namespace VenimusAPIs.Tests
             var collection = UsersCollection();
 
             user.Identities = new List<string> { _uniqueID };
-
             await collection.InsertOneAsync(user);
         }
 
