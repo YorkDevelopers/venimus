@@ -20,8 +20,19 @@ namespace VenimusAPIs.Validation
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var user = context.HttpContext.User;
+
             var mustBeAGroupAdministrator = RequiresGroupAdministrator(context.ActionDescriptor);
-            var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var useNotFoundRatherThanForbidden, out var canBeSystemAdministratorInstead);
+            var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var callerMustBeGroupMemberAttribute);
+
+            var canBeSystemAdministratorInstead = true;
+            var useNotFoundRatherThanForbidden = false;
+            var useNoContentRatherThanForbidden = false;
+            if (mustBeAGroupMember)
+            {
+                canBeSystemAdministratorInstead = callerMustBeGroupMemberAttribute.CanBeSystemAdministratorInstead;
+                useNotFoundRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden;
+                useNoContentRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNoContentRatherThanForbidden;
+            }
 
             if (mustBeAGroupAdministrator || mustBeAGroupMember)
             {
@@ -51,6 +62,10 @@ namespace VenimusAPIs.Validation
                         {
                             context.Result = new NotFoundResult();
                         }
+                        else if (useNoContentRatherThanForbidden)
+                        {
+                            context.Result = new NoContentResult();
+                        }
                         else
                         {
                             context.Result = new ForbidResult();
@@ -76,22 +91,19 @@ namespace VenimusAPIs.Validation
             return false;
         }
 
-        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out bool useNotFoundRatherThanForbidden, out bool canBeSystemAdministratorInstead)
+        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out CallerMustBeGroupMemberAttribute attribute)
         {
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupMemberAttribute), true).SingleOrDefault() as CallerMustBeGroupMemberAttribute;
+                attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupMemberAttribute), true).SingleOrDefault() as CallerMustBeGroupMemberAttribute;
                 if (attribute != null)
                 {
-                    useNotFoundRatherThanForbidden = attribute.UseNotFoundRatherThanForbidden;
-                    canBeSystemAdministratorInstead = attribute.CanBeSystemAdministratorInstead;
                     return true;
                 }
             }
 
-            useNotFoundRatherThanForbidden = false;
-            canBeSystemAdministratorInstead = true;
+            attribute = null;
             return false;
         }
     }

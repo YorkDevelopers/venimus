@@ -174,9 +174,9 @@ Allows the user to join a group.  The supplied model must contain:
 
 * If the user is successfully added to the group then 201 is returned with location to retrieve the groups details.
 
-* If the group does not exist then 404 is returned.  (**not implemented**)
+* If the group does not exist then 404 is returned.
 
-* If the user is already a member of a group then 204 will still be returned but they will only be added once (**not implemented**)
+* If the user is already a member of a group then 204 will still be returned but they will only be added once.
 
 ---
 
@@ -188,8 +188,8 @@ Allows the user to leave a group.
 
 * If the user is successfully removed from the group then 204 is returned.
 
-* If the group does not exist then 404 is returned. (**not implemented**)
+* If the group does not exist then 404 is returned.
 
-* If the user is not a member of a group then 204 will still be returned.  (**not implemented**)
+* If the user is not a member of a group then 204 will still be returned.
 
 ---

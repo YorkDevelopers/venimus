@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
 using VenimusAPIs.Validation;
@@ -111,9 +111,12 @@ namespace VenimusAPIs.UserControllers
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            model.Members.Add(new Group.GroupMember { Id = existingUser.Id });
+            if (!model.Members.Any(m => m.Id == existingUser.Id))
+            {
+                model.Members.Add(new Group.GroupMember { Id = existingUser.Id });
 
-            await _mongo.UpdateGroup(model);
+                await _mongo.UpdateGroup(model);
+            }
 
             return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
         }
@@ -133,28 +136,20 @@ namespace VenimusAPIs.UserControllers
         /// <response code="404">Group does not exist.</response>
         [Authorize]
         [Route("{groupSlug}")]
+        [CallerMustBeGroupMember(CanBeSystemAdministratorInstead = false, UseNoContentRatherThanForbidden = true)]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DELETE([FromRoute] string groupSlug)
+        public async Task<IActionResult> DELETE([FromRoute, Slug] string groupSlug)
         {
             var model = await _mongo.RetrieveGroupBySlug(groupSlug);
-            if (model == null)
-            {
-                return NotFound();
-            }
 
-            if (model.Members != null)
-            {
-                var uniqueID = UniqueIDForCurrentUser;
+            var uniqueID = UniqueIDForCurrentUser;
+            var existingUser = await _mongo.GetUserByID(uniqueID);
 
-                var existingUser = await _mongo.GetUserByID(uniqueID);
-
-                model.Members.RemoveAll(m => m.Id == existingUser.Id);
-
-                await _mongo.UpdateGroup(model);
-            }
+            model.Members.RemoveAll(m => m.Id == existingUser.Id);
+            await _mongo.UpdateGroup(model);
 
             return NoContent();
         }
