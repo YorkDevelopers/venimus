@@ -75,7 +75,7 @@ namespace VenimusAPIs
 
             services.AddSingleton<CheckGroupSecurityFilter>();
 
-            services.AddSingleton<Services.Mongo>();
+            services.AddScoped<Services.Mongo>();
 
             services.AddSingleton<Services.Auth0API>();
 

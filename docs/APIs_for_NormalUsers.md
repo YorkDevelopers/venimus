@@ -89,7 +89,7 @@ Allows the user to amend their registration for an event.  The following details
 * NumberOfGuests is positive
 * Guests not allowed
 * The user isn't signed up then a record is created
-* Too many people (**not implemented**)
+* Too many people
 
 ---
 
@@ -97,16 +97,19 @@ Allows the user to amend their registration for an event.  The following details
 
 Allows the user to view their registration details for any event.  Returns the following properties
 
-* NumberOfGuests - the number of unregistered guests
-* DietaryRequirements - any dietary requirements
-* MessageToOrganiser - free format message
+* __NumberOfGuests__ - the number of unregistered guests
+* __DietaryRequirements__ - any dietary requirements
+* __MessageToOrganiser__ - free format message
 
 ### Business Rules
 
-* Event does not exist
-* Group does not exist
-* Not a member of the group
-* Not signed up (**not implemented**)
+* If the event does not exist then 404 is returned.
+
+* If the group does not exist then 404 is returned.
+
+* If the user is not a member of the group then forbidden is returned.
+
+* If the user is not signed up for an event,  then 404 is returned.
 
 ---
 

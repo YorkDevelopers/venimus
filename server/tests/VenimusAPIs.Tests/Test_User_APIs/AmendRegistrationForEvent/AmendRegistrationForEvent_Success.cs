@@ -54,6 +54,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         private async Task WhenICallTheApi()
         {
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+            _amendedDetails.NumberOfGuests = 6;
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }

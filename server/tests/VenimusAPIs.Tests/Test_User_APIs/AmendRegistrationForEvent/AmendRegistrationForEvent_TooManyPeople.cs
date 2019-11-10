@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using System;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
@@ -9,14 +8,14 @@ using Xunit;
 namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
-    public class AmendRegistrationForEvent_AlreadyHappened : BaseTest
+    public class AmendRegistrationForEvent_TooManyPeople : BaseTest
     {
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
         private Event.EventAttendees _currentRegistration;
 
-        public AmendRegistrationForEvent_AlreadyHappened(Fixture fixture) : base(fixture)
+        public AmendRegistrationForEvent_TooManyPeople(Fixture fixture) : base(fixture)
         {
         }
 
@@ -38,29 +37,31 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenAnEventExistsInThePastForThatGroupAndIWent()
+        private async Task GivenAnEventExistsForThatGroupAndIAmGoing()
         {
             _existingEvent = Data.CreateEvent(_existingGroup, evt =>
             {
-                evt.EndTimeUTC = DateTime.UtcNow.AddDays(-10);
                 _currentRegistration = Data.AddEventAttendee(evt, User, numberOfGuests: 5);
+                evt.MaximumNumberOfAttendees = 10;
+                evt.GuestsAllowed = true;
             });
 
             var events = EventsCollection();
+
             await events.InsertOneAsync(_existingEvent);
         }
 
-        private async Task WhenICallTheApi()
+        private async Task WhenICallTheApiWithTooManyGuests()
         {
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
-            _amendedDetails.NumberOfGuests = 5;
+            _amendedDetails.NumberOfGuests = 10;
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("This event has already taken place");
+            return AssertBadRequestDetail("Sorry this will exceed the maximum number of people allowed to attend this event.");
         }
 
         private async Task ThenTheUsersRegistrationIsNotUpdated()

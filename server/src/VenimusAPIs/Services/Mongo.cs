@@ -15,9 +15,22 @@ namespace VenimusAPIs.Services
     {
         private readonly Settings.MongoDBSettings _mongoDBSettings;
 
+        private IMongoDatabase _cachedDatabase;
+
         public Mongo(IOptions<Settings.MongoDBSettings> mongoDBSettings)
         {
             _mongoDBSettings = mongoDBSettings.Value;
+        }
+
+        private IMongoDatabase ConnectToDatabase()
+        {
+            if (_cachedDatabase == null)
+            {
+                var client = new MongoClient(_mongoDBSettings.ConnectionString);
+                _cachedDatabase = client.GetDatabase(_mongoDBSettings.DatabaseName);
+            }
+
+            return _cachedDatabase;
         }
 
         private IMongoCollection<Group> GroupsCollection()
@@ -257,14 +270,6 @@ namespace VenimusAPIs.Services
             var matchingUsers = await users.Find(filter).ToListAsync();
 
             return matchingUsers;
-        }
-
-        private IMongoDatabase ConnectToDatabase()
-        {
-            var client = new MongoClient(_mongoDBSettings.ConnectionString);
-            var database = client.GetDatabase(_mongoDBSettings.DatabaseName);
-
-            return database;
         }
 
         internal async Task UpdateEvent(Models.Event amendedEvent)

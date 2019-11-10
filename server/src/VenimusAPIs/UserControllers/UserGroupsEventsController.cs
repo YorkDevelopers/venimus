@@ -145,24 +145,6 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
-            if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
-            {
-                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return ValidationProblem(ModelState);
-            }
-
-            if (theEvent.EndTimeUTC < DateTime.UtcNow)
-            {
-                return ValidationProblem(new ValidationProblemDetails
-                {
-                    Detail = "This event has already taken place",
-                });
-            }
-
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
@@ -178,6 +160,35 @@ namespace VenimusAPIs.UserControllers
 
                 theEvent.Members.Add(member);
                 created = true;
+            }
+
+            if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
+            {
+                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+            }
+
+            var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
+            var delta = (newDetails.NumberOfGuests - member.NumberOfGuests) + (member.SignedUp ? 0 : 1);
+
+            if ((numberAttending + delta) > theEvent.MaximumNumberOfAttendees)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "Sorry this will exceed the maximum number of people allowed to attend this event.",
+                });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            if (theEvent.EndTimeUTC < DateTime.UtcNow)
+            {
+                return ValidationProblem(new ValidationProblemDetails
+                {
+                    Detail = "This event has already taken place",
+                });
             }
 
             member.SignedUp = true;
@@ -287,7 +298,14 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
-            var member = await GetUsersRegistrationForThisEvent(theEvent);
+            var uniqueID = UniqueIDForCurrentUser;
+            var existingUser = await _mongo.GetUserByID(uniqueID);
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (member == null)
+            {
+                return NotFound();
+            }
 
             return new ViewMyEventRegistration
             {
