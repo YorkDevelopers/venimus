@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -7,7 +6,7 @@ using VenimusAPIs.Services.Auth0Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.Test_User_SignUp
 {
     [Story(AsA = "A new user", IWant = "To be added to the system", SoThat = "I can join groups and attend events")]
     public class NewUsersAreAdded : BaseTest

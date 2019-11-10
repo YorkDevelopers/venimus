@@ -21,7 +21,7 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
+        private Task GivenIAmNormalUser() => IAmANormalUser();
 
         private void GivenTheGroupDoesNotExists()
         {

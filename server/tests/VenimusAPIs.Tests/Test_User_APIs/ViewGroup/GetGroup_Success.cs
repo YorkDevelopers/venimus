@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
@@ -23,7 +22,7 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
+        private Task GivenIAmNormalUser() => IAmANormalUser();
 
         private async Task GivenAGroupAlreadyExists()
         {

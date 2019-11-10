@@ -7,7 +7,7 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.ListGroups
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the list of all groups", SoThat = "I can join a community")]
     public class ListGroups : BaseTest
@@ -28,7 +28,7 @@ namespace VenimusAPIs.Tests
             this.BDDfy();
         }
 
-        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
+        private Task GivenIAmNormalUser() => IAmANormalUser();
 
         private async Task GivenThatSeveralGroupsExists()
         {

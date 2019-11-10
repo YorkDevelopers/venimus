@@ -6,7 +6,7 @@ using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.Test_User_SignUp
 {
     [Story(AsA = "As a user", IWant = "To be added to the system", SoThat = "I can join groups and attend events")]
     public class ExistingUsersAreNotCreated : BaseTest
