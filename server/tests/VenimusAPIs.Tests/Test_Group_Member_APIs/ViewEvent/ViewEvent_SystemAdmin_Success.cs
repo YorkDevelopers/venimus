@@ -11,10 +11,8 @@ namespace VenimusAPIs.Tests.ViewEvent
     [Story(AsA = "ViewEvent", IWant = "To be able to view an existing event", SoThat = "I know the details")]
     public class ViewEvent_SystemAdmin_Success : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _group;
-        private User _user;
 
         public ViewEvent_SystemAdmin_Success(Fixture fixture) : base(fixture)
         {
@@ -26,21 +24,13 @@ namespace VenimusAPIs.Tests.ViewEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministratorUser()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-
-            _user = Data.Create<Models.User>();
-            var collection = UsersCollection();
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmASystemAdministratorUser() => IAmASystemAdministrator();
 
         private async Task GivenIAmNotAMemberOfTheGroup()
         {
             _group = Data.Create<Models.Group>();
 
             var collection = GroupsCollection();
-
             await collection.InsertOneAsync(_group);
         }
 
@@ -49,13 +39,11 @@ namespace VenimusAPIs.Tests.ViewEvent
             _event = Data.CreateEvent(_group);
 
             var events = EventsCollection();
-
             await events.InsertOneAsync(_event);
         }
 
         private async Task WhenICallTheGetEventApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}");
         }
 

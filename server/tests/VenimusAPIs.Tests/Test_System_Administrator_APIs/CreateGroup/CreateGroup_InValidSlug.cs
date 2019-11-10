@@ -1,9 +1,7 @@
+using MongoDB.Driver;
 using System;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
@@ -13,7 +11,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_InvalidSlug : BaseTest
     {
-        private string _token;
         private ViewModels.CreateGroup _group;
 
         public CreateGroup_InvalidSlug(Fixture fixture) : base(fixture)
@@ -26,10 +23,7 @@ namespace VenimusAPIs.Tests.CreateGroup
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task WhenICallTheCreateGroupApi()
         {
@@ -39,7 +33,6 @@ namespace VenimusAPIs.Tests.CreateGroup
 
             _group.Slug = "Has a space";
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 

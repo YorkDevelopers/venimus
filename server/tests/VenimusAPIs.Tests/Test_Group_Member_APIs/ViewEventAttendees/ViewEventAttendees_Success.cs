@@ -15,11 +15,8 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_Success : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
@@ -35,19 +32,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmAUser() => IAmANormalUser();
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -65,7 +50,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
                 Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
@@ -80,7 +65,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         {
             _event = Data.CreateEvent(_existingGroup, e =>
             {
-                Data.AddEventHost(e, _user);
+                Data.AddEventHost(e, User);
                 Data.AddEventSpeaker(e, _otherUserInGroup1);
                 Data.AddEventAttendee(e, _otherUserInGroup2);
             });
@@ -92,7 +77,6 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Events/{_event.Slug}/Members");
         }
 
@@ -109,7 +93,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
 
             Assert.Equal(3, actualAttendees.Length);
 
-            AssertMember(_user, actualAttendees, true, false);
+            AssertMember(User, actualAttendees, true, false);
             AssertMember(_otherUserInGroup1, actualAttendees, false, true);
             AssertMember(_otherUserInGroup2, actualAttendees, false, false);
         }

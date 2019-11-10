@@ -1,8 +1,7 @@
+using MongoDB.Driver;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
@@ -12,7 +11,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_Success : BaseTest
     {
-        private string _token;
         private ViewModels.CreateGroup _group;
 
         public CreateGroup_Success(Fixture fixture) : base(fixture)
@@ -25,10 +23,7 @@ namespace VenimusAPIs.Tests.CreateGroup
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task WhenICallTheCreateGroupApi()
         {
@@ -36,7 +31,6 @@ namespace VenimusAPIs.Tests.CreateGroup
             var logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg");
             _group.LogoInBase64 = Convert.ToBase64String(logo);
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 

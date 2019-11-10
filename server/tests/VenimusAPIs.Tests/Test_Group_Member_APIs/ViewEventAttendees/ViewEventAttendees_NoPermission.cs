@@ -11,11 +11,8 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_NoPermission : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
@@ -31,19 +28,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmAUser() => IAmANormalUser();
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -86,7 +71,6 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Events/{_event.Slug}/Members");
         }
 

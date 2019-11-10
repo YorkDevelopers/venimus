@@ -14,7 +14,6 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_SysAdmin_Success : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _existingGroup;
         private User _otherUserInGroup1;
@@ -32,10 +31,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             this.BDDfy();
         }
 
-        private async Task GivenIASystemAdministratorUser()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -78,7 +74,6 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Events/{_event.Slug}/Members");
         }
 

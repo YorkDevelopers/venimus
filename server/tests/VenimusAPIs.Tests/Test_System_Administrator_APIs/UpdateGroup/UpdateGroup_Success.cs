@@ -12,7 +12,6 @@ namespace VenimusAPIs.Tests.UpdateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to update existing groups", SoThat = "People can build communities")]
     public class UpdateGroup_Success : BaseTest
     {
-        private string _token;
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
 
@@ -26,10 +25,7 @@ namespace VenimusAPIs.Tests.UpdateGroup
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task GivenAGroupAlreadyExists()
         {
@@ -49,7 +45,6 @@ namespace VenimusAPIs.Tests.UpdateGroup
             _amendedGroup.Slug = _existingGroup.Slug;       // Fix for 
             _amendedGroup.Name = _existingGroup.Name;       // this test
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 

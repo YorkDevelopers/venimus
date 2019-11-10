@@ -18,10 +18,7 @@ namespace VenimusAPIs.Tests.ViewEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmAUser()
-        {
-            await IAmANormalUser();
-        }
+        private Task GivenIAmAUser() => IAmANormalUser();
 
         private async Task WhenICallTheGetEventApiForAGroupWhichDoesNotExist()
         {

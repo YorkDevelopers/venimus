@@ -15,7 +15,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_DuplicateName : BaseTest
     {
-        private string _token;
         private ViewModels.CreateGroup _group;
         private Group _existingGroup;
 
@@ -29,10 +28,7 @@ namespace VenimusAPIs.Tests.CreateGroup
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task GivenAGroupAlreadyExists()
         {
@@ -51,7 +47,6 @@ namespace VenimusAPIs.Tests.CreateGroup
 
             _group.Name = _existingGroup.Name;
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 

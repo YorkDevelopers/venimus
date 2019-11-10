@@ -1,6 +1,5 @@
-using System.Net.Http;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
@@ -10,7 +9,6 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_NoPermission : BaseTest
     {
-        private string _token;
         private ViewModels.CreateGroup _group;
 
         public CreateGroup_NoPermission(Fixture fixture) : base(fixture)
@@ -23,16 +21,12 @@ namespace VenimusAPIs.Tests.CreateGroup
             this.BDDfy();
         }
 
-        private async Task GivenIAmNotASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForNormalUser();
-        }
+        private Task GivenIAmNotASystemAdministrator() => IAmANormalUser();
 
         private async Task WhenICallTheCreateGroupApi()
         {
             _group = Data.Create<ViewModels.CreateGroup>();
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 

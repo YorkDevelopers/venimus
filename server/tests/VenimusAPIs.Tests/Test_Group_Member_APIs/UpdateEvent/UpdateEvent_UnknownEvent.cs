@@ -11,11 +11,8 @@ namespace VenimusAPIs.Tests.UpdateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent_UnknownEvent : BaseTest
     {
-        private string _uniqueID;
-        private string _token;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
-        private User _user;
 
         public UpdateEvent_UnknownEvent(Fixture fixture) : base(fixture)
         {
@@ -27,27 +24,14 @@ namespace VenimusAPIs.Tests.UpdateEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmAUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmANormalUser() => IAmANormalUser();
 
         private async Task GivenIAmAnAdminstratorForTheGroup()
         {
             _group = Data.Create<Models.Group>();
-            Data.AddGroupAdministrator(_group, _user);
+            Data.AddGroupAdministrator(_group, User);
 
             var collection = GroupsCollection();
-
             await collection.InsertOneAsync(_group);
         }
 
@@ -59,7 +43,6 @@ namespace VenimusAPIs.Tests.UpdateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/MADEUP", _amendedEvent);
         }
 

@@ -15,10 +15,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
     [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
     public class ViewGroupMembers_Success : BaseTest
     {
-        private string _token;
         private Group _existingGroup;
-        private string _uniqueID;
-        private User _user;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
@@ -34,19 +31,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             this.BDDfy();
         }
 
-        private async Task GivenIAmUser()
-        {
-            _uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(_uniqueID);
-
-            _user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            _user.Identities = new List<string> { _uniqueID };
-
-            await collection.InsertOneAsync(_user);
-        }
+        private Task GivenIAmAUser() => IAmANormalUser();
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -64,7 +49,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, _user);
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
                 Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
@@ -77,7 +62,6 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Members");
         }
 
@@ -94,7 +78,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
             Assert.Equal(4, actualMembers.Length);
 
-            AssertMember(_user, actualMembers, false);
+            AssertMember(User, actualMembers, false);
             AssertMember(_otherUserInGroup1, actualMembers, false);
             AssertMember(_otherUserInGroup2, actualMembers, false);
             AssertMember(_otherUserInGroup3, actualMembers, true);

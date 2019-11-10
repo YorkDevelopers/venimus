@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -12,7 +11,6 @@ namespace VenimusAPIs.Tests.UpdateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent_NoPermission : BaseTest
     {
-        private string _token;
         private Event _event;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
@@ -27,19 +25,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
             this.BDDfy();
         }
 
-        private async Task GivenIAmAUser()
-        {
-            var uniqueID = Guid.NewGuid().ToString();
-            _token = await Fixture.GetTokenForNormalUser(uniqueID);
-
-            var user = Data.Create<Models.User>();
-
-            var collection = UsersCollection();
-
-            user.Identities = new List<string> { uniqueID };
-
-            await collection.InsertOneAsync(user);
-        }
+        private Task GivenIAmANormalUser() => IAmANormalUser();
 
         private async Task GivenIAmNotAnAdminstratorForTheGroup()
         {
@@ -67,7 +53,6 @@ namespace VenimusAPIs.Tests.UpdateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
 
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 

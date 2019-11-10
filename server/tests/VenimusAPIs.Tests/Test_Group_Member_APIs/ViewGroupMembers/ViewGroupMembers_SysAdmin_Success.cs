@@ -15,7 +15,6 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
     [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
     public class ViewGroupMembers_SysAdmin_Success : BaseTest
     {
-        private string _token;
         private Group _existingGroup;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
@@ -32,10 +31,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             this.BDDfy();
         }
 
-        private async Task GivenIAmASystemAdministrator()
-        {
-            _token = await Fixture.GetTokenForSystemAdministrator();
-        }
+        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -66,7 +62,6 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
         private async Task WhenICallTheApi()
         {
-            Fixture.APIClient.SetBearerToken(_token);
             Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Members");
         }
 
