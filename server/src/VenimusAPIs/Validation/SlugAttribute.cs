@@ -8,7 +8,11 @@ namespace VenimusAPIs.Validation
         {
             var slug = (string)value;
             
-            if (slug.Contains(" "))
+            if (string.IsNullOrWhiteSpace(slug))
+            {
+                return new ValidationResult("The slug must be provided");
+            }
+            else if (slug.Contains(" "))
             {
                 return new ValidationResult("Slugs cannot contain spaces");
             }

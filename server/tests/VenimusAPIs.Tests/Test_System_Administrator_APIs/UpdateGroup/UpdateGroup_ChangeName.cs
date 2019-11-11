@@ -57,6 +57,8 @@ namespace VenimusAPIs.Tests.UpdateGroup
             _amendedGroup.Slug = _existingGroup.Slug; // Fix slug for this test
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
+
+            await Task.Delay(TimeSpan.FromSeconds(.5));
         }
 
         private void ThenASuccessResponseIsReturned()

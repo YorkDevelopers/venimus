@@ -22,6 +22,14 @@ namespace VenimusAPIs.Services
             _mongoDBSettings = mongoDBSettings.Value;
         }
 
+        public async Task ResetDatabase()
+        {
+            var mongoDatabase = ConnectToDatabase();
+            await mongoDatabase.DropCollectionAsync("events");
+            await mongoDatabase.DropCollectionAsync("groups");
+            await mongoDatabase.DropCollectionAsync("users");
+        }
+
         private IMongoDatabase ConnectToDatabase()
         {
             if (_cachedDatabase == null)
@@ -144,6 +152,30 @@ namespace VenimusAPIs.Services
         {
             var groups = GroupsCollection();
             var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
+
+            if (group != null)
+            {
+                if (group.Members == null)
+                {
+                    group.Members = new List<Group.GroupMember>();
+                }
+            }
+
+            return group;
+        }
+
+        public async Task<Models.Group> RetrieveGroupByGroupId(ObjectId groupId)
+        {
+            var groups = GroupsCollection();
+            var group = await groups.Find(u => u.Id == groupId).SingleOrDefaultAsync();
+
+            if (group != null)
+            {
+                if (group.Members == null)
+                {
+                    group.Members = new List<Group.GroupMember>();
+                }
+            }
 
             return group;
         }

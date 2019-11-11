@@ -5,6 +5,10 @@ System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
+Users join groups,   which means they can view events and sign up.
+Group admins can then approve users,  this means they can now see the list of group members / event attendees
+
+Some person details are only visible to group administrators
 
 Group Administrators
 View attendees - messages + diatary  requirements
@@ -20,8 +24,6 @@ Include user's profile picture.
 Allow an email address to be changed.  What should happen?  Confirm via email?
 
 Localise error messages
-
-Add events to process actions,  such as updating events after a group slug/name changes.
 
 Base64 images  as per Kevin's suggestion
 

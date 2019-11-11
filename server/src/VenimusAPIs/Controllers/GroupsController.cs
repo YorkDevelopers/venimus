@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.Serialization.Serializers;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -94,7 +96,7 @@ namespace VenimusAPIs.Controllers
         [HttpPut]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Put([FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
+        public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
 
@@ -138,7 +140,8 @@ namespace VenimusAPIs.Controllers
 
             if (updateEvents)
             {
-                await _mongo.UpdateGroupDetailsInEvents(group);
+                var groupChangedMessage = new ServiceBusMessages.GroupChangedMessage { GroupId = group.Id.ToString() };
+                await bus.Publish(groupChangedMessage);
             }
 
             return NoContent();

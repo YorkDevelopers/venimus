@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using HealthChecks.UI.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -73,7 +74,7 @@ namespace VenimusAPIs
             }
             );
 
-            services.AddSingleton<CheckGroupSecurityFilter>();
+            services.AddScoped<CheckGroupSecurityFilter>();
 
             services.AddScoped<Services.Mongo>();
 
@@ -89,10 +90,18 @@ namespace VenimusAPIs
             {
                 client.BaseAddress = new System.Uri($"https://{Configuration["Auth0:Domain"]}");
             });
+
+            services.AddMassTransit();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl, Services.Mongo mongo)
         {
+            /*
+             * mongo.ResetDatabase().Wait();
+             */
+
+            app.StartMassTransitBusIfAvailable(busControl);
+
             app.Use(async (ctx, next) =>
             {
                 ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
