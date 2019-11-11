@@ -853,6 +853,16 @@
                 Is a speaker at the event
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.IsAttending">
+            <summary>
+                Is the user attending the event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.NumberOfGuests">
+            <summary>
+                How many guests is this person bringing?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventSlug">
             <summary>
                 The unique external ID for the event.

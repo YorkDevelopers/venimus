@@ -6,6 +6,9 @@ System adminstrators can :  Ban Users
 ### DELETE /api/BannedUsers/{userslug}
 
 
+Group Administrators
+View attendees - messages + diatary  requirements
+
 Logic around banned users
 
 Logging (driven by events?)
@@ -24,11 +27,7 @@ Base64 images  as per Kevin's suggestion
 
 Add Blob storage
 
-Rename Group.Member.ID 
-
 Denormalise Group.Member
-
-Add IsAttending to GET /api/groups/{GroupSlug}/Events/{EventSlug}/Members
 
 Notify members when things happen
 

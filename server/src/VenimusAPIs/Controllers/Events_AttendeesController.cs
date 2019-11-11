@@ -65,6 +65,8 @@ namespace VenimusAPIs.Controllers
                 ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
                 IsHost = attendees.Single(x => x.UserId == m.Id).Host,
                 IsSpeaker = attendees.Single(x => x.UserId == m.Id).Speaker,
+                IsAttending = attendees.Single(x => x.UserId == m.Id).SignedUp,
+                NumberOfGuests = attendees.Single(x => x.UserId == m.Id).NumberOfGuests,
             }).ToArray();
         }
     }

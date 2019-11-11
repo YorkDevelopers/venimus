@@ -1,9 +1,8 @@
+using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -21,6 +20,9 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
+        private Event.EventAttendees _userRegistration;
+        private Event.EventAttendees _otherUser1Registration;
+        private Event.EventAttendees _otherUser2Registration;
 
         public ViewEventAttendees_Success(Fixture fixture) : base(fixture)
         {
@@ -65,9 +67,9 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         {
             _event = Data.CreateEvent(_existingGroup, e =>
             {
-                Data.AddEventHost(e, User);
-                Data.AddEventSpeaker(e, _otherUserInGroup1);
-                Data.AddEventAttendee(e, _otherUserInGroup2);
+                _userRegistration = Data.AddEventHost(e, User);
+                _otherUser1Registration = Data.AddEventSpeaker(e, _otherUserInGroup1);
+                _otherUser2Registration = Data.AddEventAttendee(e, _otherUserInGroup2);
             });
 
             var events = EventsCollection();
@@ -93,12 +95,12 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
 
             Assert.Equal(3, actualAttendees.Length);
 
-            AssertMember(User, actualAttendees, true, false);
-            AssertMember(_otherUserInGroup1, actualAttendees, false, true);
-            AssertMember(_otherUserInGroup2, actualAttendees, false, false);
+            AssertMember(User, actualAttendees, true, false, _userRegistration);
+            AssertMember(_otherUserInGroup1, actualAttendees, false, true, _otherUser1Registration);
+            AssertMember(_otherUserInGroup2, actualAttendees, false, false, _otherUser2Registration);
         }
 
-        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker)
+        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker, Event.EventAttendees attendee)
         {
             var actualAttendee = actualAttendees.Single(m => m.Slug == user.Id.ToString());
 
@@ -107,6 +109,8 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             Assert.Equal(user.Fullname, actualAttendee.Fullname);
             Assert.Equal(user.Bio, actualAttendee.Bio);
             Assert.Equal(user.Pronoun, actualAttendee.Pronoun);
+            Assert.Equal(attendee.SignedUp, actualAttendee.IsAttending);
+            Assert.Equal(attendee.NumberOfGuests, actualAttendee.NumberOfGuests);
             Assert.Equal(isHost, actualAttendee.IsHost);
             Assert.Equal(isSpeaker, actualAttendee.IsSpeaker);
             Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualAttendee.ProfilePictureInBase64));

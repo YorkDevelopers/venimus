@@ -165,32 +165,40 @@ namespace VenimusAPIs.Tests.Infrastucture
             return obj;
         }
 
-        internal void AddEventHost(Event theEvent, User user)
+        internal Event.EventAttendees AddEventHost(Event theEvent, User user)
         {
             if (theEvent.Members == null)
             {
                 theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
             }
 
-            theEvent.Members.Add(new Event.EventAttendees
+            var attendee = new Event.EventAttendees
             {
                 UserId = user.Id,
                 Host = true,
-            });
+            };
+
+            theEvent.Members.Add(attendee);
+
+            return attendee;
         }
 
-        internal void AddEventSpeaker(Event theEvent, User user)
+        internal Event.EventAttendees AddEventSpeaker(Event theEvent, User user)
         {
             if (theEvent.Members == null)
             {
                 theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
             }
 
-            theEvent.Members.Add(new Event.EventAttendees
+            var attendee = new Event.EventAttendees
             {
                 UserId = user.Id,
                 Speaker = true,
-            });
+            };
+
+            theEvent.Members.Add(attendee);
+
+            return attendee;
         }
 
         internal Event.EventAttendees AddEventAttendee(Event theEvent, User user, int numberOfGuests = 0)

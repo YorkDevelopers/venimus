@@ -48,5 +48,15 @@
         ///     Is a speaker at the event
         /// </summary>
         public bool IsSpeaker { get; set; }
+
+        /// <summary>
+        ///     Is the user attending the event?
+        /// </summary>
+        public bool IsAttending { get; set; }
+
+        /// <summary>
+        ///     How many guests is this person bringing?
+        /// </summary>
+        public int NumberOfGuests { get; set; }
     }
 }
