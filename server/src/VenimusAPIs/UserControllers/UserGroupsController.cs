@@ -111,9 +111,9 @@ namespace VenimusAPIs.UserControllers
 
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            if (!model.Members.Any(m => m.Id == existingUser.Id))
+            if (!model.Members.Any(m => m.UserId == existingUser.Id))
             {
-                model.Members.Add(new Group.GroupMember { Id = existingUser.Id });
+                model.Members.Add(new Group.GroupMember { UserId = existingUser.Id });
 
                 await _mongo.UpdateGroup(model);
             }
@@ -148,7 +148,7 @@ namespace VenimusAPIs.UserControllers
             var uniqueID = UniqueIDForCurrentUser;
             var existingUser = await _mongo.GetUserByID(uniqueID);
 
-            model.Members.RemoveAll(m => m.Id == existingUser.Id);
+            model.Members.RemoveAll(m => m.UserId == existingUser.Id);
             await _mongo.UpdateGroup(model);
 
             return NoContent();

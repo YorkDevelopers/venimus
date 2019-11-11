@@ -56,7 +56,7 @@ namespace VenimusAPIs.Validation
                         return;
                     }
 
-                    if (group.Members == null || !group.Members.Any(m => m.Id == existingUser.Id && (!mustBeAGroupAdministrator || m.IsAdministrator)))
+                    if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id && (!mustBeAGroupAdministrator || m.IsAdministrator)))
                     {
                         if (useNotFoundRatherThanForbidden)
                         {

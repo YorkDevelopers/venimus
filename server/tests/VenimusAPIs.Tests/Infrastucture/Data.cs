@@ -244,7 +244,7 @@ namespace VenimusAPIs.Tests.Infrastucture
 
             var newMember = new Group.GroupMember
             {
-                Id = user.Id,
+                UserId = user.Id,
                 IsAdministrator = false,
             };
 
@@ -262,7 +262,7 @@ namespace VenimusAPIs.Tests.Infrastucture
 
             group.Members.Add(new Group.GroupMember
             {
-                Id = user.Id,
+                UserId = user.Id,
                 IsAdministrator = true,
             });
         }

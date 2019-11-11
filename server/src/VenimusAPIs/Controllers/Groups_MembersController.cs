@@ -47,7 +47,7 @@ namespace VenimusAPIs.Controllers
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
             var members = group.Members.ToArray();
 
-            var users = await _mongo.GetUsersByIds(members.Select(m => m.Id));
+            var users = await _mongo.GetUsersByIds(members.Select(m => m.UserId));
 
             return users.Select(m => new ListGroupMembers
             {
@@ -58,7 +58,7 @@ namespace VenimusAPIs.Controllers
                 Pronoun = m.Pronoun,
                 Slug = m.Id.ToString(),
                 ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
-                IsAdministrator = members.Single(x => x.Id == m.Id).IsAdministrator,
+                IsAdministrator = members.Single(x => x.UserId == m.Id).IsAdministrator,
             }).ToArray();
         }
     }

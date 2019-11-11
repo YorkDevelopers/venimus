@@ -50,9 +50,9 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             _existingGroup = Data.Create<Models.Group>();
             _existingGroup.Members = new List<Group.GroupMember>()
             {
-                new Group.GroupMember { Id = _otherUserInGroup1.Id },
-                new Group.GroupMember { Id = _otherUserInGroup2.Id },
-                new Group.GroupMember { Id = _otherUserInGroup3.Id },
+                new Group.GroupMember { UserId = _otherUserInGroup1.Id },
+                new Group.GroupMember { UserId = _otherUserInGroup2.Id },
+                new Group.GroupMember { UserId = _otherUserInGroup3.Id },
             };
 
             var groups = GroupsCollection();

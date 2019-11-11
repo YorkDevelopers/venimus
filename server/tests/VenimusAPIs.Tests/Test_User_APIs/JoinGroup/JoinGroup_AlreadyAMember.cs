@@ -58,7 +58,7 @@ namespace VenimusAPIs.Tests.JoinGroup
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
             Assert.Single(actualGroup.Members);
-            Assert.Equal(User.Id.ToString(), actualGroup.Members[0].Id.ToString());
+            Assert.Equal(User.Id.ToString(), actualGroup.Members[0].UserId.ToString());
         }
     }
 }

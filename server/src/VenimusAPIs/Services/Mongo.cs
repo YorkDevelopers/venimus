@@ -92,7 +92,7 @@ namespace VenimusAPIs.Services
         {
             var groups = GroupsCollection();
 
-            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.Id, userID);
+            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.UserId, userID);
 
             var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch) &
                          Builders<Group>.Filter.Eq(ent => ent.IsActive, true);

@@ -50,7 +50,7 @@ namespace VenimusAPIs.Models
             /// <summary>
             ///     Unique ID of the user
             /// </summary>
-            public ObjectId Id { get; set; } 
+            public ObjectId UserId { get; set; } 
 
             /// <summary>
             ///     Are they an administrator of the group?

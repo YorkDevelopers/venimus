@@ -362,7 +362,7 @@
                 The name of this groups slack channel
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.Id">
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.UserId">
             <summary>
                 Unique ID of the user
             </summary>
