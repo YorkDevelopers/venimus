@@ -30,6 +30,11 @@ namespace VenimusAPIs.Tests.Infrastucture
             Data = new Data();
         }
 
+        protected async Task WaitForServiceBus()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(.5));
+        }
+
         protected MongoDB.Driver.IMongoCollection<Models.Event> EventsCollection()
         {
             var mongoDatabase = Fixture.MongoDatabase();

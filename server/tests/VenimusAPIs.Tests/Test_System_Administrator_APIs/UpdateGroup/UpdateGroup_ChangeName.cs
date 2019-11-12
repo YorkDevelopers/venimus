@@ -58,7 +58,7 @@ namespace VenimusAPIs.Tests.UpdateGroup
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
 
-            await Task.Delay(TimeSpan.FromSeconds(.5));
+            await WaitForServiceBus();
         }
 
         private void ThenASuccessResponseIsReturned()

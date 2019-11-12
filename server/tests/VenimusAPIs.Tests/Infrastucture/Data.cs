@@ -242,18 +242,23 @@ namespace VenimusAPIs.Tests.Infrastucture
 
             return newAttendee;
         }
-        
+
         internal Group.GroupMember AddGroupMember(Group group, User user)
         {
             if (group.Members == null)
             {
-                group.Members = new System.Collections.Generic.List<Group.GroupMember>();
+                group.Members = new List<Group.GroupMember>();
             }
 
             var newMember = new Group.GroupMember
             {
                 UserId = user.Id,
                 IsAdministrator = false,
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             };
 
             group.Members.Add(newMember);
@@ -265,13 +270,18 @@ namespace VenimusAPIs.Tests.Infrastucture
         {
             if (group.Members == null)
             {
-                group.Members = new System.Collections.Generic.List<Group.GroupMember>();
+                group.Members = new List<Group.GroupMember>();
             }
 
             group.Members.Add(new Group.GroupMember
             {
                 UserId = user.Id,
                 IsAdministrator = true,
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             });
         }
 

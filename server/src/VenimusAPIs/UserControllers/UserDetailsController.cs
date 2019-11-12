@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,7 @@ namespace VenimusAPIs.UserControllers
         [Route("api/user")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<ViewMyDetails>> Put([FromBody] UpdateMyDetails updateMyDetails)
+        public async Task<ActionResult<ViewMyDetails>> Put([FromServices] IBus bus, [FromBody] UpdateMyDetails updateMyDetails)
         {
             var uniqueID = UniqueIDForCurrentUser;
 
@@ -98,6 +99,9 @@ namespace VenimusAPIs.UserControllers
             user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
 
             await _mongo.UpdateUser(user);
+
+            var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
+            await bus.Publish(userChangedMessage);
 
             return NoContent();
         }

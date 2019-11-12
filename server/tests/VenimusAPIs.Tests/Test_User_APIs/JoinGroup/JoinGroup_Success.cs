@@ -58,7 +58,14 @@ namespace VenimusAPIs.Tests.JoinGroup
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
             Assert.Single(actualGroup.Members);
-            Assert.Equal(User.Id.ToString(), actualGroup.Members[0].UserId.ToString());
+            var newMember = actualGroup.Members[0];
+            Assert.Equal(User.Id, newMember.UserId);
+            Assert.Equal(User.Bio, newMember.Bio);
+            Assert.Equal(User.DisplayName, newMember.DisplayName);
+            Assert.Equal(User.EmailAddress, newMember.EmailAddress);
+            Assert.Equal(User.Fullname, newMember.Fullname);
+            Assert.Equal(User.Pronoun, newMember.Pronoun);
+            Assert.False(newMember.IsAdministrator);
         }
     }
 }

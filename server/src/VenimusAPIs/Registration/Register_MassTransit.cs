@@ -13,6 +13,7 @@ namespace VenimusAPIs.Registration
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<UserChangedConsumer>();
                 x.AddConsumer<GroupChangedConsumer>();
 
                 x.AddBus(provider => SetupBusControl(provider));
@@ -26,6 +27,7 @@ namespace VenimusAPIs.Registration
                 cfg.ReceiveEndpoint("venimus-events", ep =>
                 {
                     ep.ConfigureConsumer<GroupChangedConsumer>(provider);
+                    ep.ConfigureConsumer<UserChangedConsumer>(provider);
                 });
             });
         }

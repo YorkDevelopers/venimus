@@ -113,7 +113,16 @@ namespace VenimusAPIs.UserControllers
 
             if (!model.Members.Any(m => m.UserId == existingUser.Id))
             {
-                model.Members.Add(new Group.GroupMember { UserId = existingUser.Id });
+                model.Members.Add(new Group.GroupMember
+                {
+                    UserId = existingUser.Id,
+                    Bio = existingUser.Bio,
+                    DisplayName = existingUser.DisplayName,
+                    EmailAddress = existingUser.EmailAddress,
+                    Fullname = existingUser.Fullname,
+                    IsAdministrator = false,
+                    Pronoun = existingUser.Pronoun,
+                });
 
                 await _mongo.UpdateGroup(model);
             }

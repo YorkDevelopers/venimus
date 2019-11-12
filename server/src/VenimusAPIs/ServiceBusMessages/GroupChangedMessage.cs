@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace VenimusAPIs.ServiceBusMessages
+﻿namespace VenimusAPIs.ServiceBusMessages
 {
     public class GroupChangedMessage
     {

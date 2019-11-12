@@ -13,6 +13,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     public class UpdateMyDetails_Success : BaseTest
     {
         private ViewModels.UpdateMyDetails _amendedUser;
+        private Group _group;
 
         public UpdateMyDetails_Success(Fixture fixture) : base(fixture)
         {
@@ -26,6 +27,15 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
         private Task GivenIAmUser() => IAmANormalUser();
 
+        private async Task GivenAGroupAlreadyExistsAndIAmAMember()
+        {
+            _group = Data.Create<Models.Group>();
+            Data.AddGroupMember(_group, User);
+
+            var groups = GroupsCollection();
+            await groups.InsertOneAsync(_group);
+        }
+
         private async Task WhenICallTheApi()
         {
             _amendedUser = Data.Create<ViewModels.UpdateMyDetails>();
@@ -33,6 +43,8 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             _amendedUser.ProfilePictureAsBase64 = Convert.ToBase64String(logo);
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user", _amendedUser);
+
+            await WaitForServiceBus();
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -50,6 +62,19 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             Assert.Equal(_amendedUser.DisplayName, actualUser.DisplayName);
             Assert.Equal(_amendedUser.Fullname, actualUser.Fullname);
             Assert.Equal(_amendedUser.ProfilePictureAsBase64, Convert.ToBase64String(actualUser.ProfilePicture));
+        }
+
+        private async Task ThenMyDetailsAreUpdatedInAnyGroupsIBelongTo()
+        {
+            var groups = GroupsCollection();
+            var actualGroup = await groups.Find(u => u.Id == _group.Id).SingleOrDefaultAsync();
+
+            Assert.Single(actualGroup.Members);
+            var membershipDetails = actualGroup.Members[0];
+            Assert.Equal(_amendedUser.Bio, membershipDetails.Bio);
+            Assert.Equal(_amendedUser.DisplayName, membershipDetails.DisplayName);
+            Assert.Equal(_amendedUser.Fullname, membershipDetails.Fullname);
+            Assert.Equal(_amendedUser.Pronoun, membershipDetails.Pronoun);
         }
     }
 }

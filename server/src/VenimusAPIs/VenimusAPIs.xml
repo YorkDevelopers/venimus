@@ -372,6 +372,33 @@
                 Are they an administrator of the group?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.User.Id">
             <summary>
                 The internal ID for the user.
@@ -419,6 +446,11 @@
                 The unique internal ID of this group
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ServiceBusMessages.UserChangedMessage.UserId">
+            <summary>
+                The unique internal ID of this user
+            </summary>
+        </member>
         <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
@@ -447,7 +479,7 @@
              <returns>ViewMyDetails view model</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Put(VenimusAPIs.ViewModels.UpdateMyDetails)">
+        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Put(MassTransit.IBus,VenimusAPIs.ViewModels.UpdateMyDetails)">
              <summary>
                  Allows the current user to update their personal profile
              </summary>

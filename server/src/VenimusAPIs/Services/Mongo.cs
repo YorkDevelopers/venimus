@@ -249,6 +249,26 @@ namespace VenimusAPIs.Services
             await events.UpdateManyAsync(filter, update);
         }
 
+        internal async Task UpdateUserDetailsInGroups(User user)
+        {
+            var groups = GroupsCollection();
+
+            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.UserId, user.Id);
+            var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch);
+            var groupsTheUserBelongsTo = await groups.Find(filter).ToListAsync();
+
+            foreach (var grp in groupsTheUserBelongsTo)
+            {
+                var member = grp.Members.Single(g => g.UserId == user.Id);
+                member.Bio = user.Bio;
+                member.DisplayName = user.DisplayName;
+                member.EmailAddress = user.EmailAddress;
+                member.Fullname = user.Fullname;
+                member.Pronoun = user.Pronoun;
+                await groups.ReplaceOneAsync(u => u.Id == grp.Id, grp);
+            }
+        }
+
         internal async Task<bool> DoEventsExistForGroup(string groupSlug)
         {
             var events = EventsCollection();
@@ -271,6 +291,15 @@ namespace VenimusAPIs.Services
             var users = UsersCollection();
 
             var existingUser = await users.Find(u => u.EmailAddress == emailAddress).SingleOrDefaultAsync();
+
+            return existingUser;
+        }
+
+        internal async Task<Models.User> GetUserById(ObjectId id)
+        {
+            var users = UsersCollection();
+
+            var existingUser = await users.Find(u => u.Id == id).SingleOrDefaultAsync();
 
             return existingUser;
         }

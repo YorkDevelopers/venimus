@@ -12,6 +12,7 @@ namespace VenimusAPIs.Tests.JoinGroup
     {
         private ViewModels.JoinGroup _group;
         private Group _existingGroup;
+        private Group.GroupMember _existingMemberDetails;
 
         public JoinGroup_AlreadyAMember(Fixture fixture) : base(fixture)
         {
@@ -28,7 +29,7 @@ namespace VenimusAPIs.Tests.JoinGroup
         private async Task GivenAGroupAlreadyExistsAndIAmAMember()
         {
             _existingGroup = Data.Create<Models.Group>();
-            Data.AddGroupMember(_existingGroup, User);
+            _existingMemberDetails = Data.AddGroupMember(_existingGroup, User);
 
             var groups = GroupsCollection();
             await groups.InsertOneAsync(_existingGroup);
@@ -58,7 +59,14 @@ namespace VenimusAPIs.Tests.JoinGroup
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
             Assert.Single(actualGroup.Members);
-            Assert.Equal(User.Id.ToString(), actualGroup.Members[0].UserId.ToString());
+            var newMember = actualGroup.Members[0];
+            Assert.Equal(_existingMemberDetails.UserId, newMember.UserId);
+            Assert.Equal(_existingMemberDetails.Bio, newMember.Bio);
+            Assert.Equal(_existingMemberDetails.DisplayName, newMember.DisplayName);
+            Assert.Equal(_existingMemberDetails.EmailAddress, newMember.EmailAddress);
+            Assert.Equal(_existingMemberDetails.Fullname, newMember.Fullname);
+            Assert.Equal(_existingMemberDetails.Pronoun, newMember.Pronoun);
+            Assert.Equal(_existingMemberDetails.IsAdministrator, newMember.IsAdministrator);
         }
     }
 }

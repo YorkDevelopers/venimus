@@ -8,6 +8,8 @@ System adminstrators can :  Ban Users
 Users join groups,   which means they can view events and sign up.
 Group admins can then approve users,  this means they can now see the list of group members / event attendees
 
+Make someone a group admin
+
 Some person details are only visible to group administrators
 
 Group Administrators
@@ -21,7 +23,7 @@ Automatically call /user/connected from Auth0?   Or should /user/connected indic
 
 Include user's profile picture.
 
-Allow an email address to be changed.  What should happen?  Confirm via email?
+Allow an email address to be changed.  What should happen?  Confirm via email?  Update member details in groups+events
 
 Localise error messages
 
@@ -29,7 +31,9 @@ Base64 images  as per Kevin's suggestion
 
 Add Blob storage
 
-Denormalise Group.Member
+Denormalise Event.Member  (copy Group.Member)
+
+Denormalise Groups into the user record
 
 Notify members when things happen
 

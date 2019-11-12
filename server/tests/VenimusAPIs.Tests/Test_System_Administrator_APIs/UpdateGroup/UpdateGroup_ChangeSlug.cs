@@ -57,6 +57,8 @@ namespace VenimusAPIs.Tests.UpdateGroup
             _amendedGroup.Name = _existingGroup.Name; // Fix name for this test
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
+
+            await WaitForServiceBus();
         }
 
         private void ThenASuccessResponseIsReturned()

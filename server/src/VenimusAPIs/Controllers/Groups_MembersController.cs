@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
@@ -45,20 +44,16 @@ namespace VenimusAPIs.Controllers
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
             var group = await _mongo.RetrieveGroupBySlug(groupSlug);
-            var members = group.Members.ToArray();
 
-            var users = await _mongo.GetUsersByIds(members.Select(m => m.UserId));
-
-            return users.Select(m => new ListGroupMembers
+            return group.Members.Select(m => new ListGroupMembers
             {
                 Bio = m.Bio,
                 DisplayName = m.DisplayName,
                 EmailAddress = m.EmailAddress,
                 Fullname = m.Fullname,
                 Pronoun = m.Pronoun,
-                Slug = m.Id.ToString(),
-                ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
-                IsAdministrator = members.Single(x => x.UserId == m.Id).IsAdministrator,
+                Slug = m.UserId.ToString(),
+                IsAdministrator = m.IsAdministrator,
             }).ToArray();
         }
     }
