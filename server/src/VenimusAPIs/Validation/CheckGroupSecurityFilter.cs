@@ -10,11 +10,13 @@ namespace VenimusAPIs.Validation
 {
     public class CheckGroupSecurityFilter : IAsyncActionFilter
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.GroupStore _groupStore;
+        private readonly Mongo.UserStore _userStore;
 
-        public CheckGroupSecurityFilter(Services.Mongo mongo)
+        public CheckGroupSecurityFilter(Mongo.GroupStore groupStore, Mongo.UserStore userStore)
         {
-            _mongo = mongo;
+            _groupStore = groupStore;
+            _userStore = userStore;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -42,14 +44,14 @@ namespace VenimusAPIs.Validation
 
                     var uniqueID = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-                    var existingUser = await _mongo.GetUserByID(uniqueID);
+                    var existingUser = await _userStore.GetUserByID(uniqueID);
                     if (existingUser == null)
                     {
                         context.Result = new ForbidResult();
                         return;
                     }
 
-                    var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+                    var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
                     if (group == null)
                     {
                         context.Result = new NotFoundResult();

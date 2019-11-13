@@ -10,13 +10,13 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class ActiveGroupsController : ControllerBase
     {
-        private readonly Services.Mongo _mongo;
-        
+        private readonly Mongo.GroupStore _groupStore;
+
         private readonly IMapper _mapper;
 
-        public ActiveGroupsController(Services.Mongo mongo, IMapper mapper)
+        public ActiveGroupsController(Mongo.GroupStore groupStore, IMapper mapper)
         {
-            _mongo = mongo;
+            _groupStore = groupStore;
             _mapper = mapper;
         }
 
@@ -36,7 +36,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ListActiveGroups>>> Get()
         {
-            var groups = await _mongo.GetActiveGroups();
+            var groups = await _groupStore.GetActiveGroups();
 
             var viewModels = _mapper.Map<List<ListActiveGroups>>(groups);
 

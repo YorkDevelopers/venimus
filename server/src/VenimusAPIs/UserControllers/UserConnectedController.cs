@@ -11,13 +11,13 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public class UserConnectedController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.UserStore _userStore;
 
         private readonly Services.Auth0API _auth0API;
 
-        public UserConnectedController(Services.Mongo mongo, Services.Auth0API auth0API)
+        public UserConnectedController(Mongo.UserStore userStore, Services.Auth0API auth0API)
         {
-            _mongo = mongo;
+            _userStore = userStore;
             _auth0API = auth0API;
         }
 
@@ -42,7 +42,7 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
             if (existingUser == null)
             {
                 await CreateOrMergeUser(uniqueID);
@@ -57,7 +57,7 @@ namespace VenimusAPIs.UserControllers
 
             var userInfo = await _auth0API.UserInfo(accessToken);
 
-            var existingUser = await _mongo.GetUserByEmailAddress(userInfo.Email);
+            var existingUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
             if (existingUser == null)
             {
                 await CreateNewUser(uniqueID, userInfo);
@@ -72,7 +72,7 @@ namespace VenimusAPIs.UserControllers
         {
             existingUser.Identities.Add(uniqueID);
 
-            await _mongo.UpdateUser(existingUser);
+            await _userStore.UpdateUser(existingUser);
         }
 
         private async Task CreateNewUser(string uniqueID, Services.Auth0Models.UserProfile userInfo)
@@ -87,7 +87,7 @@ namespace VenimusAPIs.UserControllers
                 Pronoun = string.Empty,
             };
 
-            await _mongo.InsertUser(newUser);
+            await _userStore.InsertUser(newUser);
         }
     }
 }

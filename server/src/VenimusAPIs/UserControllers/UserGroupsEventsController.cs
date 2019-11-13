@@ -13,14 +13,13 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public class UserGroupsEventsController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.EventStore _eventStore;
+        private readonly Mongo.UserStore _userStore;
 
-        private readonly IMapper _mapper;
-
-        public UserGroupsEventsController(Services.Mongo mongo, IMapper mapper)
+        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
         {
-            _mongo = mongo;
-            _mapper = mapper;
+            _eventStore = eventStore;
+            _userStore = userStore;
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace VenimusAPIs.UserControllers
         public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
         {
             var eventSlug = signUpDetails.EventSlug;
-            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
@@ -60,7 +59,7 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member != null)
@@ -107,7 +106,7 @@ namespace VenimusAPIs.UserControllers
                 SignedUp = true,
             });
 
-            await _mongo.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent);
 
             return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
         }
@@ -139,7 +138,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] AmendRegistrationForEvent newDetails)
         {
-            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
@@ -147,7 +146,7 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             var created = false;
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
@@ -196,7 +195,7 @@ namespace VenimusAPIs.UserControllers
             member.NumberOfGuests = newDetails.NumberOfGuests;
             member.MessageToOrganiser = newDetails.MessageToOrganiser;
 
-            await _mongo.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent);
 
             if (created)
             {
@@ -229,7 +228,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
@@ -247,7 +246,7 @@ namespace VenimusAPIs.UserControllers
 
             member.SignedUp = false;
 
-            await _mongo.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent);
 
             return NoContent();
         }
@@ -256,7 +255,7 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
@@ -292,14 +291,14 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
             }
 
             var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)

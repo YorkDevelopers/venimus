@@ -4,7 +4,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson.Serialization.Serializers;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -13,13 +12,15 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class GroupsController : ControllerBase
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.EventStore _eventStore;
+        private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
 
-        public GroupsController(Services.Mongo mongo, IMapper mapper)
+        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper)
         {
-            _mongo = mongo;
+            _eventStore = eventStore;
+            _groupStore = groupStore;
             _mapper = mapper;
         }
 
@@ -48,13 +49,13 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateGroup group)
         {
-            var duplicateGroup = await _mongo.RetrieveGroupBySlug(group.Slug);
+            var duplicateGroup = await _groupStore.RetrieveGroupBySlug(group.Slug);
             if (duplicateGroup != null)
             {
                 ModelState.AddModelError("Slug", "A group using this slug already exists");
             }
 
-            duplicateGroup = await _mongo.RetrieveGroupByName(group.Name);
+            duplicateGroup = await _groupStore.RetrieveGroupByName(group.Name);
             if (duplicateGroup != null)
             {
                 ModelState.AddModelError("Name", "A group using this name already exists");
@@ -67,7 +68,7 @@ namespace VenimusAPIs.Controllers
 
             var model = _mapper.Map<Models.Group>(group);
 
-            await _mongo.StoreGroup(model);
+            await _groupStore.StoreGroup(model);
 
             return CreatedAtRoute("Groups", new { groupSlug = model.Slug }, group);
         }
@@ -98,7 +99,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             if (group == null)
             {
@@ -109,7 +110,7 @@ namespace VenimusAPIs.Controllers
 
             if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateGroup = await _mongo.RetrieveGroupBySlug(newDetails.Slug);
+                var duplicateGroup = await _groupStore.RetrieveGroupBySlug(newDetails.Slug);
                 if (duplicateGroup != null)
                 {
                     ModelState.AddModelError("Slug", "A group using this slug already exists");
@@ -120,7 +121,7 @@ namespace VenimusAPIs.Controllers
 
             if (!group.Name.Equals(newDetails.Name, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateGroup = await _mongo.RetrieveGroupByName(newDetails.Name);
+                var duplicateGroup = await _groupStore.RetrieveGroupByName(newDetails.Name);
                 if (duplicateGroup != null)
                 {
                     ModelState.AddModelError("Name", "A group using this name already exists");
@@ -136,7 +137,7 @@ namespace VenimusAPIs.Controllers
 
             _mapper.Map(newDetails, group);
 
-            await _mongo.UpdateGroup(group);
+            await _groupStore.UpdateGroup(group);
 
             if (updateEvents)
             {
@@ -166,7 +167,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetGroup>> Get(string groupSlug)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             if (group == null)
             {
@@ -194,7 +195,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ListGroups[]>> Get()
         {
-            var groups = await _mongo.RetrieveAllGroups();
+            var groups = await _groupStore.RetrieveAllGroups();
 
             var viewModels = _mapper.Map<ListGroups[]>(groups);
 
@@ -219,18 +220,18 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete([FromRoute] string groupSlug)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             if (group != null)
             {
-                var eventsExistForGroup = await _mongo.DoEventsExistForGroup(groupSlug);
+                var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(groupSlug);
                 if (eventsExistForGroup)
                 {
                     var details = new ValidationProblemDetails { Detail = "The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." };
                     return ValidationProblem(details);
                 }
 
-                await _mongo.DeleteGroup(group);
+                await _groupStore.DeleteGroup(group);
             }
 
             return NoContent();

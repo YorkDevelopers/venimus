@@ -14,13 +14,15 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public class UserGroupsController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.GroupStore _groupStore;
+        private readonly Mongo.UserStore _userStore;
 
         private readonly IMapper _mapper;
 
-        public UserGroupsController(Services.Mongo mongo, IMapper mapper)
+        public UserGroupsController(Mongo.GroupStore groupStore, Mongo.UserStore userStore, IMapper mapper)
         {
-            _mongo = mongo;
+            _groupStore = groupStore;
+            _userStore = userStore;
             _mapper = mapper;
         }
 
@@ -44,7 +46,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyGroupMembership>> Get([FromRoute, Slug]string groupSlug)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             var viewModel = _mapper.Map<ViewMyGroupMembership>(group);
 
@@ -69,9 +71,9 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
-            var groups = await _mongo.RetrieveMyActiveGroups(existingUser.Id);
+            var groups = await _groupStore.RetrieveMyActiveGroups(existingUser.Id);
 
             var viewModels = _mapper.Map<ListMyGroups[]>(groups);
 
@@ -101,7 +103,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromBody] JoinGroup group)
         {
-            var model = await _mongo.RetrieveGroupBySlug(group.GroupSlug);
+            var model = await _groupStore.RetrieveGroupBySlug(group.GroupSlug);
             if (model == null)
             {
                 return NotFound();
@@ -109,7 +111,7 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             if (!model.Members.Any(m => m.UserId == existingUser.Id))
             {
@@ -124,7 +126,7 @@ namespace VenimusAPIs.UserControllers
                     Pronoun = existingUser.Pronoun,
                 });
 
-                await _mongo.UpdateGroup(model);
+                await _groupStore.UpdateGroup(model);
             }
 
             return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
@@ -152,13 +154,13 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DELETE([FromRoute, Slug] string groupSlug)
         {
-            var model = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var model = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _mongo.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
 
             model.Members.RemoveAll(m => m.UserId == existingUser.Id);
-            await _mongo.UpdateGroup(model);
+            await _groupStore.UpdateGroup(model);
 
             return NoContent();
         }

@@ -39,8 +39,6 @@ Notify members when things happen
 
 dotnet test --filter "VenimusAPIs.Tests.DeleteEvent"
 
-Split mongo class up?
-
 Groups are sometimes retrieved twice.  Could cache.   
 
 Rename controllers

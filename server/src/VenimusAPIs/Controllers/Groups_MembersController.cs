@@ -12,11 +12,11 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class Groups_MembersController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.GroupStore _groupStore;
 
-        public Groups_MembersController(Services.Mongo mongo)
+        public Groups_MembersController(Mongo.GroupStore groupStore)
         {
-            _mongo = mongo;
+            _groupStore = groupStore;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace VenimusAPIs.Controllers
         [CallerMustBeGroupMember]
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             return group.Members.Select(m => new ListGroupMembers
             {

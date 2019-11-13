@@ -9,11 +9,11 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class FutureEventsController : ControllerBase
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.GetFutureEventsQuery _getFutureEventsQuery;
 
-        public FutureEventsController(Services.Mongo mongo)
+        public FutureEventsController(Mongo.GetFutureEventsQuery getFutureEventsQuery)
         {
-            _mongo = mongo;
+            _getFutureEventsQuery = getFutureEventsQuery;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ListFutureEvents>>> Get()
         {
-            var futureEvents = await _mongo.GetFutureEvents();
+            var futureEvents = await _getFutureEventsQuery.Evaluate();
 
             return futureEvents;
         }

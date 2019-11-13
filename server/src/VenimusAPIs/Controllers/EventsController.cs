@@ -13,13 +13,15 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class EventsController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.EventStore _eventStore;
+        private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
 
-        public EventsController(Services.Mongo mongo, IMapper mapper)
+        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper)
         {
-            _mongo = mongo;
+            _eventStore = eventStore;
+            _groupStore = groupStore;
             _mapper = mapper;
         }
 
@@ -62,7 +64,7 @@ namespace VenimusAPIs.Controllers
                 ModelState.AddModelError(nameof(newEvent.EndTimeUTC), "You cannot create an event which ends before it starts.");
             }
 
-            var duplicate = await _mongo.GetEvent(groupSlug, newEvent.Slug);
+            var duplicate = await _eventStore.GetEvent(groupSlug, newEvent.Slug);
             if (duplicate != null)
             {
                 ModelState.AddModelError(nameof(newEvent.Slug), "An event with this slug already exists for this group.");
@@ -73,14 +75,14 @@ namespace VenimusAPIs.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            var group = await _mongo.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
             var model = _mapper.Map<Models.Event>(newEvent);
             model.GroupSlug = groupSlug;
             model.GroupId = group.Id;
             model.GroupName = group.Name;
 
-            await _mongo.StoreEvent(model);
+            await _eventStore.StoreEvent(model);
             return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);
         }
 
@@ -115,7 +117,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] UpdateEvent amendedEvent)
         {
-            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (model == null)
             {
                 return NotFound();
@@ -123,7 +125,7 @@ namespace VenimusAPIs.Controllers
 
             if (!model.Slug.Equals(amendedEvent.Slug, StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicate = await _mongo.GetEvent(groupSlug, amendedEvent.Slug);
+                var duplicate = await _eventStore.GetEvent(groupSlug, amendedEvent.Slug);
                 if (duplicate != null)
                 {
                     ModelState.AddModelError(nameof(amendedEvent.Slug), "An event with this slug already exists for this group.");
@@ -142,7 +144,7 @@ namespace VenimusAPIs.Controllers
 
             _mapper.Map(amendedEvent, model);
 
-            await _mongo.UpdateEvent(model);
+            await _eventStore.UpdateEvent(model);
             return NoContent();
         }
 
@@ -164,7 +166,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (model != null)
             {
                 if (model.EndTimeUTC < DateTime.UtcNow)
@@ -173,7 +175,7 @@ namespace VenimusAPIs.Controllers
                     return ValidationProblem(details);
                 }
 
-                await _mongo.DeleteEvent(model);
+                await _eventStore.DeleteEvent(model);
             }
 
             return NoContent();
@@ -199,7 +201,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetEvent>> Get([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            var model = await _mongo.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (model == null)
             {
                 return NotFound();

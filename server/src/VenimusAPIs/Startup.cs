@@ -56,8 +56,7 @@ namespace VenimusAPIs
                         var accessToken = context.SecurityToken as JwtSecurityToken;
                         if (accessToken != null)
                         {
-                            var identity = context.Principal.Identity as ClaimsIdentity;
-                            if (identity != null)
+                            if (context.Principal.Identity is ClaimsIdentity identity)
                             {
                                 identity.AddClaim(new Claim("access_token", accessToken.RawData));
                             }
@@ -76,7 +75,10 @@ namespace VenimusAPIs
 
             services.AddScoped<CheckGroupSecurityFilter>();
 
-            services.AddScoped<Services.Mongo>();
+            services.AddScoped<Mongo.GetFutureEventsQuery>();
+            services.AddScoped<Mongo.EventStore>();
+            services.AddScoped<Mongo.GroupStore>();
+            services.AddScoped<Mongo.UserStore>();
 
             services.AddSingleton<Services.Auth0API>();
 
@@ -94,12 +96,8 @@ namespace VenimusAPIs
             services.AddMassTransit();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl, Services.Mongo mongo)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
         {
-            /*
-             * mongo.ResetDatabase().Wait();
-             */
-
             app.StartMassTransitBusIfAvailable(busControl);
 
             app.Use(async (ctx, next) =>

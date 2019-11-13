@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VenimusAPIs.Validation;
+using System.Threading.Tasks;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.UserControllers
@@ -14,11 +9,13 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public class UserEventsController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.EventStore _eventStore;
+        private readonly Mongo.UserStore _userStore;
 
-        public UserEventsController(Services.Mongo mongo)
+        public UserEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
         {
-            _mongo = mongo;
+            _eventStore = eventStore;
+            _userStore = userStore;
         }
 
         /// <summary>
@@ -40,9 +37,9 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _mongo.GetUserByID(uniqueID); 
-            
-            return await _mongo.GetMyEventRegistrations(existingUser.Id);
+            var existingUser = await _userStore.GetUserByID(uniqueID);
+
+            return await _eventStore.GetMyEventRegistrations(existingUser.Id);
         }
     }
 }

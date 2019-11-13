@@ -13,11 +13,13 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class Events_AttendeesController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
+        private readonly Mongo.EventStore _eventStore;
+        private readonly Mongo.UserStore _userStore;
 
-        public Events_AttendeesController(Services.Mongo mongo)
+        public Events_AttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
         {
-            _mongo = mongo;
+            _eventStore = eventStore;
+            _userStore = userStore;
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ListEventAttendees[]>> Get([FromRoute, Slug]string groupSlug, [FromRoute, Slug]string eventSlug)
         {
-            var theEvent = await _mongo.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
             if (theEvent == null)
             {
                 return NotFound();
@@ -52,7 +54,7 @@ namespace VenimusAPIs.Controllers
 
             var attendees = theEvent.Members.ToArray();
 
-            var users = await _mongo.GetUsersByIds(attendees.Select(m => m.UserId));
+            var users = await _userStore.GetUsersByIds(attendees.Select(m => m.UserId));
 
             return users.Select(m => new ListEventAttendees
             {

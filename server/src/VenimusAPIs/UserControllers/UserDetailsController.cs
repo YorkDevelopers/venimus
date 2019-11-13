@@ -11,11 +11,11 @@ namespace VenimusAPIs.UserControllers
     [ApiController]
     public class UserDetailsController : BaseUserController
     {
-        private readonly Services.Mongo _mongo;
-
-        public UserDetailsController(Services.Mongo mongo)
+        private readonly Mongo.UserStore _userStore;
+        
+        public UserDetailsController(Mongo.UserStore userStore)
         {
-            _mongo = mongo;
+            _userStore = userStore;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var user = await _mongo.GetUserByID(uniqueID);
+            var user = await _userStore.GetUserByID(uniqueID);
 
             return new ViewMyDetails
             {
@@ -76,11 +76,11 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var user = await _mongo.GetUserByID(uniqueID);
+            var user = await _userStore.GetUserByID(uniqueID);
 
             if (!user.DisplayName.Equals(updateMyDetails.DisplayName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateUser = await _mongo.GetUserByDisplayName(updateMyDetails.DisplayName);
+                var duplicateUser = await _userStore.GetUserByDisplayName(updateMyDetails.DisplayName);
                 if (duplicateUser != null)
                 {
                     ModelState.AddModelError(nameof(updateMyDetails.DisplayName), "A user with this display name already exists.");
@@ -98,7 +98,7 @@ namespace VenimusAPIs.UserControllers
             user.Fullname = updateMyDetails.Fullname;
             user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
 
-            await _mongo.UpdateUser(user);
+            await _userStore.UpdateUser(user);
 
             var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
             await bus.Publish(userChangedMessage);
