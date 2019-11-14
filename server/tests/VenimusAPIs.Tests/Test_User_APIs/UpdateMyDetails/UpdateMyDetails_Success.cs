@@ -14,6 +14,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     {
         private ViewModels.UpdateMyDetails _amendedUser;
         private Group _group;
+        private Event _event;
 
         public UpdateMyDetails_Success(Fixture fixture) : base(fixture)
         {
@@ -34,6 +35,17 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
             var groups = GroupsCollection();
             await groups.InsertOneAsync(_group);
+        }
+
+        private async Task GivenAnEventExistsAndIAmAlreadySignedUp()
+        {
+            _event = Data.CreateEvent(_group, e =>
+            {
+                Data.AddEventAttendee(e, User);
+            });
+
+            var events = EventsCollection();
+            await events.InsertOneAsync(_event);
         }
 
         private async Task WhenICallTheApi()
@@ -71,6 +83,19 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
             Assert.Single(actualGroup.Members);
             var membershipDetails = actualGroup.Members[0];
+            Assert.Equal(_amendedUser.Bio, membershipDetails.Bio);
+            Assert.Equal(_amendedUser.DisplayName, membershipDetails.DisplayName);
+            Assert.Equal(_amendedUser.Fullname, membershipDetails.Fullname);
+            Assert.Equal(_amendedUser.Pronoun, membershipDetails.Pronoun);
+        }
+
+        private async Task ThenMyDetailsAreUpdatedInAnyEventsIBelongTo()
+        {
+            var events = EventsCollection();
+            var actualEvent = await events.Find(u => u.Id == _event.Id).SingleOrDefaultAsync();
+
+            Assert.Single(actualEvent.Members);
+            var membershipDetails = actualEvent.Members[0];
             Assert.Equal(_amendedUser.Bio, membershipDetails.Bio);
             Assert.Equal(_amendedUser.DisplayName, membershipDetails.DisplayName);
             Assert.Equal(_amendedUser.Fullname, membershipDetails.Fullname);

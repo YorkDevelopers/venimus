@@ -76,6 +76,13 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             Assert.Equal(_signUpToEvent.DietaryRequirements, member.DietaryRequirements);
             Assert.Equal(_signUpToEvent.MessageToOrganiser, member.MessageToOrganiser);
             Assert.Equal(_signUpToEvent.NumberOfGuests, member.NumberOfGuests);
+
+            Assert.Equal(User.Bio, member.Bio);
+            Assert.Equal(User.DisplayName, member.DisplayName);
+            Assert.Equal(User.EmailAddress, member.EmailAddress);
+            Assert.Equal(User.Fullname, member.Fullname);
+            Assert.Equal(User.Pronoun, member.Pronoun);
+
             Assert.True(member.SignedUp);
         }
     }

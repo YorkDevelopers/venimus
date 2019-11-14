@@ -31,8 +31,6 @@ Base64 images  as per Kevin's suggestion
 
 Add Blob storage
 
-Denormalise Event.Member  (copy Group.Member)
-
 Denormalise Groups into the user record
 
 Notify members when things happen

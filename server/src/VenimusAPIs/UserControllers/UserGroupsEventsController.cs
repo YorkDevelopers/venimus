@@ -104,6 +104,11 @@ namespace VenimusAPIs.UserControllers
                 NumberOfGuests = signUpDetails.NumberOfGuests,
                 UserId = existingUser.Id,
                 SignedUp = true,
+                Bio = existingUser.Bio,
+                DisplayName = existingUser.DisplayName,
+                EmailAddress = existingUser.EmailAddress,
+                Fullname = existingUser.Fullname,
+                Pronoun = existingUser.Pronoun,
             });
 
             await _eventStore.UpdateEvent(theEvent);

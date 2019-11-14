@@ -60,6 +60,26 @@ namespace VenimusAPIs.Mongo
             }).ToArray();
         }
 
+        internal async Task UpdateUserDetailsInEvents(User user)
+        {
+            var events = EventsCollection();
+
+            var memberMatch = Builders<Event.EventAttendees>.Filter.Eq(a => a.UserId, user.Id);
+            var filter = Builders<Event>.Filter.ElemMatch(x => x.Members, memberMatch);
+            var eventsTheUserBelongsTo = await events.Find(filter).ToListAsync();
+
+            foreach (var evt in eventsTheUserBelongsTo)
+            {
+                var member = evt.Members.Single(g => g.UserId == user.Id);
+                member.Bio = user.Bio;
+                member.DisplayName = user.DisplayName;
+                member.EmailAddress = user.EmailAddress;
+                member.Fullname = user.Fullname;
+                member.Pronoun = user.Pronoun;
+                await events.ReplaceOneAsync(u => u.Id == evt.Id, evt);
+            }
+        }
+
         internal async Task StoreEvent(Event newEvent)
         {
             var events = EventsCollection();

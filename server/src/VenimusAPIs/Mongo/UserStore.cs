@@ -64,15 +64,5 @@ namespace VenimusAPIs.Mongo
 
             return existingUser;
         }
-
-        internal async Task<List<Models.User>> GetUsersByIds(IEnumerable<ObjectId> memberIds)
-        {
-            var users = UsersCollection();
-
-            var filter = Builders<Models.User>.Filter.In(x => x.Id, memberIds);
-            var matchingUsers = await users.Find(filter).ToListAsync();
-
-            return matchingUsers;
-        }
     }
 }

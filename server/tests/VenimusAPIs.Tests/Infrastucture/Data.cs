@@ -176,6 +176,11 @@ namespace VenimusAPIs.Tests.Infrastucture
             {
                 UserId = user.Id,
                 Host = true,
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             };
 
             theEvent.Members.Add(attendee);
@@ -194,6 +199,11 @@ namespace VenimusAPIs.Tests.Infrastucture
             {
                 UserId = user.Id,
                 Speaker = true,
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             };
 
             theEvent.Members.Add(attendee);
@@ -215,6 +225,11 @@ namespace VenimusAPIs.Tests.Infrastucture
                 SignedUp = true,
                 DietaryRequirements = Guid.NewGuid().ToString(),
                 MessageToOrganiser = Guid.NewGuid().ToString(),
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             };
 
             theEvent.Members.Add(newAttendee);
@@ -236,6 +251,11 @@ namespace VenimusAPIs.Tests.Infrastucture
                 SignedUp = false,
                 DietaryRequirements = Guid.NewGuid().ToString(),
                 MessageToOrganiser = Guid.NewGuid().ToString(),
+                Bio = user.Bio,
+                DisplayName = user.DisplayName,
+                EmailAddress = user.EmailAddress,
+                Fullname = user.Fullname,
+                Pronoun = user.Pronoun,
             };
 
             theEvent.Members.Add(newAttendee);

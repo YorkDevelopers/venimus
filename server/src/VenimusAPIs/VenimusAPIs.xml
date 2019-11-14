@@ -322,6 +322,33 @@
                 The number of unregistered guest the person is bringing
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
             <summary>
                 The unique internal ID of this group

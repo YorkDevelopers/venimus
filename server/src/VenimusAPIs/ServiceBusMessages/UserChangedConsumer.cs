@@ -7,11 +7,13 @@ namespace VenimusAPIs.ServiceBusMessages
     {
         private readonly Mongo.GroupStore _groupStore;
         private readonly Mongo.UserStore _userStore;
+        private readonly Mongo.EventStore _eventStore;
 
-        public UserChangedConsumer(Mongo.GroupStore groupStore, Mongo.UserStore userStore)
+        public UserChangedConsumer(Mongo.GroupStore groupStore, Mongo.UserStore userStore, Mongo.EventStore eventStore)
         {
             _groupStore = groupStore;
             _userStore = userStore;
+            _eventStore = eventStore;
         }
 
         public async Task Consume(ConsumeContext<UserChangedMessage> context)
@@ -25,6 +27,8 @@ namespace VenimusAPIs.ServiceBusMessages
             }
 
             await _groupStore.UpdateUserDetailsInGroups(user);
+
+            await _eventStore.UpdateUserDetailsInEvents(user);
         }
     }
 }

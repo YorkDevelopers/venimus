@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
@@ -52,23 +51,18 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            var attendees = theEvent.Members.ToArray();
-
-            var users = await _userStore.GetUsersByIds(attendees.Select(m => m.UserId));
-
-            return users.Select(m => new ListEventAttendees
+            return theEvent.Members.Select(attendee => new ListEventAttendees
             {
-                Bio = m.Bio,
-                DisplayName = m.DisplayName,
-                EmailAddress = m.EmailAddress,
-                Fullname = m.Fullname,
-                Pronoun = m.Pronoun,
-                Slug = m.Id.ToString(),
-                ProfilePictureInBase64 = Convert.ToBase64String(m.ProfilePicture),
-                IsHost = attendees.Single(x => x.UserId == m.Id).Host,
-                IsSpeaker = attendees.Single(x => x.UserId == m.Id).Speaker,
-                IsAttending = attendees.Single(x => x.UserId == m.Id).SignedUp,
-                NumberOfGuests = attendees.Single(x => x.UserId == m.Id).NumberOfGuests,
+                Bio = attendee.Bio,
+                DisplayName = attendee.DisplayName,
+                EmailAddress = attendee.EmailAddress,
+                Fullname = attendee.Fullname,
+                Pronoun = attendee.Pronoun,
+                Slug = attendee.UserId.ToString(),
+                IsHost = attendee.Host,
+                IsSpeaker = attendee.Speaker,
+                IsAttending = attendee.SignedUp,
+                NumberOfGuests = attendee.NumberOfGuests,
             }).ToArray();
         }
     }
