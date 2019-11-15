@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Tests.Infrastucture
@@ -263,7 +262,7 @@ namespace VenimusAPIs.Tests.Infrastucture
             return newAttendee;
         }
 
-        internal Group.GroupMember AddGroupMember(Group group, User user)
+        internal Group.GroupMember AddGroupMember(Group group, User user, bool isApproved = false)
         {
             if (group.Members == null)
             {
@@ -279,6 +278,7 @@ namespace VenimusAPIs.Tests.Infrastucture
                 EmailAddress = user.EmailAddress,
                 Fullname = user.Fullname,
                 Pronoun = user.Pronoun,
+                IsApproved = isApproved,
             };
 
             group.Members.Add(newMember);

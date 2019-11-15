@@ -426,6 +426,11 @@
                 Visible to all signed in members
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Group.GroupMember.IsApproved">
+            <summary>
+                Has their membership been approved by the group administrator?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.User.Id">
             <summary>
                 The internal ID for the user.
@@ -698,6 +703,11 @@
         <member name="P:VenimusAPIs.ViewModels.AmendRegistrationForEvent.MessageToOrganiser">
             <summary>
                 Free format message to the event host.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ApproveMember.UserSlug">
+            <summary>
+                The Slug of the user we are approving.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Slug">

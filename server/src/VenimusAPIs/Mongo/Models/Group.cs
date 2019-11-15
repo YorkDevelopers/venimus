@@ -83,6 +83,11 @@ namespace VenimusAPIs.Models
             ///     Visible to all signed in members
             /// </summary>
             public string Bio { get; set; }
+
+            /// <summary>
+            ///     Has their membership been approved by the group administrator?
+            /// </summary>
+            public bool IsApproved { get; set; }
         }
     }
 }
