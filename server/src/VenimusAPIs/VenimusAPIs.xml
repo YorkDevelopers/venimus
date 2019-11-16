@@ -196,6 +196,26 @@
              <response code="403">No Permission.</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.Groups_MembersController.Post(System.String,VenimusAPIs.ViewModels.ApproveMember)">
+             <summary>
+                 Allows a group administrator to approve a new users membership
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/groups/YorkCodeDojo/ApprovedMembers
+                 {
+                     userSlug : 123455
+                 }
+            
+             </remarks>
+             <returns>OK</returns>
+             <response code="200">Success</response>
+             <response code="400">User cannot be approved.</response>
+             <response code="401">No Access.</response>
+             <response code="403">No Permission.</response>
+             <response code="404">Group does not exist.</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.ActiveGroupsController.Get">
              <summary>
                  Allows you request the list of active groups
@@ -674,6 +694,11 @@
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
         </member>
+        <member name="P:VenimusAPIs.Validation.CallerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead">
+            <summary>
+            The caller doesn't need to be a member of the group if they have the System Administrator role.
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden">
             <summary>
             If the caller doesn't have access to the group then we return NotFound(404) rather than Forbid(403)
@@ -1007,6 +1032,11 @@
         <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.IsAdministrator">
             <summary>
                 Is the user a group administrator?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.IsApproved">
+            <summary>
+                Has this user's membership to the group been approved?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Slug">

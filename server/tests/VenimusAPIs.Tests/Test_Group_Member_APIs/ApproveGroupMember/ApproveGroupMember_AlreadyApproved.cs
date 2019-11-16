@@ -42,7 +42,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
             var collection = UsersCollection();
             await collection.InsertOneAsync(_newMember);
 
-            Data.AddGroupMember(_group, _newMember, isApproved: true);
+            Data.AddApprovedGroupMember(_group, _newMember);
 
             var groups = GroupsCollection();
             await groups.InsertOneAsync(_group);

@@ -43,5 +43,10 @@
         ///     Is the user a group administrator?
         /// </summary>
         public bool IsAdministrator { get; set; }
+
+        /// <summary>
+        ///     Has this user's membership to the group been approved?
+        /// </summary>
+        public bool IsApproved { get; set; }
     }
 }

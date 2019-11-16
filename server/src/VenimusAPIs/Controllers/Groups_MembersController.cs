@@ -39,7 +39,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [CallerMustBeGroupMember]
+        [CallerMustBeApprovedGroupMember]
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
@@ -53,6 +53,7 @@ namespace VenimusAPIs.Controllers
                 Pronoun = m.Pronoun,
                 Slug = m.UserId.ToString(),
                 IsAdministrator = m.IsAdministrator,
+                IsApproved = m.IsApproved,
             }).ToArray();
         }
 
@@ -74,6 +75,7 @@ namespace VenimusAPIs.Controllers
         /// <response code="401">No Access.</response>
         /// <response code="403">No Permission.</response>
         /// <response code="404">Group does not exist.</response>
+        [Authorize]
         [Route("api/Groups/{groupSlug}/ApprovedMembers")]
         [CallerMustBeGroupAdministrator]
         [HttpPost]

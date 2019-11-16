@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
+using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ViewEventAttendees
+namespace VenimusAPIs.Tests.ViewGroupMembers
 {
-    [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
-    public class ViewEventAttendees_UnknownEvent : BaseTest
+    [Story(AsA = "User", IWant = "to be able to view the other members of a group", SoThat = "I can belong to the community")]
+    public class ViewGroupMembers_UnapprovedMember : BaseTest
     {
         private Group _existingGroup;
         private User _otherUserInGroup1;
@@ -17,7 +21,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
 
-        public ViewEventAttendees_UnknownEvent(Fixture fixture) : base(fixture)
+        public ViewGroupMembers_UnapprovedMember(Fixture fixture) : base(fixture)
         {
         }
 
@@ -41,11 +45,11 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             await collection.InsertManyAsync(new[] { _otherUserInGroup1, _otherUserInGroup2, _otherUserInGroup3, _otherUserNotInGroup1 });
         }
 
-        private async Task GivenIAndSomeOthersBelongToTheGroup()
+        private async Task GivenIAndSomeOthersBelongToTheGroupButIAmNotApproved()
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddApprovedGroupMember(g, User);
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
                 Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
@@ -56,14 +60,14 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task WhenICallTheApiForAnUnknownEvent()
+        private async Task WhenICallTheApi()
         {
-            Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Events/MADEUP/Members");
+            Response = await Fixture.APIClient.GetAsync($"api/Groups/{_existingGroup.Slug}/Members");
         }
 
-        private void ThenNotFoundIsReturned()
+        private void ThenForbiddenIsReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, Response.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.Forbidden, Response.StatusCode);
         }
     }
 }

@@ -49,9 +49,9 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, User);
+                Data.AddApprovedGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
-                Data.AddGroupMember(g, _otherUserInGroup2);
+                Data.AddApprovedGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
             });
 
@@ -78,13 +78,13 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
             Assert.Equal(4, actualMembers.Length);
 
-            AssertMember(User, actualMembers, false);
-            AssertMember(_otherUserInGroup1, actualMembers, false);
-            AssertMember(_otherUserInGroup2, actualMembers, false);
-            AssertMember(_otherUserInGroup3, actualMembers, true);
+            AssertMember(User, actualMembers, false, true);
+            AssertMember(_otherUserInGroup1, actualMembers, false, false);
+            AssertMember(_otherUserInGroup2, actualMembers, false, true);
+            AssertMember(_otherUserInGroup3, actualMembers, true, true);
         }
 
-        private void AssertMember(User user, ListGroupMembers[] actualMembers, bool isAdministrator)
+        private void AssertMember(User user, ListGroupMembers[] actualMembers, bool isAdministrator, bool isApproved)
         {
             var actualMember = actualMembers.Single(m => m.Slug == user.Id.ToString());
 
@@ -94,7 +94,8 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             Assert.Equal(user.Bio, actualMember.Bio);
             Assert.Equal(user.Pronoun, actualMember.Pronoun);
             Assert.Equal(isAdministrator, actualMember.IsAdministrator);
-            
+            Assert.Equal(isApproved, actualMember.IsApproved);
+
             // Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualMember.ProfilePictureInBase64));
         }
     }

@@ -71,6 +71,24 @@ The following needs to be provided.
 
 ---
 
+### POST /api/Groups/{GroupSlug}/ApprovedMembers
+
+Group adminstrators can approve new members to the group. The following properties must be supplied:
+
+* __UserSlug__ - The external ID for the user.
+
+### Business Rules
+
+* The user must be either a sysadmin administrator or an approved member of the group to be able to approve members.
+
+* 404 is returned if the group does not exist.
+
+* 400 is returned if the user is not a member of the group
+
+* 400 is returned if the user is already an approved member of the group.
+
+---
+
 ## GET /api/groups/{GroupSlug}/Members
 
 Retrieves the list of members of the supplied group.  For the following array of properties are returned:
@@ -78,6 +96,8 @@ Retrieves the list of members of the supplied group.  For the following array of
 * __Slug__ - The external ID for the user.
 
 * __IsAdministrator__ - Is the user a group administrator?
+
+* __IsApproved__ - Has the user's group membership been approved?
 
 * __EmailAddress__ - The email address which also links all the social media accounts together.
 
@@ -93,7 +113,7 @@ Retrieves the list of members of the supplied group.  For the following array of
 
 ### Business Rules
 
-* The user must be either a sysadmin administrator or a member of the group to retrieve the members list.
+* The user must be either a sysadmin administrator or an approved member of the group to retrieve the members list.
 
 * 404 is returned if the group does not exist.
 
@@ -123,7 +143,7 @@ Retrieves the list of signed up attendees of the supplied event.  For the follow
 
 ### Business Rules
 
-* The user must be either a sysadmin administrator or a member of the group to retrieve the members list.
+* The user must be either a sysadmin administrator or an approved member of the group to retrieve the members list.
 
 * 404 is returned if the group or event does not exist.
 

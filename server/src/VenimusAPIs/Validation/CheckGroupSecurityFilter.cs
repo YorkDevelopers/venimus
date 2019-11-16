@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,8 +24,9 @@ namespace VenimusAPIs.Validation
         {
             var user = context.HttpContext.User;
 
-            var mustBeAGroupAdministrator = RequiresGroupAdministrator(context.ActionDescriptor);
-            var mustBeAGroupMember = RequiresGroupMembership(context.ActionDescriptor, out var callerMustBeGroupMemberAttribute);
+            var mustBeAGroupAdministrator = HasAttribute<CallerMustBeGroupAdministratorAttribute>(context.ActionDescriptor, out var callerMustBeGroupAdministratorAttribute);
+            var mustBeAGroupMember = HasAttribute<CallerMustBeGroupMemberAttribute>(context.ActionDescriptor, out var callerMustBeGroupMemberAttribute);
+            var mustBeAnApprovedGroupMember = HasAttribute<CallerMustBeApprovedGroupMemberAttribute>(context.ActionDescriptor, out var callerMustBeApprovedGroupMemberAttribute);
 
             var canBeSystemAdministratorInstead = true;
             var useNotFoundRatherThanForbidden = false;
@@ -35,8 +37,12 @@ namespace VenimusAPIs.Validation
                 useNotFoundRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden;
                 useNoContentRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNoContentRatherThanForbidden;
             }
+            else if (mustBeAnApprovedGroupMember)
+            {
+                canBeSystemAdministratorInstead = callerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead;
+            }
 
-            if (mustBeAGroupAdministrator || mustBeAGroupMember)
+            if (mustBeAGroupAdministrator || mustBeAGroupMember || mustBeAnApprovedGroupMember)
             {
                 if (!canBeSystemAdministratorInstead || !user.IsInRole("SystemAdministrator"))
                 {
@@ -58,7 +64,9 @@ namespace VenimusAPIs.Validation
                         return;
                     }
 
-                    if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id && (!mustBeAGroupAdministrator || m.IsAdministrator)))
+                    if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id 
+                                                                    && (!mustBeAGroupAdministrator || m.IsAdministrator)
+                                                                    && (!mustBeAnApprovedGroupMember || m.IsApproved)))
                     {
                         if (useNotFoundRatherThanForbidden)
                         {
@@ -81,24 +89,13 @@ namespace VenimusAPIs.Validation
             await next();
         }
 
-        private static bool RequiresGroupAdministrator(ActionDescriptor actionDescriptor)
+        private static bool HasAttribute<T>(ActionDescriptor actionDescriptor, out T attribute) 
+            where T : Attribute
         {
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                var attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupAdministratorAttribute), true).SingleOrDefault();
-                return attribute != null;
-            }
-
-            return false;
-        }
-
-        private static bool RequiresGroupMembership(ActionDescriptor actionDescriptor, out CallerMustBeGroupMemberAttribute attribute)
-        {
-            var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
-            if (controllerActionDescriptor != null)
-            {
-                attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CallerMustBeGroupMemberAttribute), true).SingleOrDefault() as CallerMustBeGroupMemberAttribute;
+                attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(T), true).SingleOrDefault() as T;
                 if (attribute != null)
                 {
                     return true;

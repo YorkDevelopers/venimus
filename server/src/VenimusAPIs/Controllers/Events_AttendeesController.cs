@@ -38,7 +38,7 @@ namespace VenimusAPIs.Controllers
         [Authorize]
         [Route("api/Groups/{groupSlug}/Events/{eventSlug}/Members")]
         [HttpGet]
-        [CallerMustBeGroupMember]
+        [CallerMustBeApprovedGroupMember]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

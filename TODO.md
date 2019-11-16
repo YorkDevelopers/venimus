@@ -5,19 +5,6 @@ System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
-
-[Document]
-    Group adminstrators can :  Approve Users
-    ### POST /api/Groups/{GroupSlug}/ApprovedUsers
-
-[Add permission check to viewing group / event membership]
-
-Users join groups,   which means they can view events and sign up.
-Group admins can then approve users,  this means they can now see the list of group members / event attendees
-
-
-
-
 Make someone a group admin
 
 Some person details are only visible to group administrators

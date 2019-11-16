@@ -262,6 +262,8 @@ namespace VenimusAPIs.Tests.Infrastucture
             return newAttendee;
         }
 
+        internal Group.GroupMember AddApprovedGroupMember(Group group, User user) => AddGroupMember(group, user, isApproved: true);
+
         internal Group.GroupMember AddGroupMember(Group group, User user, bool isApproved = false)
         {
             if (group.Members == null)
@@ -302,6 +304,7 @@ namespace VenimusAPIs.Tests.Infrastucture
                 EmailAddress = user.EmailAddress,
                 Fullname = user.Fullname,
                 Pronoun = user.Pronoun,
+                IsApproved = true,
             });
         }
 
