@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.DeleteEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to delete an existing event", SoThat = "People are kept informed")]
     public class DeleteEvent_PastEvent : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private Event _event;
         private Group _group;
 
@@ -19,9 +21,14 @@ namespace VenimusAPIs.Tests.DeleteEvent
         }
 
         [Fact]
-        public void Execute()
+        public async Task Execute()
         {
-            this.BDDfy();
+            await ResetDatabase();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "The event cannot be deleted as it has already taken place." },
+                { Cultures.Test, "'€'The event cannot be deleted as it has already taken place." },
+            }).BDDfy();
         }
 
         private async Task GivenIAmANormalUser()
@@ -54,12 +61,13 @@ namespace VenimusAPIs.Tests.DeleteEvent
 
         private async Task WhenICallTheDeleteEventApi()
         {
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.DeleteAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}");
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("The event cannot be deleted as it has already taken place.");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheEventIsNotRemovedFromTheDatabase()

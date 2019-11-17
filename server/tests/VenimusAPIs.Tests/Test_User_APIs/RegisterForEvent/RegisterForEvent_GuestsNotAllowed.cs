@@ -10,6 +10,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class RegisterForEvent_GuestsNotAllowed : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
@@ -21,7 +23,11 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "This event does not allow you to bring guests.  All attendees must be members of this group." },
+                { Cultures.Test, "'€'This event does not allow you to bring guests.  All attendees must be members of this group." },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -54,12 +60,13 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _signUpToEvent.EventSlug = _existingEvent.Slug;
             _signUpToEvent.NumberOfGuests = 2;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+            return AssertBadRequest("NumberOfGuests", ExpectedMessage);
         }
 
         private async Task ThenTheUserIsNotAMemberOfTheEvent()

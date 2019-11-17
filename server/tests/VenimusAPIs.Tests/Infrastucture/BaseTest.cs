@@ -12,6 +12,12 @@ namespace VenimusAPIs.Tests.Infrastucture
     [Collection("Serial")]
     public abstract class BaseTest : IClassFixture<Fixture>
     {
+        public static class Cultures
+        {
+            public const string Normal = "en-GB";
+            public const string Test = "zu-ZA";
+        }
+
         protected string UniqueID { get; set; }
 
         protected string Token { get; set; }
@@ -39,7 +45,7 @@ namespace VenimusAPIs.Tests.Infrastucture
         {
             var mongoDatabase = Fixture.MongoDatabase();
             var collection = mongoDatabase.GetCollection<Models.Event>("events");
-         
+
             return collection;
         }
 

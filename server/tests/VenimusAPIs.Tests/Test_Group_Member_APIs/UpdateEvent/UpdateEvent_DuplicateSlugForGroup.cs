@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -12,6 +11,8 @@ namespace VenimusAPIs.Tests.UpdateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent_DuplicateSlugForGroup : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private Event _event;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
@@ -24,7 +25,11 @@ namespace VenimusAPIs.Tests.UpdateEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "An event with this slug already exists for this group." },
+                { Cultures.Test, "'€'An event with this slug already exists for this group." },
+            }).BDDfy();
         }
 
         private Task GivenIAmANormalUser() => IAmANormalUser();
@@ -65,12 +70,13 @@ namespace VenimusAPIs.Tests.UpdateEvent
                 e.Slug = _otherEvent.Slug;
             });
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("Slug", "An event with this slug already exists for this group.");
+            return AssertBadRequest("Slug", ExpectedMessage);
         }
 
         private async Task ThenTheEventIsNotUpdatedInTheDatabase()

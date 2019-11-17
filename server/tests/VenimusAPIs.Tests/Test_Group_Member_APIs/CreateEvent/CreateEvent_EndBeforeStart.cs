@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_EndBeforeStart : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private ViewModels.CreateEvent _event;
         private Group _group;
 
@@ -22,7 +24,11 @@ namespace VenimusAPIs.Tests.CreateEvent
         public async Task Execute()
         {
             await ResetDatabase();
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "You cannot create an event which ends before it starts." },
+                { Cultures.Test, "'€'You cannot create an event which ends before it starts." },
+            }).BDDfy();
         }
 
         private async Task GivenIAmANormalUser()
@@ -48,12 +54,13 @@ namespace VenimusAPIs.Tests.CreateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(-2);
             });
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("EndTimeUTC", "You cannot create an event which ends before it starts.");
+            return AssertBadRequest("EndTimeUTC", ExpectedMessage);
         }
 
         private async Task ThenTheEventIsNotAddedToTheDatabase()

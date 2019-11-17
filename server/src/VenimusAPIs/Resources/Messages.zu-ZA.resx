@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EVENT_ALREADY_EXISTS" xml:space="preserve">
+    <value>'€'An event with this slug already exists for this group.</value>
+  </data>
+  <data name="EVENT_END_BEFORE_START" xml:space="preserve">
+    <value>'€'You cannot create an event which ends before it starts.</value>
+  </data>
+  <data name="EVENT_HAS_HAPPENED" xml:space="preserve">
+    <value>'€'The event cannot be deleted as it has already taken place.</value>
+  </data>
+  <data name="EVENT_IN_THE_PAST" xml:space="preserve">
+    <value>'€'You cannot create an event in the past.</value>
+  </data>
   <data name="GUESTS_NOT_ALLOWED" xml:space="preserve">
     <value>'€'This event does not allow you to bring guests.  All attendees must be members of this group.</value>
   </data>

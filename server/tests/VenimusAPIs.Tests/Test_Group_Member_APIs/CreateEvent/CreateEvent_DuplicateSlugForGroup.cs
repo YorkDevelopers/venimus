@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.CreateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to schedule a new event", SoThat = "People can meet up")]
     public class CreateEvent_DuplicateSlugForGroup : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private ViewModels.CreateEvent _event;
         private Group _group;
         private Event _existingEvent;
@@ -23,7 +25,11 @@ namespace VenimusAPIs.Tests.CreateEvent
         public async Task Execute()
         {
             await ResetDatabase();
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "An event with this slug already exists for this group." },
+                { Cultures.Test, "'€'An event with this slug already exists for this group." },
+            }).BDDfy();
         }
 
         private async Task GivenIAmANormalUser()
@@ -59,12 +65,13 @@ namespace VenimusAPIs.Tests.CreateEvent
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
             });
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("Slug", "An event with this slug already exists for this group.");
+            return AssertBadRequest("Slug", ExpectedMessage);
         }
 
         private async Task ThenTheEventIsNotAddedToTheDatabase()

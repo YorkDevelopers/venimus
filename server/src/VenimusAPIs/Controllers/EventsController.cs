@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
@@ -17,12 +18,14 @@ namespace VenimusAPIs.Controllers
         private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<Messages> _stringLocalizer;
 
-        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper)
+        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<Messages> stringLocalizer)
         {
             _eventStore = eventStore;
             _groupStore = groupStore;
             _mapper = mapper;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -56,18 +59,21 @@ namespace VenimusAPIs.Controllers
         {
             if (newEvent.StartTimeUTC < DateTime.UtcNow)
             {
-                ModelState.AddModelError(nameof(newEvent.StartTimeUTC), "You cannot create an event in the past.");
+                var message = _stringLocalizer.GetString("EVENT_IN_THE_PAST").Value;
+                ModelState.AddModelError(nameof(newEvent.StartTimeUTC), message);
             }
 
             if (newEvent.StartTimeUTC >= newEvent.EndTimeUTC)
             {
-                ModelState.AddModelError(nameof(newEvent.EndTimeUTC), "You cannot create an event which ends before it starts.");
+                var message = _stringLocalizer.GetString("EVENT_END_BEFORE_START").Value;
+                ModelState.AddModelError(nameof(newEvent.EndTimeUTC), message);
             }
 
             var duplicate = await _eventStore.GetEvent(groupSlug, newEvent.Slug);
             if (duplicate != null)
             {
-                ModelState.AddModelError(nameof(newEvent.Slug), "An event with this slug already exists for this group.");
+                var message = _stringLocalizer.GetString("EVENT_ALREADY_EXISTS").Value;
+                ModelState.AddModelError(nameof(newEvent.Slug), message);
             }
 
             if (!ModelState.IsValid)
@@ -128,13 +134,15 @@ namespace VenimusAPIs.Controllers
                 var duplicate = await _eventStore.GetEvent(groupSlug, amendedEvent.Slug);
                 if (duplicate != null)
                 {
-                    ModelState.AddModelError(nameof(amendedEvent.Slug), "An event with this slug already exists for this group.");
+                    var message = _stringLocalizer.GetString("EVENT_ALREADY_EXISTS").Value;
+                    ModelState.AddModelError(nameof(amendedEvent.Slug), message);
                 }
             }
 
             if (amendedEvent.StartTimeUTC >= amendedEvent.EndTimeUTC)
             {
-                ModelState.AddModelError(nameof(amendedEvent.EndTimeUTC), "You cannot create an event which ends before it starts.");
+                var message = _stringLocalizer.GetString("EVENT_END_BEFORE_START").Value;
+                ModelState.AddModelError(nameof(amendedEvent.EndTimeUTC), message);
             }
 
             if (!ModelState.IsValid)
@@ -171,7 +179,8 @@ namespace VenimusAPIs.Controllers
             {
                 if (model.EndTimeUTC < DateTime.UtcNow)
                 {
-                    var details = new ValidationProblemDetails { Detail = "The event cannot be deleted as it has already taken place." };
+                    var message = _stringLocalizer.GetString("EVENT_HAS_HAPPENED").Value;
+                    var details = new ValidationProblemDetails { Detail = message };
                     return ValidationProblem(details);
                 }
 
