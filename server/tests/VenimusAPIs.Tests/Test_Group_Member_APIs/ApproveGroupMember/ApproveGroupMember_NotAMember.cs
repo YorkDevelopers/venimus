@@ -10,6 +10,8 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
     [Story(AsA = "Group administrator", IWant = "to be able to approve new members to the group", SoThat = "Then can belong to the community")]
     public class ApproveGroupMember_NotAMember : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private Group _group;
         private User _newMember;
 
@@ -20,7 +22,11 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { "en-GB", "The user does not belong to this group" },
+                { "zu-ZA", "'€'The user does not belong to this group" },
+            }).BDDfy();
         }
 
         private Task GivenIAmAUser() => IAmANormalUser();
@@ -47,12 +53,13 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
         private async Task WhenICallTheApi()
         {
             var data = new ApproveMember { UserSlug = _newMember.Id.ToString() };
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/ApprovedMembers", data);
         }
 
         private async Task ThenABadRquestResponseIsReturned()
         {
-            await AssertBadRequestDetail("The user does not belong to this group");
+            await AssertBadRequestDetail(ExpectedMessage);
         }
     }
 }

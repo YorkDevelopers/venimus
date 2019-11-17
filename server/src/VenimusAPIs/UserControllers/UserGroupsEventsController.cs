@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace VenimusAPIs.UserControllers
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
+        private readonly IStringLocalizer<Messages> _stringLocalizer;
 
-        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
+        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore, IStringLocalizer<Messages> stringLocalizer)
         {
             _eventStore = eventStore;
             _userStore = userStore;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -72,7 +75,8 @@ namespace VenimusAPIs.UserControllers
 
             if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
-                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+                var message = _stringLocalizer.GetString("GUESTS_NOT_ALLOWED").Value;
+                ModelState.AddModelError("NumberOfGuests", message);
             }
 
             if (!ModelState.IsValid)

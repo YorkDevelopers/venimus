@@ -94,6 +94,8 @@ namespace VenimusAPIs
             });
 
             services.AddMassTransit();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
@@ -117,6 +119,8 @@ namespace VenimusAPIs
             app.UseHttpsRedirection();
 
             app.UseSwagger();
+
+            app.AddLocalisation();
 
             app.UseRouting();
 

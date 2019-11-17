@@ -13,6 +13,7 @@ Group Administrators
 View attendees - messages + diatary  requirements
 
 Logic around banned users
+    Cannot make any calls
 
 Logging (driven by events?)
 

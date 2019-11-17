@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Validation;
@@ -12,10 +13,12 @@ namespace VenimusAPIs.Controllers
     public class Groups_MembersController : Controller
     {
         private readonly Mongo.GroupStore _groupStore;
+        private readonly IStringLocalizer<Messages> _stringLocalizer;
 
-        public Groups_MembersController(Mongo.GroupStore groupStore)
+        public Groups_MembersController(Mongo.GroupStore groupStore, IStringLocalizer<Messages> stringLocalizer)
         {
             _groupStore = groupStore;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -86,13 +89,15 @@ namespace VenimusAPIs.Controllers
             var newUser = group.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
             if (newUser == null)
             {
-                var details = new ValidationProblemDetails { Detail = "The user does not belong to this group" };
+                var message = _stringLocalizer.GetString("NOT_A_MEMBER_OF_THE_GROUP").Value;
+                var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }
 
             if (newUser.IsApproved == true)
             {
-                var details = new ValidationProblemDetails { Detail = "The user's membership of this group has already been approved." };
+                var message = _stringLocalizer.GetString("MEMBER_ALREADY_APPROVED").Value;
+                var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }
 
