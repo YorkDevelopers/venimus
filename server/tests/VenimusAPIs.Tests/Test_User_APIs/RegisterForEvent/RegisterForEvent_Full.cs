@@ -10,6 +10,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class RegisterForEvent_Full : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
@@ -21,7 +23,11 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "Sorry this is event is full." },
+                { Cultures.Test, "'€'Sorry this is event is full." },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -60,12 +66,13 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
             _signUpToEvent.EventSlug = _existingEvent.Slug;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("Sorry this is event is full.");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheUserIsNotAMemberOfTheEvent()

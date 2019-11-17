@@ -12,6 +12,8 @@ namespace VenimusAPIs.Tests.CreateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to create new groups", SoThat = "People can build communities")]
     public class CreateGroup_DuplicateSlug : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private ViewModels.CreateGroup _group;
         private Group _existingGroup;
 
@@ -22,7 +24,11 @@ namespace VenimusAPIs.Tests.CreateGroup
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "A group using this slug already exists" },
+                { Cultures.Test, "'€'A group using this slug already exists" },
+            }).BDDfy();
         }
 
         private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
@@ -44,12 +50,13 @@ namespace VenimusAPIs.Tests.CreateGroup
 
             _group.Slug = _existingGroup.Slug;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync("api/Groups", _group);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("Slug", "A group using this slug already exists");
+            return AssertBadRequest("Slug", ExpectedMessage);
         }
 
         private async Task ThenTheDuplicateGroupIsNotAddedToTheDatabase()

@@ -59,20 +59,20 @@ namespace VenimusAPIs.Controllers
         {
             if (newEvent.StartTimeUTC < DateTime.UtcNow)
             {
-                var message = _stringLocalizer.GetString("EVENT_IN_THE_PAST").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_IN_THE_PAST).Value;
                 ModelState.AddModelError(nameof(newEvent.StartTimeUTC), message);
             }
 
             if (newEvent.StartTimeUTC >= newEvent.EndTimeUTC)
             {
-                var message = _stringLocalizer.GetString("EVENT_END_BEFORE_START").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_END_BEFORE_START).Value;
                 ModelState.AddModelError(nameof(newEvent.EndTimeUTC), message);
             }
 
             var duplicate = await _eventStore.GetEvent(groupSlug, newEvent.Slug);
             if (duplicate != null)
             {
-                var message = _stringLocalizer.GetString("EVENT_ALREADY_EXISTS").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_ALREADY_EXISTS).Value;
                 ModelState.AddModelError(nameof(newEvent.Slug), message);
             }
 
@@ -134,14 +134,14 @@ namespace VenimusAPIs.Controllers
                 var duplicate = await _eventStore.GetEvent(groupSlug, amendedEvent.Slug);
                 if (duplicate != null)
                 {
-                    var message = _stringLocalizer.GetString("EVENT_ALREADY_EXISTS").Value;
+                    var message = _stringLocalizer.GetString(Resources.Messages.EVENT_ALREADY_EXISTS).Value;
                     ModelState.AddModelError(nameof(amendedEvent.Slug), message);
                 }
             }
 
             if (amendedEvent.StartTimeUTC >= amendedEvent.EndTimeUTC)
             {
-                var message = _stringLocalizer.GetString("EVENT_END_BEFORE_START").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_END_BEFORE_START).Value;
                 ModelState.AddModelError(nameof(amendedEvent.EndTimeUTC), message);
             }
 
@@ -179,7 +179,7 @@ namespace VenimusAPIs.Controllers
             {
                 if (model.EndTimeUTC < DateTime.UtcNow)
                 {
-                    var message = _stringLocalizer.GetString("EVENT_HAS_HAPPENED").Value;
+                    var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_HAPPENED).Value;
                     var details = new ValidationProblemDetails { Detail = message };
                     return ValidationProblem(details);
                 }

@@ -10,6 +10,8 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class AmendRegistrationForEvent_TooManyPeople : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
@@ -22,7 +24,11 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "Sorry this will exceed the maximum number of people allowed to attend this event." },
+                { Cultures.Test, "'€'Sorry this will exceed the maximum number of people allowed to attend this event." },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -56,12 +62,13 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
             _amendedDetails.NumberOfGuests = 10;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("Sorry this will exceed the maximum number of people allowed to attend this event.");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheUsersRegistrationIsNotUpdated()

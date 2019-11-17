@@ -10,6 +10,8 @@ namespace VenimusAPIs.Tests.DeleteGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to delete unused groups", SoThat = "The database can be kept tidy")]
     public class DeleteGroup_InUse : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private Group _existingGroup;
         private Event _event1;
         private Event _event2;
@@ -21,7 +23,11 @@ namespace VenimusAPIs.Tests.DeleteGroup
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." },
+                { Cultures.Test, "'€'The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." },
+            }).BDDfy();
         }
 
         private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
@@ -48,12 +54,13 @@ namespace VenimusAPIs.Tests.DeleteGroup
 
         private async Task WhenICallTheApi()
         {
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.DeleteAsync($"api/Groups/{_existingGroup.Slug}");
         }
 
         private Task ThenABadRequestIsReturned()
         {
-            return AssertBadRequestDetail("The group cannot be deleted as it has one or events.  Please mark the group as InActive instead.");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheGroupIsNotRemovedFromTheDatabase()

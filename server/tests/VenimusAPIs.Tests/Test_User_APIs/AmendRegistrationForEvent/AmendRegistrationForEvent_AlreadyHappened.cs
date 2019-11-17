@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class AmendRegistrationForEvent_AlreadyHappened : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
@@ -23,7 +25,11 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "This event has already taken place" },
+                { Cultures.Test, "'€'This event has already taken place" },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -55,12 +61,13 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
             _amendedDetails.NumberOfGuests = 5;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("This event has already taken place");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheUsersRegistrationIsNotUpdated()

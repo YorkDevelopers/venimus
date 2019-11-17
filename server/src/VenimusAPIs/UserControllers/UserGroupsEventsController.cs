@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -67,16 +66,17 @@ namespace VenimusAPIs.UserControllers
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member != null)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.USER_ALREADY_SIGNED_UP).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "You are already signed up to this event.",
+                    Detail = message,
                 });
             }
 
             if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
-                var message = _stringLocalizer.GetString("GUESTS_NOT_ALLOWED").Value;
-                ModelState.AddModelError("NumberOfGuests", message);
+                var message = _stringLocalizer.GetString(Resources.Messages.GUESTS_NOT_ALLOWED).Value;
+                ModelState.AddModelError(nameof(RegisterForEvent.NumberOfGuests), message);
             }
 
             if (!ModelState.IsValid)
@@ -87,17 +87,19 @@ namespace VenimusAPIs.UserControllers
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
             if ((numberAttending + 1 + signUpDetails.NumberOfGuests) > theEvent.MaximumNumberOfAttendees)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_IS_FULL).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "Sorry this is event is full.",
+                    Detail = message,
                 });
             }
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "This event has already taken place",
+                    Detail = message,
                 });
             }
 
@@ -172,7 +174,8 @@ namespace VenimusAPIs.UserControllers
 
             if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
-                ModelState.AddModelError("NumberOfGuests", "This event does not allow you to bring guests.  All attendees must be members of this group.");
+                var message = _stringLocalizer.GetString(Resources.Messages.GUESTS_NOT_ALLOWED).Value;
+                ModelState.AddModelError(nameof(AmendRegistrationForEvent.NumberOfGuests), message);
             }
 
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
@@ -180,9 +183,10 @@ namespace VenimusAPIs.UserControllers
 
             if ((numberAttending + delta) > theEvent.MaximumNumberOfAttendees)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.TOO_MANY_PEOPLE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "Sorry this will exceed the maximum number of people allowed to attend this event.",
+                    Detail = message,
                 });
             }
 
@@ -193,9 +197,10 @@ namespace VenimusAPIs.UserControllers
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "This event has already taken place",
+                    Detail = message,
                 });
             }
 
@@ -245,9 +250,10 @@ namespace VenimusAPIs.UserControllers
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
+                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
-                    Detail = "This event has already taken place",
+                    Detail = message,
                 });
             }
 

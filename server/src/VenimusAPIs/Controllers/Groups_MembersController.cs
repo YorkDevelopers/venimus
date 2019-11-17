@@ -89,14 +89,14 @@ namespace VenimusAPIs.Controllers
             var newUser = group.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
             if (newUser == null)
             {
-                var message = _stringLocalizer.GetString("NOT_A_MEMBER_OF_THE_GROUP").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.NOT_A_MEMBER_OF_THE_GROUP).Value;
                 var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }
 
             if (newUser.IsApproved == true)
             {
-                var message = _stringLocalizer.GetString("MEMBER_ALREADY_APPROVED").Value;
+                var message = _stringLocalizer.GetString(Resources.Messages.MEMBER_ALREADY_APPROVED).Value;
                 var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }

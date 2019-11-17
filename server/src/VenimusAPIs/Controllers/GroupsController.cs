@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -16,12 +17,14 @@ namespace VenimusAPIs.Controllers
         private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<Messages> _stringLocalizer;
 
-        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper)
+        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<Messages> stringLocalizer)
         {
             _eventStore = eventStore;
             _groupStore = groupStore;
             _mapper = mapper;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -52,13 +55,15 @@ namespace VenimusAPIs.Controllers
             var duplicateGroup = await _groupStore.RetrieveGroupBySlug(group.Slug);
             if (duplicateGroup != null)
             {
-                ModelState.AddModelError("Slug", "A group using this slug already exists");
+                var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
+                ModelState.AddModelError(nameof(CreateGroup.Slug), message);
             }
 
             duplicateGroup = await _groupStore.RetrieveGroupByName(group.Name);
             if (duplicateGroup != null)
             {
-                ModelState.AddModelError("Name", "A group using this name already exists");
+                var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                ModelState.AddModelError(nameof(CreateGroup.Name), message);
             }
 
             if (!ModelState.IsValid)
@@ -113,7 +118,8 @@ namespace VenimusAPIs.Controllers
                 var duplicateGroup = await _groupStore.RetrieveGroupBySlug(newDetails.Slug);
                 if (duplicateGroup != null)
                 {
-                    ModelState.AddModelError("Slug", "A group using this slug already exists");
+                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
+                    ModelState.AddModelError(nameof(UpdateGroup.Slug), message);
                 }
 
                 updateEvents = true;
@@ -124,7 +130,8 @@ namespace VenimusAPIs.Controllers
                 var duplicateGroup = await _groupStore.RetrieveGroupByName(newDetails.Name);
                 if (duplicateGroup != null)
                 {
-                    ModelState.AddModelError("Name", "A group using this name already exists");
+                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                    ModelState.AddModelError(nameof(UpdateGroup.Name), message);
                 }
 
                 updateEvents = true;
@@ -227,7 +234,8 @@ namespace VenimusAPIs.Controllers
                 var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(groupSlug);
                 if (eventsExistForGroup)
                 {
-                    var details = new ValidationProblemDetails { Detail = "The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." };
+                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_HAS_EVENTS).Value;
+                    var details = new ValidationProblemDetails { Detail = message };
                     return ValidationProblem(details);
                 }
 

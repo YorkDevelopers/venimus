@@ -1,6 +1,6 @@
+using MongoDB.Driver;
 using System;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.UpdateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to update existing groups", SoThat = "People can build communities")]
     public class UpdateGroup_DuplicateName : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
         private Group _anotherGroup;
@@ -20,9 +22,14 @@ namespace VenimusAPIs.Tests.UpdateGroup
         }
 
         [Fact]
-        public void Execute()
+        public async Task Execute()
         {
-            this.BDDfy();
+            await ResetDatabase();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "A group using this name already exists" },
+                { Cultures.Test, "'€'A group using this name already exists" },
+            }).BDDfy();
         }
 
         private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
@@ -51,12 +58,13 @@ namespace VenimusAPIs.Tests.UpdateGroup
             _amendedGroup.LogoInBase64 = Convert.ToBase64String(_existingGroup.Logo);
             _amendedGroup.Name = _anotherGroup.Name;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("Name", "A group using this name already exists");
+            return AssertBadRequest("Name", ExpectedMessage);
         }
 
         private async Task ThenTheGroupDetailsAreNotUpdated()

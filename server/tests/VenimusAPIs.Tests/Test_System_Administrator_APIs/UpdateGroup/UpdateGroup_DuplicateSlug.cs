@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.UpdateGroup
     [Story(AsA = "SystemAdministrator", IWant = "To be able to update existing groups", SoThat = "People can build communities")]
     public class UpdateGroup_DuplicateSlug : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty; 
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
         private Group _anotherGroup;
@@ -22,7 +24,11 @@ namespace VenimusAPIs.Tests.UpdateGroup
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "A group using this slug already exists" },
+                { Cultures.Test, "'€'A group using this slug already exists" },
+            }).BDDfy();
         }
 
         private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
@@ -51,12 +57,13 @@ namespace VenimusAPIs.Tests.UpdateGroup
             _amendedGroup.LogoInBase64 = Convert.ToBase64String(_existingGroup.Logo);
             _amendedGroup.Slug = _anotherGroup.Slug;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_existingGroup.Slug}", _amendedGroup);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("Slug", "A group using this slug already exists");
+            return AssertBadRequest("Slug", ExpectedMessage);
         }
 
         private async Task ThenTheGroupDetailsAreNotUpdated()

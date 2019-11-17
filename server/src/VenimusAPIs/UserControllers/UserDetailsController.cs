@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.UserControllers
@@ -12,10 +13,12 @@ namespace VenimusAPIs.UserControllers
     public class UserDetailsController : BaseUserController
     {
         private readonly Mongo.UserStore _userStore;
-        
-        public UserDetailsController(Mongo.UserStore userStore)
+        private readonly IStringLocalizer<Messages> _stringLocalizer;
+
+        public UserDetailsController(Mongo.UserStore userStore, IStringLocalizer<Messages> stringLocalizer)
         {
             _userStore = userStore;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -83,7 +86,8 @@ namespace VenimusAPIs.UserControllers
                 var duplicateUser = await _userStore.GetUserByDisplayName(updateMyDetails.DisplayName);
                 if (duplicateUser != null)
                 {
-                    ModelState.AddModelError(nameof(updateMyDetails.DisplayName), "A user with this display name already exists.");
+                    var message = _stringLocalizer.GetString(Resources.Messages.USER_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                    ModelState.AddModelError(nameof(updateMyDetails.DisplayName), message);
                 }
             }
 

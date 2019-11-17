@@ -126,8 +126,23 @@
   <data name="EVENT_HAS_HAPPENED" xml:space="preserve">
     <value>'€'The event cannot be deleted as it has already taken place.</value>
   </data>
+  <data name="EVENT_HAS_TAKEN_PLACE" xml:space="preserve">
+    <value>'€'This event has already taken place</value>
+  </data>
   <data name="EVENT_IN_THE_PAST" xml:space="preserve">
     <value>'€'You cannot create an event in the past.</value>
+  </data>
+  <data name="EVENT_IS_FULL" xml:space="preserve">
+    <value>'€'Sorry this is event is full.</value>
+  </data>
+  <data name="GROUP_ALREADY_EXISTS_WITH_THIS_NAME" xml:space="preserve">
+    <value>'€'A group using this name already exists</value>
+  </data>
+  <data name="GROUP_ALREADY_EXISTS_WITH_THIS_SLUG" xml:space="preserve">
+    <value>'€'A group using this slug already exists</value>
+  </data>
+  <data name="GROUP_HAS_EVENTS" xml:space="preserve">
+    <value>'€'The group cannot be deleted as it has one or events.  Please mark the group as InActive instead.</value>
   </data>
   <data name="GUESTS_NOT_ALLOWED" xml:space="preserve">
     <value>'€'This event does not allow you to bring guests.  All attendees must be members of this group.</value>
@@ -137,5 +152,14 @@
   </data>
   <data name="NOT_A_MEMBER_OF_THE_GROUP" xml:space="preserve">
     <value>'€'The user does not belong to this group</value>
+  </data>
+  <data name="TOO_MANY_PEOPLE" xml:space="preserve">
+    <value>'€'Sorry this will exceed the maximum number of people allowed to attend this event.</value>
+  </data>
+  <data name="USER_ALREADY_EXISTS_WITH_THIS_NAME" xml:space="preserve">
+    <value>'€'A user with this display name already exists.</value>
+  </data>
+  <data name="USER_ALREADY_SIGNED_UP" xml:space="preserve">
+    <value>'€'You are already signed up to this event.</value>
   </data>
 </root>

@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -12,6 +11,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class RegisterForEvent_AlreadyHappened : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
         private Event _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
@@ -24,7 +25,11 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         public async Task Execute()
         {
             await ResetDatabase();
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "This event has already taken place" },
+                { Cultures.Test, "'€'This event has already taken place" },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -57,12 +62,13 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _signUpToEvent.EventSlug = _existingEvent.Slug;
             _signUpToEvent.NumberOfGuests = 0;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("This event has already taken place");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheUserIsNotAMemberOfTheEvent()

@@ -1,8 +1,7 @@
+using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -13,6 +12,8 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     [Story(AsA = "User", IWant = "To be able to update my profile details", SoThat = "I can ensure they are upto date")]
     public class UpdateMyDetails_DuplicateDisplayName : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private ViewModels.UpdateMyDetails _amendedUser;
         private User _otherUser;
 
@@ -23,7 +24,11 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "A user with this display name already exists." },
+                { Cultures.Test, "'€'A user with this display name already exists." },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -45,12 +50,13 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
             _amendedUser.DisplayName = _otherUser.DisplayName;
 
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user", _amendedUser);
         }
 
         private async Task ThenAnErrorResponseIsReturned()
         {
-            await AssertBadRequest("DisplayName", "A user with this display name already exists.");
+            await AssertBadRequest("DisplayName", ExpectedMessage);
         }
 
         private async Task ThenMyDetailsAreNotUpdatedInTheDatabase()

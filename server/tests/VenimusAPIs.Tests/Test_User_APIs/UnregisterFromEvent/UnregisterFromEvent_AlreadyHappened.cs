@@ -11,6 +11,8 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
     [Story(AsA = "User", IWant = "To be able to decline events", SoThat = "The host knows I cannot attend")]
     public class UnregisterFromEvent_AlreadyHappened : BaseTest
     {
+        private string Culture = string.Empty;
+        private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
         private Event _existingEvent;
 
@@ -21,7 +23,11 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
+            {
+                { Cultures.Normal, "This event has already taken place" },
+                { Cultures.Test, "'€'This event has already taken place" },
+            }).BDDfy();
         }
 
         private Task GivenIAmUser() => IAmANormalUser();
@@ -50,12 +56,13 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
 
         private async Task WhenICallTheApi()
         {
+            Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.DeleteAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequestDetail("This event has already taken place");
+            return AssertBadRequestDetail(ExpectedMessage);
         }
 
         private async Task ThenTheUserIsNotRecordedAsNotGoingToTheEvent()

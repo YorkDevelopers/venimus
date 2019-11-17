@@ -493,6 +493,97 @@
                 The user's social media identities
             </summary>
         </member>
+        <member name="T:VenimusAPIs.Resources.Messages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_ALREADY_EXISTS">
+            <summary>
+              Looks up a localized string similar to An event with this slug already exists for this group..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_END_BEFORE_START">
+            <summary>
+              Looks up a localized string similar to You cannot create an event which ends before it starts..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_HAS_HAPPENED">
+            <summary>
+              Looks up a localized string similar to The event cannot be deleted as it has already taken place..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_HAS_TAKEN_PLACE">
+            <summary>
+              Looks up a localized string similar to This event has already taken place.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_IN_THE_PAST">
+            <summary>
+              Looks up a localized string similar to You cannot create an event in the past..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.EVENT_IS_FULL">
+            <summary>
+              Looks up a localized string similar to Sorry this is event is full..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME">
+            <summary>
+              Looks up a localized string similar to A group using this name already exists.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG">
+            <summary>
+              Looks up a localized string similar to A group using this slug already exists.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.GROUP_HAS_EVENTS">
+            <summary>
+              Looks up a localized string similar to The group cannot be deleted as it has one or events.  Please mark the group as InActive instead..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.GUESTS_NOT_ALLOWED">
+            <summary>
+              Looks up a localized string similar to This event does not allow you to bring guests.  All attendees must be members of this group..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.MEMBER_ALREADY_APPROVED">
+            <summary>
+              Looks up a localized string similar to The user&apos;s membership of this group has already been approved..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.NOT_A_MEMBER_OF_THE_GROUP">
+            <summary>
+              Looks up a localized string similar to The user does not belong to this group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.TOO_MANY_PEOPLE">
+            <summary>
+              Looks up a localized string similar to Sorry this will exceed the maximum number of people allowed to attend this event..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.USER_ALREADY_EXISTS_WITH_THIS_NAME">
+            <summary>
+              Looks up a localized string similar to A user with this display name already exists..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.Messages.USER_ALREADY_SIGNED_UP">
+            <summary>
+              Looks up a localized string similar to You are already signed up to this event..
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ServiceBusMessages.GroupChangedMessage.GroupId">
             <summary>
                 The unique internal ID of this group
