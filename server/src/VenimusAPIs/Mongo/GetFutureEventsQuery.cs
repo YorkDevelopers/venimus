@@ -1,24 +1,25 @@
-﻿using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
-using VenimusAPIs.Settings;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Mongo
 {
-    public class GetFutureEventsQuery : MongoBase
+    public class GetFutureEventsQuery
     {
-        public GetFutureEventsQuery(IOptions<MongoDBSettings> mongoDBSettings) : base(mongoDBSettings)
+        private readonly MongoConnection _mongoConnection;
+
+        public GetFutureEventsQuery(MongoConnection mongoConnection)
         {
+            _mongoConnection = mongoConnection;
         }
 
         internal async Task<List<ViewModels.ListFutureEvents>> Evaluate()
         {
-            var database = ConnectToDatabase();
+            var database = _mongoConnection.ConnectToDatabase();
 
             var events = database.GetCollection<Models.Event>("events");
             var groups = database.GetCollection<Models.Group>("groups");

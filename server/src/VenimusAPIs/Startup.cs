@@ -75,6 +75,7 @@ namespace VenimusAPIs
 
             services.AddScoped<CheckGroupSecurityFilter>();
 
+            services.AddScoped<Mongo.MongoConnection>();
             services.AddScoped<Mongo.GetFutureEventsQuery>();
             services.AddScoped<Mongo.EventStore>();
             services.AddScoped<Mongo.GroupStore>();

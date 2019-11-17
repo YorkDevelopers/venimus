@@ -1,26 +1,26 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using VenimusAPIs.Models;
-using VenimusAPIs.Settings;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Mongo
 {
-    public class EventStore : MongoBase
+    public class EventStore
     {
-        public EventStore(IOptions<MongoDBSettings> mongoDBSettings) : base(mongoDBSettings)
+        private readonly MongoConnection _mongoConnection;
+
+        public EventStore(MongoConnection mongoConnection)
         {
+            _mongoConnection = mongoConnection;
         }
 
         internal async Task<Event> GetEvent(string groupSlug, string eventSlug)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
             var theEvent = await events.Find(u => u.Slug == eventSlug && u.GroupSlug == groupSlug).SingleOrDefaultAsync();
 
             if (theEvent != null)
@@ -44,7 +44,7 @@ namespace VenimusAPIs.Mongo
             var filter = Builders<Event>.Filter.ElemMatch(x => x.Members, memberMatch) &
                          Builders<Event>.Filter.Gt(ent => ent.EndTimeUTC, currentTime);
 
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             var matchingEvents = await events.Find(filter).ToListAsync();
 
@@ -62,7 +62,7 @@ namespace VenimusAPIs.Mongo
 
         internal async Task UpdateUserDetailsInEvents(User user)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             var memberMatch = Builders<Event.EventAttendees>.Filter.Eq(a => a.UserId, user.Id);
             var filter = Builders<Event>.Filter.ElemMatch(x => x.Members, memberMatch);
@@ -82,14 +82,14 @@ namespace VenimusAPIs.Mongo
 
         internal async Task StoreEvent(Event newEvent)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             await events.InsertOneAsync(newEvent);
         }
 
         internal async Task UpdateGroupDetailsInEvents(Group group)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id);
             var update = Builders<Event>.Update
@@ -101,7 +101,7 @@ namespace VenimusAPIs.Mongo
 
         internal async Task<bool> DoEventsExistForGroup(string groupSlug)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             var filter = Builders<Event>.Filter.Eq(ent => ent.GroupSlug, groupSlug);
             var eventsExist = await events.Find(filter).AnyAsync();
@@ -111,14 +111,14 @@ namespace VenimusAPIs.Mongo
 
         internal async Task UpdateEvent(Models.Event amendedEvent)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             await events.ReplaceOneAsync(u => u.Id == amendedEvent.Id, amendedEvent);
         }
 
         internal async Task DeleteEvent(Event theEvent)
         {
-            var events = EventsCollection();
+            var events = _mongoConnection.EventsCollection();
 
             await events.DeleteOneAsync(e => e.Id == theEvent.Id);
         }

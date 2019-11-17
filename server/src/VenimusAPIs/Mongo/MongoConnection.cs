@@ -5,13 +5,13 @@ using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Mongo
 {
-    public abstract class MongoBase
+    public class MongoConnection
     {
         private readonly Settings.MongoDBSettings _mongoDBSettings;
 
         private IMongoDatabase _cachedDatabase;
 
-        public MongoBase(IOptions<Settings.MongoDBSettings> mongoDBSettings)
+        public MongoConnection(IOptions<Settings.MongoDBSettings> mongoDBSettings)
         {
             _mongoDBSettings = mongoDBSettings.Value;
         }
@@ -24,28 +24,28 @@ namespace VenimusAPIs.Mongo
             await mongoDatabase.DropCollectionAsync("users");
         }
 
-        protected IMongoCollection<Group> GroupsCollection()
+        public IMongoCollection<Group> GroupsCollection()
         {
             var database = ConnectToDatabase();
             var groups = database.GetCollection<Models.Group>("groups");
             return groups;
         }
 
-        protected IMongoCollection<User> UsersCollection()
+        public IMongoCollection<User> UsersCollection()
         {
             var database = ConnectToDatabase();
             var users = database.GetCollection<Models.User>("users");
             return users;
         }
 
-        protected IMongoCollection<Event> EventsCollection()
+        public IMongoCollection<Event> EventsCollection()
         {
             var database = ConnectToDatabase();
             var events = database.GetCollection<Models.Event>("events");
             return events;
         }
 
-        protected IMongoDatabase ConnectToDatabase()
+        public IMongoDatabase ConnectToDatabase()
         {
             if (_cachedDatabase == null)
             {
