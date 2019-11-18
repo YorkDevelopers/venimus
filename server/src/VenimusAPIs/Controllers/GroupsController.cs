@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using System.Threading.Tasks;
+using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -204,9 +206,44 @@ namespace VenimusAPIs.Controllers
         {
             var groups = await _groupStore.RetrieveAllGroups();
 
-            var viewModels = _mapper.Map<ListGroups[]>(groups);
+            var server = $"{Request.Scheme}://{Request.Host}";
+
+            var viewModels = groups.Select(grp => new ListGroups
+            {
+                Description = grp.Description,
+                IsActive = grp.IsActive,
+                Name = grp.Name,
+                SlackChannelName = grp.SlackChannelName,
+                Slug = grp.Slug,
+                Logo = $"{server}/api/groups/{grp.Slug}/logo",
+            }).ToArray();
 
             return viewModels;
+        }
+
+        /// <summary>
+        ///     Allows you to get the logo for a group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/groups/YORKCODEDOJO/logo
+        ///
+        /// </remarks>
+        /// <returns>byte array for the image</returns>
+        /// <response code="200">Success</response>
+        [Route("/api/groups/{groupSlug}/logo")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetLogo([FromRoute, Slug] string groupSlug)
+        {
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            return File(group.Logo, "image/jpeg");
         }
 
         /// <summary>

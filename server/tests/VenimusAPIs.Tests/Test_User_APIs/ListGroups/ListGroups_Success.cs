@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -10,14 +9,14 @@ using Xunit;
 namespace VenimusAPIs.Tests.ListGroups
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the list of all groups", SoThat = "I can join a community")]
-    public class ListGroups : BaseTest
+    public class ListGroups_Success : BaseTest
     {
         private Group _expectedGroup1;
         private Group _expectedGroup2;
         private Group _expectedGroup3;
         private Group _expectedGroup4;
 
-        public ListGroups(Fixture fixture) : base(fixture)
+        public ListGroups_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -68,7 +67,7 @@ namespace VenimusAPIs.Tests.ListGroups
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(expectedGroup.IsActive, actualGroup.IsActive);
-            Assert.Equal(expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
+            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
         }
     }
 }
