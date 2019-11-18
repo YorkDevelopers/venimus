@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs", "src\VenimusA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs.Tests", "tests\VenimusAPIs.Tests\VenimusAPIs.Tests.csproj", "{82779B2C-C85D-4683-8AB3-EB581FD2D561}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleWebsite", "SampleWebsite\SampleWebsite.csproj", "{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorkDeveloperEvents", "SampleWebsite\YorkDeveloperEvents.csproj", "{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

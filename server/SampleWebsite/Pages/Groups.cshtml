@@ -1,11 +1,15 @@
 ﻿@page
-@model SampleWebsite.Pages.GroupsModel
+@model YorkDeveloperEvents.Pages.GroupsModel
 @{
     ViewData["Title"] = "Groups";
 }
 
-<h1>Example Group</h1>
+<h1>Example Groups</h1>
 
-Group Name : @Model.ViewModel.Name
-<br />
-Group Description : @Model.ViewModel.Description
+@foreach (var item in Model.ViewModel)
+{
+    <span>@item.name</span>
+    <img src="@item.logo" />
+}
+
+

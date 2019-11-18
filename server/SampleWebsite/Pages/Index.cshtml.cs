@@ -1,27 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using YorkDeveloperEvents.ViewModels;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
-namespace SampleWebsite.Pages
+namespace YorkDeveloperEvents.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        public ListActiveGroups[] ViewModel { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public IndexModel(IHttpClientFactory httpClientFactory)
         {
-            _logger = logger;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task OnGet()
         {
-            var returnUrl = "/Groups";
-            await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
+            var httpClient = _httpClientFactory.CreateClient("API");
+            var publicGroupsJSON = await httpClient.GetStringAsync("/public/Groups");
+            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON).Where(g => !string.IsNullOrEmpty(g.name)).ToArray();
+        }
+
+        public async Task OnPost()
+        {
+            var httpClient = _httpClientFactory.CreateClient("API");
+            var publicGroupsJSON = await httpClient.GetStringAsync("/public/Groups");
+            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON).Where(g => !string.IsNullOrEmpty(g.name)).ToArray();
         }
     }
 }

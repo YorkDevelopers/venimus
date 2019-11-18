@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+    <ul class="navbar-nav">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/MyGroups">My Groups</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-page="/MyEvents">My Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage" title="Manage">Hello @User.Identity.Name!</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-page="/Logout">Logout</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-page="/Login">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-page="/Login">Login</a>
+            </li>
+        }
+    </ul>

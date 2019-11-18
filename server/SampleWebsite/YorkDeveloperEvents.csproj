@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>fa8bb447-989d-4b96-abf1-0fa5cdbbce8f</UserSecretsId>
+    <AssemblyName>YorkDeveloperEvents</AssemblyName>
+    <RootNamespace>YorkDeveloperEvents</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

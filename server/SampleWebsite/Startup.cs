@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-namespace SampleWebsite
+using Microsoft.IdentityModel.Tokens;
+
+namespace YorkDeveloperEvents
 {
     public class Startup
     {
@@ -53,7 +56,7 @@ namespace SampleWebsite
 
                 // Configure the scope
                 options.Scope.Clear();
-                options.Scope.Add("openid"); 
+                options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("email");
 
@@ -63,6 +66,11 @@ namespace SampleWebsite
 
                 // Configure the Claims Issuer to be Auth0
                 options.ClaimsIssuer = "Auth0";
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name"
+                };
 
                 options.Events = new OpenIdConnectEvents
                 {
@@ -82,8 +90,8 @@ namespace SampleWebsite
                         {
                             if (postLogoutUri.StartsWith("/"))
                             {
-                                 // transform to absolute
-                                 var request = context.Request;
+                                // transform to absolute
+                                var request = context.Request;
                                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
                             }
                             logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
@@ -98,6 +106,9 @@ namespace SampleWebsite
             });
 
             services.AddRazorPages();
+
+            //httpClient.BaseAddress = new Uri("https://venimus-api.azurewebsites.net");
+            services.AddHttpClient("API", client => client.BaseAddress = new Uri("https://localhost:7001"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,6 +138,7 @@ namespace SampleWebsite
             {
                 endpoints.MapRazorPages();
             });
+
         }
     }
 }
