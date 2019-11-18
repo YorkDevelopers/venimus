@@ -999,14 +999,9 @@
             A description of the group in markdown
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.SlackChannelName">
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Logo">
             <summary>
-                The name of this groups slack channel
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.LogoInBase64">
-            <summary>
-                The group's logo.
+                The group's logo. (Either URL or Base64)
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.Slug">
@@ -1193,9 +1188,9 @@
                 The name of this groups slack channel
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.LogoInBase64">
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.Logo">
             <summary>
-                The group's logo.
+                The group's logo as either an URL or in Base64.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.EventSlug">

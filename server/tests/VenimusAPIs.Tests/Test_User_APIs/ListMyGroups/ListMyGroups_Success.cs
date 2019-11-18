@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
+using MongoDB.Driver;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.ListMyGroups
 {
     [Story(AsA = "User", IWant = "To be able to see what groups I'm a member of", SoThat = "I can belong to the communities")]
     public class ListMyGroups_Success : BaseTest
@@ -79,14 +75,14 @@ namespace VenimusAPIs.Tests
         private async Task ThenTheListOfActiveGroupsTheUserBelongsToAreReturned()
         {
             var json = await Response.Content.ReadAsStringAsync();
-            var groups = JsonSerializer.Deserialize<ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var groups = JsonSerializer.Deserialize<ViewModels.ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, groups.Length);
             AssertGroup(groups, _inGroup1);
             AssertGroup(groups, _inGroup2);
         }
 
-        private void AssertGroup(ListMyGroups[] actualGroups, Group expectedGroup)
+        private void AssertGroup(ViewModels.ListMyGroups[] actualGroups, Group expectedGroup)
         {
             var actualGroup = actualGroups.Single(e => e.Slug == expectedGroup.Slug);
 
@@ -94,7 +90,7 @@ namespace VenimusAPIs.Tests
             Assert.Equal(expectedGroup.Name, actualGroup.Name);
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
-            Assert.Equal(expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
+            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
         }
     }
 }

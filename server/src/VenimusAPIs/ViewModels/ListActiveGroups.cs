@@ -18,13 +18,8 @@
         public string Description { get; set; }
 
         /// <summary>
-        ///     The name of this groups slack channel
+        ///     The group's logo. (Either URL or Base64)
         /// </summary>
-        public string SlackChannelName { get; set; }
-
-        /// <summary>
-        ///     The group's logo.
-        /// </summary>
-        public string LogoInBase64 { get; set; }
+        public string Logo { get; set; }
     }
 }

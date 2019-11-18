@@ -75,7 +75,16 @@ namespace VenimusAPIs.UserControllers
 
             var groups = await _groupStore.RetrieveMyActiveGroups(existingUser.Id);
 
-            var viewModels = _mapper.Map<ListMyGroups[]>(groups);
+            var server = $"{Request.Scheme}://{Request.Host}";
+
+            var viewModels = groups.Select(grp => new ListMyGroups
+            {
+                Description = grp.Description,
+                Name = grp.Name,
+                SlackChannelName = grp.SlackChannelName,
+                Slug = grp.Slug,
+                Logo = $"{server}/api/groups/{grp.Slug}/logo",
+            }).ToArray();
 
             return viewModels;
         }

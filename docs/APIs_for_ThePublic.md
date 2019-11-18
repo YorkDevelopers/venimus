@@ -13,9 +13,7 @@ Returns a list of groups which are marked as active within the community.  The p
 
 * __Description__ - A description of the group in markdown
 
-* __SlackChannelName__ - The name of this groups slack channel
-
-* __LogoInBase64__ - The group's logo.
+* __Logo__ - The URL of the group's logo.
 
 ---
 

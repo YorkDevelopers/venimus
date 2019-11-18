@@ -139,7 +139,7 @@ Returns the active groups that the current user is a member of.  The properties 
 
 * __SlackChannelName__ - The name of this groups slack channel
 
-* __LogoInBase64__ - The group's logo.
+* __Logo__ - The URL of the group's logo.
 
 ### Business Rules
 

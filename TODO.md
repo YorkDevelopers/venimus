@@ -34,12 +34,11 @@ Groups are sometimes retrieved twice.  Could cache.
 Rename controllers
 
 
-## Group Images
-    /api/Groups      (all groups)
-    /public/Groups   (only active groups)
-    /api/user/groups (groups I belong to)
+## User Images
+    group members
+    event members
 
-Add ImageURL to the group
+Add ImageURL to the user
 Include the ImageURL in these results
 Add endpoint to serve up the image URL.
 

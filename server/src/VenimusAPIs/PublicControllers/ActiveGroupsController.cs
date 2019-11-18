@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -34,11 +35,19 @@ namespace VenimusAPIs.Controllers
         [Route("public/Groups")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<ListActiveGroups>>> Get()
+        public async Task<ActionResult<ListActiveGroups[]>> Get()
         {
             var groups = await _groupStore.GetActiveGroups();
 
-            var viewModels = _mapper.Map<List<ListActiveGroups>>(groups);
+            var server = $"{Request.Scheme}://{Request.Host}";
+
+            var viewModels = groups.Select(grp => new ListActiveGroups
+            {
+                Description = grp.Description,
+                Name = grp.Name,
+                Slug = grp.Slug,
+                Logo = $"{server}/api/groups/{grp.Slug}/logo",
+            }).ToArray();
 
             return viewModels;
         }

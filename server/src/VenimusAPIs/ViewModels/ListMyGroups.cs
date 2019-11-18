@@ -23,8 +23,8 @@
         public string SlackChannelName { get; set; }
 
         /// <summary>
-        ///     The group's logo.
+        ///     The group's logo as either an URL or in Base64.
         /// </summary>
-        public string LogoInBase64 { get; set; }
+        public string Logo { get; set; }
     }
 }
