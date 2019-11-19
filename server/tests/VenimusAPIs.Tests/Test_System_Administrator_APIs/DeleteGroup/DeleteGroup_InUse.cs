@@ -26,7 +26,7 @@ namespace VenimusAPIs.Tests.DeleteGroup
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." },
-                { Cultures.Test, "'€'The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." },
+                { Cultures.Test, "'\u20AC'The group cannot be deleted as it has one or events.  Please mark the group as InActive instead." },
             }).BDDfy();
         }
 

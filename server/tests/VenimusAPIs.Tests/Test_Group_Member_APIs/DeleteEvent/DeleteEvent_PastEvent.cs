@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.DeleteEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "The event cannot be deleted as it has already taken place." },
-                { Cultures.Test, "'€'The event cannot be deleted as it has already taken place." },
+                { Cultures.Test, "'\u20AC'The event cannot be deleted as it has already taken place." },
             }).BDDfy();
         }
 

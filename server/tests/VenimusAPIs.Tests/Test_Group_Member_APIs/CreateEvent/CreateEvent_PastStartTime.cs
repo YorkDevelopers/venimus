@@ -28,7 +28,7 @@ namespace VenimusAPIs.Tests.CreateEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "You cannot create an event in the past." },
-                { Cultures.Test, "'€'You cannot create an event in the past." },
+                { Cultures.Test, "'\u20AC'You cannot create an event in the past." },
             }).BDDfy();
         }
 

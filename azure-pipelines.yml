@@ -6,7 +6,9 @@ trigger:
     exclude:
     - server/tools/MockAuth/*
     - mockauth-azure-pipelines.yml
-
+    - yorkdeveloperevents/*
+    - yorkdeveloperevents-azure-pipelines.yml
+    
 pool:
   vmImage: 'Ubuntu-latest'
 

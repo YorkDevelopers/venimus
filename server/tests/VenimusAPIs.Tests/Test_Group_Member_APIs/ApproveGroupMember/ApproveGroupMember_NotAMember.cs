@@ -25,7 +25,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "The user does not belong to this group" },
-                { Cultures.Test, "'€'The user does not belong to this group" },
+                { Cultures.Test, "'\u20AC'The user does not belong to this group" },
             }).BDDfy();
         }
 

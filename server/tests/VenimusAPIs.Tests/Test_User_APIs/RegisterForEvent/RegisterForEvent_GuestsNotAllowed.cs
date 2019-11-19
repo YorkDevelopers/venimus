@@ -26,7 +26,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "This event does not allow you to bring guests.  All attendees must be members of this group." },
-                { Cultures.Test, "'€'This event does not allow you to bring guests.  All attendees must be members of this group." },
+                { Cultures.Test, "'\u20AC'This event does not allow you to bring guests.  All attendees must be members of this group." },
             }).BDDfy();
         }
 

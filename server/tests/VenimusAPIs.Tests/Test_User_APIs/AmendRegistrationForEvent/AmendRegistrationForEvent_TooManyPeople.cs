@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "Sorry this will exceed the maximum number of people allowed to attend this event." },
-                { Cultures.Test, "'€'Sorry this will exceed the maximum number of people allowed to attend this event." },
+                { Cultures.Test, "'\u20AC'Sorry this will exceed the maximum number of people allowed to attend this event." },
             }).BDDfy();
         }
 

@@ -28,7 +28,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "An event with this slug already exists for this group." },
-                { Cultures.Test, "'€'An event with this slug already exists for this group." },
+                { Cultures.Test, "'\u20AC'An event with this slug already exists for this group." },
             }).BDDfy();
         }
 

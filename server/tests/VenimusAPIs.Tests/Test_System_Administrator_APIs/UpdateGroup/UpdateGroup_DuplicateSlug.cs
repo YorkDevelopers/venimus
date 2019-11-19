@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.UpdateGroup
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "A group using this slug already exists" },
-                { Cultures.Test, "'€'A group using this slug already exists" },
+                { Cultures.Test, "'\u20AC'A group using this slug already exists" },
             }).BDDfy();
         }
 

@@ -28,7 +28,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "This event has already taken place" },
-                { Cultures.Test, "'€'This event has already taken place" },
+                { Cultures.Test, "'\u20AC'This event has already taken place" },
             }).BDDfy();
         }
 

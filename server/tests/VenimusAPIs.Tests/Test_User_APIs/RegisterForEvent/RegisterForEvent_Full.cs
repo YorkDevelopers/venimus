@@ -26,7 +26,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "Sorry this is event is full." },
-                { Cultures.Test, "'€'Sorry this is event is full." },
+                { Cultures.Test, "'\u20AC'Sorry this is event is full." },
             }).BDDfy();
         }
 

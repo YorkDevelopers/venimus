@@ -25,7 +25,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "The user's membership of this group has already been approved." },
-                { Cultures.Test, "'€'The user's membership of this group has already been approved." },
+                { Cultures.Test, "'\u20AC'The user's membership of this group has already been approved." },
             }).BDDfy();
         }
 

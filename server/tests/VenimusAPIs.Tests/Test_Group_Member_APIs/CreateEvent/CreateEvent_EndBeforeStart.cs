@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.CreateEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "You cannot create an event which ends before it starts." },
-                { Cultures.Test, "'€'You cannot create an event which ends before it starts." },
+                { Cultures.Test, "'\u20AC'You cannot create an event which ends before it starts." },
             }).BDDfy();
         }
 

@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "A user with this display name already exists." },
-                { Cultures.Test, "'€'A user with this display name already exists." },
+                { Cultures.Test, "'\u20AC'A user with this display name already exists." },
             }).BDDfy();
         }
 

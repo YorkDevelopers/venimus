@@ -25,7 +25,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
                 { Cultures.Normal, "You are already signed up to this event." },
-                { Cultures.Test, "'€'You are already signed up to this event." },
+                { Cultures.Test, "'\u20AC'You are already signed up to this event." },
             }).BDDfy();
         }
 

@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs", "src\VenimusA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs.Tests", "tests\VenimusAPIs.Tests\VenimusAPIs.Tests.csproj", "{82779B2C-C85D-4683-8AB3-EB581FD2D561}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorkDeveloperEvents", "SampleWebsite\YorkDeveloperEvents.csproj", "{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateInitialData", "tools\CreateInitialData\CreateInitialData.csproj", "{7D49751C-A140-4EC9-9C33-06C77B09FE20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateInitialData", "tools\CreateInitialData\CreateInitialData.csproj", "{7D49751C-A140-4EC9-9C33-06C77B09FE20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorkDeveloperEvents", "..\yorkdevelopersevents\YorkDeveloperEvents.csproj", "{C33FF857-19E1-42B6-9B66-0D7FB5D93580}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +25,14 @@ Global
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Release|Any CPU.Build.0 = Release|Any CPU
-		{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{890AD4F4-5C23-4ADC-8AAD-DB98D3F11952}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
