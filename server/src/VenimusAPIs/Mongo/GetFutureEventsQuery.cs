@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
+using VenimusAPIs.Services;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Mongo
@@ -11,10 +12,12 @@ namespace VenimusAPIs.Mongo
     public class GetFutureEventsQuery
     {
         private readonly MongoConnection _mongoConnection;
+        private readonly GroupLogoURLBuilder _groupLogoURLBuilder;
 
-        public GetFutureEventsQuery(MongoConnection mongoConnection)
+        public GetFutureEventsQuery(MongoConnection mongoConnection, GroupLogoURLBuilder groupLogoURLBuilder)
         {
             _mongoConnection = mongoConnection;
+            _groupLogoURLBuilder = groupLogoURLBuilder;
         }
 
         internal async Task<List<ViewModels.ListFutureEvents>> Evaluate()
@@ -51,6 +54,8 @@ namespace VenimusAPIs.Mongo
                     EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
                     GroupName = e.GroupName,
+                    GroupLogo = _groupLogoURLBuilder.BuildURL(e.GroupSlug),
+                    GroupSlug = e.GroupSlug,
                 });
 
                 result.AddRange(viewModels);

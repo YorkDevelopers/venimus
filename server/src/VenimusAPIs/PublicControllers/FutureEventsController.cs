@@ -28,6 +28,7 @@ namespace VenimusAPIs.Controllers
         /// <returns>Array of FutureEvent view models</returns>
         /// <response code="200">Success</response>
         [Route("public/FutureEvents")]
+        [ResponseCache(Duration = 300)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ListFutureEvents>>> Get()

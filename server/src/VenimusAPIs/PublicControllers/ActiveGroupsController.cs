@@ -33,6 +33,7 @@ namespace VenimusAPIs.Controllers
         /// <returns>Array of ListActiveGroups view models</returns>
         /// <response code="200">Success</response>
         [Route("public/Groups")]
+        [ResponseCache(Duration = 300)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ListActiveGroups[]>> Get()

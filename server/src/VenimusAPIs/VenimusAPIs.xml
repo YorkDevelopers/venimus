@@ -153,7 +153,7 @@
              <response code="200">Success</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Get">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(VenimusAPIs.Services.GroupLogoURLBuilder)">
              <summary>
                  Allows you to retrieve the list of all groups
              </summary>
@@ -1089,6 +1089,16 @@
         <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventFinishesUTC">
             <summary>
                 When does the event finish, in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupSlug">
+            <summary>
+                The unique external code for the group.  For example YorkCodeDojo
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupLogo">
+            <summary>
+                The group's logo. (Either URL or Base64)
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.Slug">

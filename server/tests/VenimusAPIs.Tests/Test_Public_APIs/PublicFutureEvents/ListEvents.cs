@@ -90,6 +90,10 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Id.ToString());
 
             Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
+            Assert.Equal(expectedGroup.Slug, actualEvent.GroupSlug);
+            Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
+            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualEvent.GroupLogo);
+
             Assert.Equal(expectedEvent.Title, actualEvent.EventTitle);
             Assert.Equal(expectedEvent.Description, actualEvent.EventDescription);
             AssertDateTime(expectedEvent.StartTimeUTC, actualEvent.EventStartsUTC);

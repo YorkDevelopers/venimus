@@ -1,0 +1,35 @@
+﻿@page
+@model YorkDeveloperEvents.Pages.WhatsOnModel
+@{
+    ViewData["Title"] = "Whats On";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome To York Developers</h1>
+        <br />
+        <h2>The following events are scheduled in York,  register to come along</h2>
+        <br />
+        <table>
+            @foreach (var item in Model.ViewModel)
+            {
+                <tr>
+                    <td><img class="groupLogo" src="@item.GroupLogo" /></td>
+                    <td>@item.EventTitle - @item.EventStartsUTC - @item.EventFinishesUTC</td>
+                </tr>
+                <tr>
+                    <td>@item.GroupName</td>
+                </tr>
+                <tr>
+                    <td>@item.EventDescription</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><button>Join Now</button></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            }
+        </table>
+    </div>

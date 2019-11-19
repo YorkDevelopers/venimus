@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using YorkDeveloperEvents.ViewModels;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents.Pages
 {
