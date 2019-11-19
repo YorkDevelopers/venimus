@@ -22,14 +22,7 @@ namespace YorkDeveloperEvents.Pages
         {
             var httpClient = _httpClientFactory.CreateClient("API");
             var publicGroupsJSON = await httpClient.GetStringAsync("/public/Groups");
-            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON).Where(g => !string.IsNullOrEmpty(g.name)).ToArray();
-        }
-
-        public async Task OnPost()
-        {
-            var httpClient = _httpClientFactory.CreateClient("API");
-            var publicGroupsJSON = await httpClient.GetStringAsync("/public/Groups");
-            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON).Where(g => !string.IsNullOrEmpty(g.name)).ToArray();
+            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

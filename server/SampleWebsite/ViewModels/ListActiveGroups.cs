@@ -12,8 +12,6 @@
         /// </summary>
         public string Name { get; set; }
 
-        public string name { get; set; }
-
         /// <summary>
         /// A description of the group in markdown
         /// </summary>
@@ -23,7 +21,5 @@
         ///     The group's logo. (Either URL or Base64)
         /// </summary>
         public string Logo { get; set; }
-
-        public string logo { get; set; }
     }
 }
