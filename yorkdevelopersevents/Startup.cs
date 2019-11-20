@@ -81,6 +81,7 @@ namespace YorkDeveloperEvents
                     {
                         var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
                         builder.Scheme = "https";
+                        builder.Port = int.Parse(Configuration["https_port"]);
                         context.ProtocolMessage.RedirectUri = builder.ToString();
 
                         context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
