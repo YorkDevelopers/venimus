@@ -69,5 +69,16 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
             Assert.Contains(actualUser.Identities, p => p == _newUniqueID);
             Assert.Contains(actualUser.Identities, p => p == _originalUniqueID);
         }
+
+        private void ThenTheHeaderIsSetToShowTheUserWasNotCreated()
+        {
+            var value = bool.Parse(Response.Headers.GetValues("NewUser").First());
+            Assert.False(value);
+        }
+
+        private void ThenThePathToUserIsReturned()
+        {
+            Assert.Equal($"http://localhost/api/user", Response.Headers.Location.ToString());
+        }
     }
 }

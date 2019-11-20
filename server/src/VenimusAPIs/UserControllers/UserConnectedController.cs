@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.Services;
 
 namespace VenimusAPIs.UserControllers
 {
@@ -13,12 +14,15 @@ namespace VenimusAPIs.UserControllers
     {
         private readonly Mongo.UserStore _userStore;
 
-        private readonly Services.Auth0API _auth0API;
+        private readonly Auth0API _auth0API;
+        
+        private readonly URLBuilder _urlBuilder;
 
-        public UserConnectedController(Mongo.UserStore userStore, Services.Auth0API auth0API)
+        public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder)
         {
             _userStore = userStore;
             _auth0API = auth0API;
+            _urlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -43,10 +47,15 @@ namespace VenimusAPIs.UserControllers
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _userStore.GetUserByID(uniqueID);
-            if (existingUser == null)
+            var newUser = existingUser == null;
+
+            if (newUser)
             {
                 await CreateOrMergeUser(uniqueID);
             }
+
+            Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues(newUser.ToString()));
+            Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL()));
 
             return NoContent();
         }

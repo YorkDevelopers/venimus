@@ -82,7 +82,7 @@ namespace VenimusAPIs
             services.AddScoped<Mongo.UserStore>();
 
             services.AddSingleton<Services.Auth0API>();
-            services.AddSingleton<Services.GroupLogoURLBuilder>();
+            services.AddSingleton<Services.URLBuilder>();
             services.AddHttpContextAccessor();
             services.AddControllers();
 

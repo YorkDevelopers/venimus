@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
@@ -62,6 +63,17 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
             var numberOfEntries = await users.Find(filter).CountDocumentsAsync();
 
             Assert.Equal(1, numberOfEntries);
+        }
+
+        private void ThenTheHeaderIsSetToShowTheUserWasNotCreated()
+        {
+            var value = bool.Parse(Response.Headers.GetValues("NewUser").First());
+            Assert.False(value);
+        }
+        
+        private void ThenThePathToUserIsReturned()
+        {
+            Assert.Equal($"http://localhost/api/user", Response.Headers.Location.ToString());
         }
     }
 }

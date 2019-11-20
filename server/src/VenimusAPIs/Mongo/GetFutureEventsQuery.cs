@@ -12,9 +12,9 @@ namespace VenimusAPIs.Mongo
     public class GetFutureEventsQuery
     {
         private readonly MongoConnection _mongoConnection;
-        private readonly GroupLogoURLBuilder _groupLogoURLBuilder;
+        private readonly URLBuilder _groupLogoURLBuilder;
 
-        public GetFutureEventsQuery(MongoConnection mongoConnection, GroupLogoURLBuilder groupLogoURLBuilder)
+        public GetFutureEventsQuery(MongoConnection mongoConnection, URLBuilder groupLogoURLBuilder)
         {
             _mongoConnection = mongoConnection;
             _groupLogoURLBuilder = groupLogoURLBuilder;
@@ -54,7 +54,7 @@ namespace VenimusAPIs.Mongo
                     EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
                     GroupName = e.GroupName,
-                    GroupLogo = _groupLogoURLBuilder.BuildURL(e.GroupSlug),
+                    GroupLogo = _groupLogoURLBuilder.BuildGroupLogoURL(e.GroupSlug),
                     GroupSlug = e.GroupSlug,
                 });
 

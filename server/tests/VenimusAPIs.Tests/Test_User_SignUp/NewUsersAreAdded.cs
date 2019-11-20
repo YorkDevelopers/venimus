@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -57,6 +58,17 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
             Assert.Equal(string.Empty, actualUser.Bio);
 
             // Assert.Equal(Fixture.MockAuth0.UserProfile.Picture, actualUser.ProfilePicture);
+        }
+
+        private void ThenTheHeaderIsSetToShowTheUserWasCreated()
+        {
+            var value = bool.Parse(Response.Headers.GetValues("NewUser").First());
+            Assert.True(value);
+        }
+
+        private void ThenThePathToUserIsReturned()
+        {
+            Assert.Equal($"http://localhost/api/user", Response.Headers.Location.ToString());
         }
     }
 }

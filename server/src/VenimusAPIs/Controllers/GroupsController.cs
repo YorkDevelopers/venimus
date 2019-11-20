@@ -203,7 +203,7 @@ namespace VenimusAPIs.Controllers
         [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ListGroups[]>> Get([FromServices] GroupLogoURLBuilder groupLogoURLBuilder)
+        public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder)
         {
             var groups = await _groupStore.RetrieveAllGroups();
 
@@ -216,7 +216,7 @@ namespace VenimusAPIs.Controllers
                 Name = grp.Name,
                 SlackChannelName = grp.SlackChannelName,
                 Slug = grp.Slug,
-                Logo = groupLogoURLBuilder.BuildURL(grp.Slug),
+                Logo = groupLogoURLBuilder.BuildGroupLogoURL(grp.Slug),
             }).ToArray();
 
             return viewModels;
