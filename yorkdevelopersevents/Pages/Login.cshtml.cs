@@ -8,8 +8,7 @@ namespace YorkDeveloperEvents.Pages
     {
         public async Task OnGet()
         {
-            var returnUrl = "/";
-
+            var returnUrl = "https://" + Request.Host + Request.PathBase + "/";
             await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
         }
     }

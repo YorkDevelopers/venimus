@@ -95,7 +95,7 @@ namespace YorkDeveloperEvents
                             {
                                 // transform to absolute
                                 var request = context.Request;
-                                postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                                postLogoutUri = "https://" + request.Host + request.PathBase + postLogoutUri;
                             }
                             logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
                         }
