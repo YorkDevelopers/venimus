@@ -79,6 +79,10 @@ namespace YorkDeveloperEvents
                 {
                     OnRedirectToIdentityProvider = context =>
                     {
+                        var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
+                        builder.Scheme = "https";
+                        context.ProtocolMessage.RedirectUri = builder.ToString();
+
                         context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
                         return Task.FromResult(0);
                     },
