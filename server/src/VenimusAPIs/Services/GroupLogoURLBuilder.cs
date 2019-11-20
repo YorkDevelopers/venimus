@@ -14,7 +14,8 @@ namespace VenimusAPIs.Services
         public string BuildURL(string groupSlug)
         {
             var request = _httpContextAccessor.HttpContext.Request;
-            var server = $"{request.Scheme}://{request.Host}";
+            var scheme = request.IsHttps ? "https" : "http";
+            var server = $"{scheme}://{request.Host}";
 
             return $"{server}/api/groups/{groupSlug}/logo";
         }
