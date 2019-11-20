@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,22 @@ namespace YorkDeveloperEvents
             var backendSettings = new Settings.BackendSettings();
             Configuration.GetSection("Backend").Bind(backendSettings);
             services.AddSingleton(Options.Create(backendSettings));
+
+            if (string.Equals(
+                Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
+                "true", StringComparison.OrdinalIgnoreCase))
+            {
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                        ForwardedHeaders.XForwardedProto;
+                    // Only loopback proxies are allowed by default.
+                    // Clear that restriction because forwarders are enabled by explicit 
+                    // configuration.
+                    options.KnownNetworks.Clear();
+                    options.KnownProxies.Clear();
+                });
+            }
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -79,10 +96,10 @@ namespace YorkDeveloperEvents
                 {
                     OnRedirectToIdentityProvider = context =>
                     {
-                        var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
-                        builder.Scheme = "https";
-                        builder.Port = int.Parse(Configuration["port"]);
-                        context.ProtocolMessage.RedirectUri = builder.ToString();
+                        //var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
+                        //builder.Scheme = "https";
+                        //builder.Port = int.Parse(Configuration["port"]);
+                        //context.ProtocolMessage.RedirectUri = builder.ToString();
 
                         context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
                         return Task.FromResult(0);
