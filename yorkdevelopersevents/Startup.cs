@@ -42,7 +42,7 @@ namespace YorkDeveloperEvents
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddCookie()
+            .AddCookie(options => options.LoginPath = "/Login")
             .AddOpenIdConnect("Auth0", options =>
             {
                 options.SaveTokens = true;
@@ -81,7 +81,7 @@ namespace YorkDeveloperEvents
                     {
                         var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
                         builder.Scheme = "https";
-                        builder.Port = int.Parse(Configuration["https_port"]);
+                        builder.Port = int.Parse(Configuration["port"]);
                         context.ProtocolMessage.RedirectUri = builder.ToString();
 
                         context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
