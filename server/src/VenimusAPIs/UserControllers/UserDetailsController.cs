@@ -33,7 +33,7 @@ namespace VenimusAPIs.UserControllers
         /// <returns>ViewMyDetails view model</returns>
         /// <response code="200">Success</response>
         [Authorize]
-        [Route("api/user")]
+        [Route("api/user", Name = "CurrentUserDetails")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ViewMyDetails>> Get()

@@ -51,7 +51,7 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
         private async Task WhenICallTheUserLoggedInAPI()
         {
             Fixture.APIClient.SetBearerToken(_token);
-            Response = await Fixture.APIClient.PostAsync("api/Users/Connected");
+            Response = await Fixture.APIClient.PostAsync("api/user/connected");
 
             Response.EnsureSuccessStatusCode();
         }

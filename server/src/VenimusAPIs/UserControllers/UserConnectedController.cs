@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using VenimusAPIs.Services;
 
 namespace VenimusAPIs.UserControllers
@@ -15,7 +13,7 @@ namespace VenimusAPIs.UserControllers
         private readonly Mongo.UserStore _userStore;
 
         private readonly Auth0API _auth0API;
-        
+
         private readonly URLBuilder _urlBuilder;
 
         public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder)
@@ -38,7 +36,7 @@ namespace VenimusAPIs.UserControllers
         /// </remarks>
         /// <returns>The route to the user</returns>
         /// <response code="201">Success</response>
-        [Route("api/Users/Connected")]
+        [Route("api/user/connected")]
         [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -51,23 +49,32 @@ namespace VenimusAPIs.UserControllers
 
             if (newUser)
             {
-                await CreateOrMergeUser(uniqueID);
+                newUser = await CreateOrMergeUser(uniqueID);
             }
 
-            Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues(newUser.ToString()));
-            Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL()));
-
-            return NoContent();
+            if (newUser)
+            {
+                Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("true"));
+                return CreatedAtRoute("CurrentUserDetails", new { }, null);
+            }
+            else
+            {
+                Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("false"));
+                Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL()));
+                return NoContent();
+            }
         }
 
-        private async Task CreateOrMergeUser(string uniqueID)
+        private async Task<bool> CreateOrMergeUser(string uniqueID)
         {
             var accessToken = User.FindFirst("access_token")?.Value;
 
             var userInfo = await _auth0API.UserInfo(accessToken);
 
             var existingUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
-            if (existingUser == null)
+            var newUser = existingUser == null;
+
+            if (newUser)
             {
                 await CreateNewUser(uniqueID, userInfo);
             }
@@ -75,6 +82,8 @@ namespace VenimusAPIs.UserControllers
             {
                 await AddIdentityToExistingUser(uniqueID, existingUser);
             }
+
+            return newUser;
         }
 
         private async Task AddIdentityToExistingUser(string uniqueID, Models.User existingUser)

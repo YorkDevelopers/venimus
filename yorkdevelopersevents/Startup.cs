@@ -1,16 +1,22 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using YorkDeveloperEvents.Services;
 
 namespace YorkDeveloperEvents
 {
@@ -80,11 +86,6 @@ namespace YorkDeveloperEvents
                 {
                     OnRedirectToIdentityProvider = context =>
                     {
-                        //var builder = new UriBuilder(context.ProtocolMessage.RedirectUri);
-                        //builder.Scheme = "https";
-                        //builder.Port = int.Parse(Configuration["port"]);
-                        //context.ProtocolMessage.RedirectUri = builder.ToString();
-
                         context.ProtocolMessage.SetParameter("audience", "https://Venimus.YorkDevelopers.org");
                         return Task.FromResult(0);
                     },
@@ -110,13 +111,25 @@ namespace YorkDeveloperEvents
                         context.HandleResponse();
 
                         return Task.CompletedTask;
+                    },
+
+                    OnTicketReceived = async (context) =>
+                    {
+                        var service = context.HttpContext.RequestServices.GetRequiredService<OnTicketReceived>();
+                        await service.Execute(context);
                     }
                 };
             });
 
+            services.AddSingleton<OnTicketReceived>();
+
             services.AddRazorPages();
 
-            services.AddHttpClient("API", client => client.BaseAddress = new Uri(backendSettings.URL));
+            services.AddHttpClient("API", client =>
+            {
+                client.DefaultRequestVersion = new Version(2, 0);
+                client.BaseAddress = new Uri(backendSettings.URL);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
