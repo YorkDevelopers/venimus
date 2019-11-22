@@ -31,6 +31,7 @@ namespace YorkDeveloperEvents.Services
             var claims = new List<Claim>
             {
                 new Claim("UserProfileURL", response.Headers.Location.ToString()),
+                new Claim("ProfilePictureURL", response.Headers.GetValues("profilepictureurl").First()),
                 new Claim("NewUser", (response.StatusCode == System.Net.HttpStatusCode.Created).ToString()),
             };
 

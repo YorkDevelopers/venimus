@@ -10,10 +10,10 @@
                 <a class="nav-link text-dark" asp-area="" asp-page="/MyEvents">My Events</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Me" title="Manage">Hello @User.Identity.Name</a>
+                <a class="nav-link text-dark" asp-page="/Logout">Logout</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-page="/Logout">Logout</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Me" title="Manage"><img class="profile-image" src="@User.FindFirst("ProfilePictureURL").Value"></a>
             </li>
         }
         else

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using VenimusAPIs.Services;
 
@@ -16,11 +17,14 @@ namespace VenimusAPIs.UserControllers
 
         private readonly URLBuilder _urlBuilder;
 
-        public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder, IHttpClientFactory httpClientFactory)
         {
             _userStore = userStore;
             _auth0API = auth0API;
             _urlBuilder = urlBuilder;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -105,11 +109,18 @@ namespace VenimusAPIs.UserControllers
                 DisplayName = string.Empty,
                 Fullname = userInfo.Name,
                 Pronoun = string.Empty,
+                ProfilePicture = await DownloadImage(userInfo.Picture),
             };
 
             await _userStore.InsertUser(newUser);
 
             return newUser;
+        }
+
+        private async Task<byte[]> DownloadImage(string url)
+        {
+            var client = _httpClientFactory.CreateClient();
+            return await client.GetByteArrayAsync(url);
         }
     }
 }
