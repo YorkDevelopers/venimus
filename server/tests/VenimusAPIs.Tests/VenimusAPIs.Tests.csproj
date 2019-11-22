@@ -45,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="images\profile.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="images\York_Code_Dojo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

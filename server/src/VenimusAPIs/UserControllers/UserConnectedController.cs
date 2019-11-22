@@ -44,13 +44,15 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
-            var newUser = existingUser == null;
+            var theUser = await _userStore.GetUserByID(uniqueID);
+            var newUser = theUser == null;
 
             if (newUser)
             {
-                newUser = await CreateOrMergeUser(uniqueID);
+                (theUser, newUser) = await CreateOrMergeUser(uniqueID);
             }
+
+            Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser)));
 
             if (newUser)
             {
@@ -65,25 +67,25 @@ namespace VenimusAPIs.UserControllers
             }
         }
 
-        private async Task<bool> CreateOrMergeUser(string uniqueID)
+        private async Task<(Models.User theUser, bool isNew)> CreateOrMergeUser(string uniqueID)
         {
             var accessToken = User.FindFirst("access_token")?.Value;
 
             var userInfo = await _auth0API.UserInfo(accessToken);
 
-            var existingUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
-            var newUser = existingUser == null;
+            var theUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
+            var isNewUser = theUser == null;
 
-            if (newUser)
+            if (isNewUser)
             {
-                await CreateNewUser(uniqueID, userInfo);
+                theUser = await CreateNewUser(uniqueID, userInfo);
             }
             else
             {
-                await AddIdentityToExistingUser(uniqueID, existingUser);
+                await AddIdentityToExistingUser(uniqueID, theUser);
             }
 
-            return newUser;
+            return (theUser, isNewUser);
         }
 
         private async Task AddIdentityToExistingUser(string uniqueID, Models.User existingUser)
@@ -93,7 +95,7 @@ namespace VenimusAPIs.UserControllers
             await _userStore.UpdateUser(existingUser);
         }
 
-        private async Task CreateNewUser(string uniqueID, Services.Auth0Models.UserProfile userInfo)
+        private async Task<Models.User> CreateNewUser(string uniqueID, Services.Auth0Models.UserProfile userInfo)
         {
             var newUser = new Models.User
             {
@@ -106,6 +108,8 @@ namespace VenimusAPIs.UserControllers
             };
 
             await _userStore.InsertUser(newUser);
+
+            return newUser;
         }
     }
 }

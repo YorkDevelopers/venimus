@@ -125,6 +125,7 @@ namespace VenimusAPIs.Tests.Infrastucture
 
             User = Data.Create<Models.User>();
             User.Identities = new List<string> { UniqueID };
+            User.ProfilePicture = System.IO.File.ReadAllBytes("images/profile.jpg");
 
             var collection = UsersCollection();
 

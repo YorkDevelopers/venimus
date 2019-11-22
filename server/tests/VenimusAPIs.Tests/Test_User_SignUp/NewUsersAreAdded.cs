@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Services.Auth0Models;
@@ -14,6 +15,7 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
     {
         private string _uniqueID;
         private string _token;
+        private ObjectId _actualUserID;
 
         public NewUsersAreAdded(Fixture fixture) : base(fixture)
         {
@@ -57,6 +59,8 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
             Assert.Equal(string.Empty, actualUser.DisplayName);
             Assert.Equal(string.Empty, actualUser.Bio);
 
+            _actualUserID = actualUser.Id;
+
             // Assert.Equal(Fixture.MockAuth0.UserProfile.Picture, actualUser.ProfilePicture);
         }
 
@@ -69,6 +73,12 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
         private void ThenThePathToUserIsReturned()
         {
             Assert.Equal($"http://localhost/api/user", Response.Headers.Location.ToString());
+        }
+
+        private void AndThenTheHeaderContainsTheUrlToTheUsersProfilePicture()
+        {
+            var value = Response.Headers.GetValues("ProfilePictureURL").First();
+            Assert.Equal($"http://localhost/api/users/{_actualUserID}/profilepicture", value);
         }
     }
 }

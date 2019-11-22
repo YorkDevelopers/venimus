@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Services
 {
@@ -25,6 +26,14 @@ namespace VenimusAPIs.Services
             var server = $"{request.Scheme}://{request.Host}";
 
             return $"{server}/api/user";
+        }
+
+        internal string BuildUserDetailsProfilePictureURL(User theUser)
+        {
+            var request = _httpContextAccessor.HttpContext.Request;
+            var server = $"{request.Scheme}://{request.Host}";
+
+            return $"{server}/api/users/{theUser.Id}/profilepicture";
         }
     }
 }
