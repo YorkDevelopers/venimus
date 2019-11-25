@@ -1,0 +1,31 @@
+﻿@page
+@model YorkDeveloperEvents.Pages.MyGroupsModel
+@{
+    ViewData["Title"] = "My Groups";
+}
+
+<div class="text-center">
+    <h1 class="display-4">You belong to the following groups</h1>
+    <br />
+    <table>
+        @foreach (var item in Model.ViewModel)
+        {
+            <tr>
+                <td><img class="groupLogo" src="@item.Logo" /></td>
+                <td>@item.Description</td>
+            </tr>
+            <tr>
+                <td>@item.Name</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><a href="/LeaveGroup?groupSlug=@item.Slug">Leave</a></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        }
+    </table>
+</div>
+

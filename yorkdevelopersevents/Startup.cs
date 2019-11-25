@@ -123,7 +123,8 @@ namespace YorkDeveloperEvents
 
             services.AddSingleton<OnTicketReceived>();
 
-            services.AddRazorPages();
+            services.AddRazorPages()
+                    .AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
             services.AddHttpClient("API", client =>
             {

@@ -22,5 +22,18 @@ namespace YorkDeveloperEvents.Extensions
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             return httpClient.PutAsync(url, content);
         }
+
+        public static async Task<T> ReadAsJsonAsync<T>(this HttpResponseMessage message)
+        {
+            var dataAsString = await message.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public static async Task<T> GetAsJson<T>(this HttpClient httpClient, string url)
+        {
+            var response = await httpClient.GetAsync(url); 
+            var dataAsString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
     }
 }
