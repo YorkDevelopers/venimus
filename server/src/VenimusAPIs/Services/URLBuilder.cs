@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Services
@@ -28,12 +30,14 @@ namespace VenimusAPIs.Services
             return $"{server}/api/user";
         }
 
-        internal string BuildUserDetailsProfilePictureURL(User theUser)
+        internal string BuildUserDetailsProfilePictureURL(User theUser) => BuildUserDetailsProfilePictureURL(theUser.Id);
+
+        internal string BuildUserDetailsProfilePictureURL(ObjectId theUserID)
         {
             var request = _httpContextAccessor.HttpContext.Request;
             var server = $"{request.Scheme}://{request.Host}";
 
-            return $"{server}/api/users/{theUser.Id}/profilepicture";
+            return $"{server}/api/users/{theUserID.ToString()}/profilepicture";
         }
     }
 }

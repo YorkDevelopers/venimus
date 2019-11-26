@@ -1146,9 +1146,9 @@
                 Visible to all signed in members
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.ProfilePictureInBase64">
+        <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.ProfilePicture">
             <summary>
-                The user's profile picture
+                The URL of the user's profile picture
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.IsAdministrator">

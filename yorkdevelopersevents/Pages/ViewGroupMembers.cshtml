@@ -1,0 +1,17 @@
+﻿@page
+@model YorkDeveloperEvents.Pages.ViewGroupMembersModel
+@{
+    ViewData["Title"] = "ViewGroupMembers";
+}
+
+<h1>Members of this group</h1>
+
+<table>
+    @foreach (var item in Model.ViewModel)
+    {
+        <tr>
+            <td><img class="groupLogo" src="@item.ProfilePicture" /></td>
+            <td>@item.DisplayName (@item.Fullname)</td>
+        </tr>
+    }
+</table>

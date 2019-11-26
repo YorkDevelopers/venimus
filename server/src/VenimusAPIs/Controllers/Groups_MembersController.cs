@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -14,11 +15,13 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Mongo.GroupStore _groupStore;
         private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly URLBuilder _urlBuilder;
 
-        public Groups_MembersController(Mongo.GroupStore groupStore, IStringLocalizer<Messages> stringLocalizer)
+        public Groups_MembersController(Mongo.GroupStore groupStore, IStringLocalizer<Messages> stringLocalizer, URLBuilder urlBuilder)
         {
             _groupStore = groupStore;
             _stringLocalizer = stringLocalizer;
+            _urlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -57,6 +60,7 @@ namespace VenimusAPIs.Controllers
                 Slug = m.UserId.ToString(),
                 IsAdministrator = m.IsAdministrator,
                 IsApproved = m.IsApproved,
+                ProfilePicture = _urlBuilder.BuildUserDetailsProfilePictureURL(m.UserId),
             }).ToArray();
         }
 

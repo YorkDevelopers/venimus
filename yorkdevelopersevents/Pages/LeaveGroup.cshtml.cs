@@ -10,7 +10,7 @@ namespace YorkDeveloperEvents.Pages
         {
         }
 
-        public async Task<ActionResult> OnGet(string groupSlug)
+        public async Task<ActionResult> OnPost(string groupSlug)
         {
             var httpClient = await APIClient();
             var response = await httpClient.DeleteAsync($"api/User/Groups/{groupSlug}");

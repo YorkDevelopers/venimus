@@ -95,8 +95,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
             Assert.Equal(user.Pronoun, actualMember.Pronoun);
             Assert.Equal(isAdministrator, actualMember.IsAdministrator);
             Assert.Equal(isApproved, actualMember.IsApproved);
-
-            // Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualMember.ProfilePictureInBase64));
+            Assert.Equal($"http://localhost/api/users/{user.Id.ToString()}/profilepicture", actualMember.ProfilePicture);
         }
     }
 }
