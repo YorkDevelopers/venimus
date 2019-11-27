@@ -1,22 +1,18 @@
-﻿using System.Net.Http;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
-using YorkDeveloperEvents.Extensions;
+using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents.Pages
 {
-    public class ViewGroupMembersModel : BasePageModel
+    public class ViewGroupMembersModel : PageModel
     {
-        public ViewGroupMembersModel(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
-        {
-        }
-
         public ListGroupMembers[] ViewModel { get; set; }
 
-        public async Task OnGet(string groupSlug)
+        public async Task OnGet([FromServices] API api, string groupSlug)
         {
-            var httpClient = await APIClient();
-            ViewModel = await httpClient.GetAsJson<ListGroupMembers[]>($"/api/Groups/{groupSlug}/Members");
+            ViewModel = await api.ListGroupMembers(groupSlug);
         }
     }
 }

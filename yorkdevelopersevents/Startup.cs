@@ -121,12 +121,14 @@ namespace YorkDeveloperEvents
                 };
             });
 
+            services.AddHttpContextAccessor();
+
             services.AddSingleton<OnTicketReceived>();
 
             services.AddRazorPages()
                     .AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
-            services.AddHttpClient("API", client =>
+            services.AddHttpClient<API>(client =>
             {
                 client.DefaultRequestVersion = new Version(2, 0);
                 client.BaseAddress = new Uri(backendSettings.URL);

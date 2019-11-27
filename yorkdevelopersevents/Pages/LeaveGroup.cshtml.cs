@@ -1,21 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
+using YorkDeveloperEvents.Services;
 
 namespace YorkDeveloperEvents.Pages
 {
-    public class LeaveGroupModel : BasePageModel
+    public class LeaveGroupModel : PageModel
     {
-        public LeaveGroupModel(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
-        {
-        }
 
-        public async Task<ActionResult> OnPost(string groupSlug)
+        public async Task<ActionResult> OnPost([FromServices] API api, string groupSlug)
         {
-            var httpClient = await APIClient();
-            var response = await httpClient.DeleteAsync($"api/User/Groups/{groupSlug}");
-            response.EnsureSuccessStatusCode();
-
+            await api.LeaveGroup(groupSlug);
             return LocalRedirect("/MyGroups");
         }
     }

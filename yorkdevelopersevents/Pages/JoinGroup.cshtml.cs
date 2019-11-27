@@ -1,25 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
-using YorkDeveloperEvents.Extensions;
+using YorkDeveloperEvents.Services;
 
 namespace YorkDeveloperEvents.Pages
 {
-    public class JoinGroupModel : BasePageModel
+    public class JoinGroupModel : PageModel
     {
-        public JoinGroupModel(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        public async Task<ActionResult> OnGet([FromServices] API api, string groupSlug)
         {
-        }
-
-        public async Task<ActionResult> OnGet(string groupSlug)
-        {
-            var httpClient = await APIClient();
-
-            var data = new { GroupSlug = groupSlug };
-            var response = await httpClient.PostAsJsonAsync($"api/User/Groups", data);
-
-            response.EnsureSuccessStatusCode();
+            await api.JoinGroup(groupSlug);
 
             return LocalRedirect("/MyGroups");
         }
