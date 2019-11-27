@@ -95,6 +95,8 @@ namespace VenimusAPIs
                 client.BaseAddress = new System.Uri($"https://{Configuration["Auth0:Domain"]}");
             });
 
+            services.AddHttpClient("ImageSource");
+
             services.AddMassTransit();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");

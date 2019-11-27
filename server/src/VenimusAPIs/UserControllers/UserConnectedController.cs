@@ -119,7 +119,7 @@ namespace VenimusAPIs.UserControllers
 
         private async Task<byte[]> DownloadImage(string url)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("ImageSource");
             return await client.GetByteArrayAsync(url);
         }
     }

@@ -36,9 +36,13 @@ namespace VenimusAPIs.Tests
                 builder.ConfigureTestServices(services =>
                 {
                     services.AddSingleton(sp => MockAuth0);
+                    services.AddSingleton(sp => MockImageSource);
 
                     services.AddHttpClient("Auth0")
                         .AddHttpMessageHandler<MockAuth0>();
+
+                    services.AddHttpClient("ImageSource")
+                        .AddHttpMessageHandler<MockImageSource>();
                 });
             }
 
@@ -51,6 +55,7 @@ namespace VenimusAPIs.Tests
             _configuration = builder.Build();
 
             MockAuth0 = new MockAuth0();
+            MockImageSource = new MockImageSource();
 
             _fixture = new WebApplicationFactory<Startup>();
             _factory = _fixture.Factories.FirstOrDefault() ?? _fixture.WithWebHostBuilder(ConfigureWebHostBuilder);
@@ -62,6 +67,8 @@ namespace VenimusAPIs.Tests
         public APIClient APIClient => new APIClient(_client);
 
         public MockAuth0 MockAuth0 { get; }
+
+        public MockImageSource MockImageSource { get; }
 
         private readonly HttpClient _client;
 

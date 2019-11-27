@@ -36,6 +36,7 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
         private void GivenIExistInAuth0()
         {
             Fixture.MockAuth0.UserProfile = Data.Create<UserProfile>();
+            Fixture.MockAuth0.UserProfile.Picture = "https://yorkdevelopers.org/david.betteridge.jpg";
         }
 
         private async Task WhenICallTheUserLoggedInAPI()
