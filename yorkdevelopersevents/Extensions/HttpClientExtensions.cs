@@ -31,7 +31,8 @@ namespace YorkDeveloperEvents.Extensions
 
         public static async Task<T> GetAsJson<T>(this HttpClient httpClient, string url)
         {
-            var response = await httpClient.GetAsync(url); 
+            var response = await httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
             var dataAsString = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }

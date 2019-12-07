@@ -1,0 +1,26 @@
+﻿@page
+@model YorkDeveloperEvents.RegisterForEventModel
+@{
+    ViewData["Title"] = "RegisterForEvent";
+}
+
+<h1>Register For  @Model.Event.GroupName -  @Model.Event.EventTitle</h1>
+
+<form action="/RegisterForEvent" method="post">
+    @Html.AntiForgeryToken()
+
+    <label asp-for="RegisterForEvent.DietaryRequirements"  ></label>
+    <input asp-for="RegisterForEvent.DietaryRequirements" /><br />
+
+    <label asp-for="RegisterForEvent.MessageToOrganiser"></label>
+    <input asp-for="RegisterForEvent.MessageToOrganiser" /><br />
+
+    <label asp-for="RegisterForEvent.NumberOfGuests" ></label>
+    <input asp-for="RegisterForEvent.NumberOfGuests" type="number" /><br />
+
+    <input name="RegisterForEvent.EventSlug" type="hidden" value="@Model.Event.EventSlug" />
+
+    <input name="GroupSlug" type="hidden" value="@Model.GroupSlug" />
+
+    <button type="submit">Register</button>
+</form>

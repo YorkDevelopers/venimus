@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,10 +15,24 @@ namespace YorkDeveloperEvents.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        internal async Task<GetEvent> GetEvent(string groupSlug, string eventSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<GetEvent>($"/api/Groups/{groupSlug}/Events/{eventSlug}");
+        }
+
         public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
         {
             _client = client;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        internal async Task RegisterForEvent(string groupSlug, RegisterForEvent registerForEvent)
+        {
+            var client = await Client();
+
+            var response = await client.PostAsJsonAsync($"api/User/Groups/{groupSlug}/Events", registerForEvent);
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<ListMyGroups[]> ListMyGroups()

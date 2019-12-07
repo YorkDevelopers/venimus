@@ -50,7 +50,7 @@ namespace VenimusAPIs.Mongo
                 {
                     EventDescription = e.Description,
                     EventFinishesUTC = e.EndTimeUTC,
-                    EventSlug = e.Id.ToString(),
+                    EventSlug = e.Slug,
                     EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
                     GroupName = e.GroupName,

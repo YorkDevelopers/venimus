@@ -87,7 +87,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
 
         private void AssertEvent(ListFutureEvents[] actualEvents, Event expectedEvent, Group expectedGroup)
         {
-            var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Id.ToString());
+            var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Slug);
 
             Assert.Equal(expectedGroup.Name, actualEvent.GroupName);
             Assert.Equal(expectedGroup.Slug, actualEvent.GroupSlug);
