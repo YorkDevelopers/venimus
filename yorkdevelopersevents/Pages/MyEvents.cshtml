@@ -4,5 +4,33 @@
     ViewData["Title"] = "MyEvents";
 }
 
-<h1>MyEvents</h1>
+<h1>You are signed up to the following events</h1>
 
+<div class="text-center">
+    <table>
+        @foreach (var item in Model.ViewModel)
+        {
+            <tr>
+                <td>@item.EventTitle - @item.EventStartsUTC - @item.EventFinishesUTC</td>
+            </tr>
+            <tr>
+                <td>@item.GroupName</td>
+            </tr>
+            <tr>
+                <td>@item.EventDescription</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><a href="/AmendRegistrationForEvent?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">Change Registration</a></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><a href="/UnregisterFromEvent?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">Unregister From Event</a></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        }
+    </table>
+</div>

@@ -8,10 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger.json">
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <SourceUri>https://venimus-api.azurewebsites.net/swagger/v1/swagger.json</SourceUri>
-    </OpenApiReference>
+    <None Include="OpenAPIs\swagger.json" />
   </ItemGroup>
 
   <ItemGroup>

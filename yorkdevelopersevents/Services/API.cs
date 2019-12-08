@@ -72,5 +72,11 @@ namespace YorkDeveloperEvents.Services
             var client = await Client();
             return await client.GetAsJson<ListGroupMembers[]>($"/api/Groups/{groupSlug}/Members");
         }
+
+        internal async Task<ViewAllMyEventRegistrations[]> ListMyEvents()
+        {
+            var client = await Client();
+            return await client.GetAsJson<ViewAllMyEventRegistrations[]>("api/user/events");
+        }
     }
 }

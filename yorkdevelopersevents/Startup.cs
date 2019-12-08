@@ -133,6 +133,7 @@ namespace YorkDeveloperEvents
                 client.DefaultRequestVersion = new Version(2, 0);
                 client.BaseAddress = new Uri(backendSettings.URL);
             });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
