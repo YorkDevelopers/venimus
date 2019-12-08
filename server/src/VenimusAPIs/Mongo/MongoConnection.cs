@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Threading.Tasks;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Mongo
@@ -9,7 +9,7 @@ namespace VenimusAPIs.Mongo
     {
         private readonly Settings.MongoDBSettings _mongoDBSettings;
 
-        private IMongoDatabase _cachedDatabase;
+        private IMongoDatabase? _cachedDatabase;
 
         public MongoConnection(IOptions<Settings.MongoDBSettings> mongoDBSettings)
         {

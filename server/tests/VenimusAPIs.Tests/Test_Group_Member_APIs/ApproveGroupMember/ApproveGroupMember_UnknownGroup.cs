@@ -24,7 +24,7 @@ namespace VenimusAPIs.Tests.ViewGroupMembers.ApproveGroupMember
 
         private async Task WhenICallTheApiForAGroupWhichDoesNotExist()
         {
-            var data = new ApproveMember();
+            var data = new ApproveMember() { UserSlug = "ANYONE" };
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/MADEUP/ApprovedMembers", data);
         }
 

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using VenimusAPIs.Services;
 
 namespace VenimusAPIs.UserControllers
@@ -51,7 +51,7 @@ namespace VenimusAPIs.UserControllers
             var theUser = await _userStore.GetUserByID(uniqueID);
             var newUser = theUser == null;
 
-            if (newUser)
+            if (theUser == null)
             {
                 (theUser, newUser) = await CreateOrMergeUser(uniqueID);
             }
@@ -74,22 +74,24 @@ namespace VenimusAPIs.UserControllers
         private async Task<(Models.User theUser, bool isNew)> CreateOrMergeUser(string uniqueID)
         {
             var accessToken = User.FindFirst("access_token")?.Value;
+            if (string.IsNullOrWhiteSpace(accessToken))
+            {
+                throw new System.Exception("No access token!");
+            }
 
             var userInfo = await _auth0API.UserInfo(accessToken);
 
             var theUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
-            var isNewUser = theUser == null;
-
-            if (isNewUser)
+            if (theUser == null)
             {
-                theUser = await CreateNewUser(uniqueID, userInfo);
+                var newUser = await CreateNewUser(uniqueID, userInfo);
+                return (newUser, true);
             }
             else
             {
                 await AddIdentityToExistingUser(uniqueID, theUser);
+                return (theUser, false);
             }
-
-            return (theUser, isNewUser);
         }
 
         private async Task AddIdentityToExistingUser(string uniqueID, Models.User existingUser)

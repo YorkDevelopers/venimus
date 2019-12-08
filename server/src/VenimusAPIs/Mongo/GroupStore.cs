@@ -1,8 +1,8 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Mongo
@@ -51,7 +51,7 @@ namespace VenimusAPIs.Mongo
             await groups.InsertOneAsync(group);
         }
 
-        public async Task<Models.Group> RetrieveGroupBySlug(string groupSlug)
+        public async Task<Models.Group?> RetrieveGroupBySlug(string groupSlug)
         {
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync();
@@ -67,7 +67,7 @@ namespace VenimusAPIs.Mongo
             return group;
         }
 
-        public async Task<Models.Group> RetrieveGroupByName(string groupName)
+        public async Task<Models.Group?> RetrieveGroupByName(string groupName)
         {
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
@@ -90,7 +90,7 @@ namespace VenimusAPIs.Mongo
             await groups.ReplaceOneAsync(grp => grp.Id == group.Id, group);
         }
 
-        public async Task<Models.Group> RetrieveGroupByGroupId(ObjectId groupId)
+        public async Task<Models.Group?> RetrieveGroupByGroupId(ObjectId groupId)
         {
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Id == groupId).SingleOrDefaultAsync();

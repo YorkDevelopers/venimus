@@ -5,6 +5,6 @@
         /// <summary>
         ///     The Slug of the user we are approving.
         /// </summary>
-        public string UserSlug { get; set; }
+        public string UserSlug { get; set; } = default!;
     }
 }

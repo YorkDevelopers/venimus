@@ -5,6 +5,6 @@
         /// <summary>
         ///     The unique internal ID of this user
         /// </summary>
-        public string UserId { get; set; }
+        public string UserId { get; set; } = default!;
     }
 }

@@ -5,6 +5,6 @@
         /// <summary>
         ///     The unique internal ID of this group
         /// </summary>
-        public string GroupId { get; set; }
+        public string GroupId { get; set; } = default!;
     }
 }

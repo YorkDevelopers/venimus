@@ -168,7 +168,7 @@ namespace VenimusAPIs.UserControllers
             var uniqueID = UniqueIDForCurrentUser;
             var existingUser = await _userStore.GetUserByID(uniqueID);
 
-            model.Members.RemoveAll(m => m.UserId == existingUser.Id);
+            model!.Members.RemoveAll(m => m.UserId == existingUser.Id);
             await _groupStore.UpdateGroup(model);
 
             return NoContent();

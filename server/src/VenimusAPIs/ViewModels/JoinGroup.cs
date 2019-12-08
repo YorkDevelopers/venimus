@@ -5,6 +5,6 @@
         /// <summary>
         ///     The slug of the group that the user is joining.
         /// </summary>
-        public string GroupSlug { get; set; }
+        public string GroupSlug { get; set; } = default!;
     }
 }

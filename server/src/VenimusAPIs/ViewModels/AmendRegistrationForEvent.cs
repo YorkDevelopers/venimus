@@ -13,11 +13,11 @@ namespace VenimusAPIs.ViewModels
         /// <summary>
         ///     Any Dietary Requirements.
         /// </summary>
-        public string DietaryRequirements { get; set; }
+        public string DietaryRequirements { get; set; } = default!;
 
         /// <summary>
         ///     Free format message to the event host.
         /// </summary>
-        public string MessageToOrganiser { get; set; }
+        public string MessageToOrganiser { get; set; } = default!;
     }
 }

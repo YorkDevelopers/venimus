@@ -12,6 +12,7 @@
     <NoWarn>1701;1702;1591</NoWarn>
     <WarningsAsErrors />
     <UserSecretsId>b01dcd4a-d7aa-444a-877c-19bdeb9ba93d</UserSecretsId>
+    <nullable>enable</nullable>
   </PropertyGroup>
 
   <ItemGroup>

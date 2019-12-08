@@ -5,7 +5,7 @@
         /// <summary>
         ///     The unique external code for the group.  For example YorkCodeDojo
         /// </summary>
-        public string Slug { get; set; }
+        public string Slug { get; set; } = default!;
 
         /// <summary>
         ///     Is this group still actively running events?
@@ -15,21 +15,21 @@
         /// <summary>
         /// The unique name for the group / community.  For example York Code Dojo
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         /// <summary>
         /// A description of the group in markdown
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
-        public string SlackChannelName { get; set; }
+        public string SlackChannelName { get; set; } = default!;
 
         /// <summary>
         ///     The group's logo, either a URL or Base64 data
         /// </summary>
-        public string Logo { get; set; }
+        public string Logo { get; set; } = default!;
     }
 }

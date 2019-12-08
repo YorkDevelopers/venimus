@@ -85,7 +85,7 @@ namespace VenimusAPIs.Controllers
 
             var model = _mapper.Map<Models.Event>(newEvent);
             model.GroupSlug = groupSlug;
-            model.GroupId = group.Id;
+            model.GroupId = group!.Id;
             model.GroupName = group.Name;
 
             await _eventStore.StoreEvent(model);

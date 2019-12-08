@@ -11,7 +11,7 @@ namespace VenimusAPIs.ViewModels
         [Required]
         [Slug]
         [MaxLength(100)]
-        public string Slug { get; set; }
+        public string Slug { get; set; } = default!;
 
         /// <summary>
         ///     Is this group still actively running events?
@@ -23,22 +23,22 @@ namespace VenimusAPIs.ViewModels
         /// </summary>
         [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         /// <summary>
         /// A description of the group in markdown
         /// </summary>
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
-        public string SlackChannelName { get; set; }
+        public string SlackChannelName { get; set; } = default!;
 
         /// <summary>
         ///     The group's logo.
         /// </summary>
-        public string LogoInBase64 { get; set; }
+        public string LogoInBase64 { get; set; } = default!;
     }
 }

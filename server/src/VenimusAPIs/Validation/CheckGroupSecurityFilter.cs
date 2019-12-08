@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace VenimusAPIs.Validation
 {
@@ -31,13 +31,13 @@ namespace VenimusAPIs.Validation
             var canBeSystemAdministratorInstead = true;
             var useNotFoundRatherThanForbidden = false;
             var useNoContentRatherThanForbidden = false;
-            if (mustBeAGroupMember)
+            if (mustBeAGroupMember && callerMustBeGroupMemberAttribute != null)
             {
                 canBeSystemAdministratorInstead = callerMustBeGroupMemberAttribute.CanBeSystemAdministratorInstead;
                 useNotFoundRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden;
                 useNoContentRatherThanForbidden = callerMustBeGroupMemberAttribute.UseNoContentRatherThanForbidden;
             }
-            else if (mustBeAnApprovedGroupMember)
+            else if (mustBeAnApprovedGroupMember && callerMustBeApprovedGroupMemberAttribute != null)
             {
                 canBeSystemAdministratorInstead = callerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead;
             }
@@ -47,6 +47,11 @@ namespace VenimusAPIs.Validation
                 if (!canBeSystemAdministratorInstead || !user.IsInRole("SystemAdministrator"))
                 {
                     var groupSlug = context.ActionArguments["groupSlug"].ToString();
+                    if (groupSlug == null)
+                    {
+                        context.Result = new ForbidResult();
+                        return;
+                    }
 
                     var uniqueID = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -64,7 +69,7 @@ namespace VenimusAPIs.Validation
                         return;
                     }
 
-                    if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id 
+                    if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id
                                                                     && (!mustBeAGroupAdministrator || m.IsAdministrator)
                                                                     && (!mustBeAnApprovedGroupMember || m.IsApproved)))
                     {
@@ -89,11 +94,10 @@ namespace VenimusAPIs.Validation
             await next();
         }
 
-        private static bool HasAttribute<T>(ActionDescriptor actionDescriptor, out T attribute) 
+        private static bool HasAttribute<T>(ActionDescriptor actionDescriptor, out T? attribute)
             where T : Attribute
         {
-            var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
-            if (controllerActionDescriptor != null)
+            if (actionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
             {
                 attribute = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(T), true).SingleOrDefault() as T;
                 if (attribute != null)

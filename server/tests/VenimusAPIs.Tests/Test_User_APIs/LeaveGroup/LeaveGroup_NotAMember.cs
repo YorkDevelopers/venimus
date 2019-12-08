@@ -47,7 +47,7 @@ namespace VenimusAPIs.Tests.LeaveGroup
             var groups = GroupsCollection();
             var actualGroup = await groups.Find(u => u.Id == _existingGroup.Id).SingleOrDefaultAsync();
 
-            Assert.Null(actualGroup.Members);
+            Assert.Empty(actualGroup.Members);
         }
     }
 }

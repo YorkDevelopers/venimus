@@ -12,26 +12,26 @@ namespace VenimusAPIs.ViewModels
         [Required]
         [MaxLength(100)]
         [Slug]
-        public string Slug { get; set; }
+        public string Slug { get; set; } = default!;
 
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
         /// </summary>
         [Required]
         [MaxLength(200)]
-        public string Title { get; set; }
+        public string Title { get; set; } = default!;
 
         /// <summary>
         /// A description of the event,  in markdown format.
         /// </summary>
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         /// <summary>
         /// The location of the event, for example York Minster,  Room 201 York St John University
         /// </summary>
         [Required]
-        public string Location { get; set; }
+        public string Location { get; set; } = default!;
 
         /// <summary>
         /// Date and time the event starts

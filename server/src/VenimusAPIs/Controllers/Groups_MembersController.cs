@@ -50,7 +50,7 @@ namespace VenimusAPIs.Controllers
         {
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
-            return group.Members.Select(m => new ListGroupMembers
+            return group!.Members.Select(m => new ListGroupMembers
             {
                 Bio = m.Bio,
                 DisplayName = m.DisplayName,
@@ -90,7 +90,7 @@ namespace VenimusAPIs.Controllers
         {
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
 
-            var newUser = group.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
+            var newUser = group!.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
             if (newUser == null)
             {
                 var message = _stringLocalizer.GetString(Resources.Messages.NOT_A_MEMBER_OF_THE_GROUP).Value;

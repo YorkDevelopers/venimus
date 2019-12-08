@@ -14,7 +14,7 @@ namespace VenimusAPIs.Models
         /// <summary>
         ///     The unique external id for the event.  For example May2019
         /// </summary>
-        public string Slug { get; set; }
+        public string Slug { get; set; } = default!;
 
         /// <summary>
         ///     The internal ID of the group to which this event belongs
@@ -24,27 +24,27 @@ namespace VenimusAPIs.Models
         /// <summary>
         ///     The external ID of the group to which this event belongs
         /// </summary>
-        public string GroupSlug { get; set; }
+        public string GroupSlug { get; set; } = default!;
 
         /// <summary>
         ///     The name of the group the event belongs to
         /// </summary>
-        public string GroupName { get; set; }
+        public string GroupName { get; set; } = default!;
 
         /// <summary>
         /// The title of the event,  for example March 2019 Meetup. Must be unique for the group.
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } = default!;
 
         /// <summary>
         /// A description of the event,  in markdown format.
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         /// <summary>
         /// The location of the event, for example York Minster,  Room 201 York St John University
         /// </summary>
-        public string Location { get; set; }
+        public string Location { get; set; } = default!;
 
         /// <summary>
         /// Date and time the event starts
@@ -69,7 +69,7 @@ namespace VenimusAPIs.Models
         /// <summary>
         /// Attendees of this group
         /// </summary>
-        public List<EventAttendees> Members { get; set; }
+        public List<EventAttendees> Members { get; set; } = new List<EventAttendees>();
 
         public class EventAttendees
         {
@@ -98,12 +98,12 @@ namespace VenimusAPIs.Models
             /// <summary>
             ///     Any Dietary Requirements the user has
             /// </summary>
-            public string DietaryRequirements { get; set; }
+            public string DietaryRequirements { get; set; } = default!;
 
             /// <summary>
             ///     Free format message to the organiser
             /// </summary>
-            public string MessageToOrganiser { get; set; }
+            public string MessageToOrganiser { get; set; } = default!;
 
             /// <summary>
             ///     The number of unregistered guest the person is bringing
@@ -113,29 +113,29 @@ namespace VenimusAPIs.Models
             /// <summary>
             ///     The email address which also links all the social media accounts together.
             /// </summary>
-            public string EmailAddress { get; set; }
+            public string EmailAddress { get; set; } = default!;
 
             /// <summary>
             ///     The users preferred personal pronon.  e.g. Him
             /// </summary>
-            public string Pronoun { get; set; }
+            public string Pronoun { get; set; } = default!;
 
             /// <summary>
             ///     The user's fullname.  e.g David Betteridge
             /// </summary>
-            public string Fullname { get; set; }
+            public string Fullname { get; set; } = default!;
 
             /// <summary>
             ///     The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
             ///     (Has to be unique)
             /// </summary>
-            public string DisplayName { get; set; }
+            public string DisplayName { get; set; } = default!;
 
             /// <summary>
             ///     The user's biography.  This can include their place of work/student,  any interests etc.
             ///     Visible to all signed in members
             /// </summary>
-            public string Bio { get; set; }
+            public string Bio { get; set; } = default!;
         }
     }
 }
