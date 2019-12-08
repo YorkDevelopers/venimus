@@ -37,9 +37,9 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
-            return await _eventStore.GetMyEventRegistrations(existingUser.Id);
+            return await _eventStore.GetMyEventRegistrations(existingUser.Id).ConfigureAwait(false);
         }
     }
 }

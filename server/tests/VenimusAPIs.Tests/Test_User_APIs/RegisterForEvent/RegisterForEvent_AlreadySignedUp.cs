@@ -12,7 +12,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
 
         public RegisterForEvent_AlreadySignedUp(Fixture fixture) : base(fixture)

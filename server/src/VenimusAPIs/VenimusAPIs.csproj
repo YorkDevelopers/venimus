@@ -13,6 +13,8 @@
     <WarningsAsErrors />
     <UserSecretsId>b01dcd4a-d7aa-444a-877c-19bdeb9ba93d</UserSecretsId>
     <nullable>enable</nullable>
+    <AssemblyName>VenimusAPIs</AssemblyName>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
     <PackageReference Include="MassTransit.RabbitMQ" Version="6.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.9.3" />
     <PackageReference Include="Serilog" Version="2.9.0" />
@@ -38,17 +44,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Messages.Designer.cs">
+    <Compile Update="Resources\ResourceMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Messages.resx</DependentUpon>
+      <DependentUpon>ResourceMessages.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Messages.resx">
+    <EmbeddedResource Update="Resources\ResourceMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <LastGenOutput>ResourceMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

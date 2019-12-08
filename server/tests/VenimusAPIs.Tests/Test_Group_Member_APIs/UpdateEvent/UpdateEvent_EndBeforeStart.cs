@@ -13,7 +13,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
     {
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty;
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
 

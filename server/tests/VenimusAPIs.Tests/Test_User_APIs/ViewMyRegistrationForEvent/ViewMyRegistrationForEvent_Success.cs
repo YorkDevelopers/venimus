@@ -14,8 +14,8 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
     public class ViewMyRegistrationForEvent_Success : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
-        private Event.EventAttendees _registrationDetails;
+        private GroupEvent _existingEvent;
+        private GroupEventAttendees _registrationDetails;
 
         public ViewMyRegistrationForEvent_Success(Fixture fixture) : base(fixture)
         {

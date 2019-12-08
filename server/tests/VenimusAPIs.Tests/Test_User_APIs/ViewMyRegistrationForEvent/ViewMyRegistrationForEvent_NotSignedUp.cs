@@ -10,7 +10,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
     public class ViewMyRegistrationForEvent_NotSignedUp : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
 
         public ViewMyRegistrationForEvent_NotSignedUp(Fixture fixture) : base(fixture)
         {

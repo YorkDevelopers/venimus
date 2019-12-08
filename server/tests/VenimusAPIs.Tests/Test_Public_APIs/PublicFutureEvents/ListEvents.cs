@@ -16,9 +16,9 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private Group _group1;
         private Group _group2;
         private Group _group3;
-        private Event _futureEvent1;
-        private Event _futureEvent2;
-        private Event[] _futureEvents;
+        private GroupEvent _futureEvent1;
+        private GroupEvent _futureEvent2;
+        private GroupEvent[] _futureEvents;
 
         public ListEvents(Fixture fixture) : base(fixture)
         {
@@ -33,7 +33,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
 
         private async Task GivenThereAreSomeEvents()
         {
-            var pastEvent = Data.Create<Models.Event>();
+            var pastEvent = Data.Create<Models.GroupEvent>();
             pastEvent.StartTimeUTC = DateTime.UtcNow.AddDays(-1);
 
             _group1 = Data.Create<Models.Group>();
@@ -85,7 +85,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             }
         }
 
-        private void AssertEvent(ListFutureEvents[] actualEvents, Event expectedEvent, Group expectedGroup)
+        private void AssertEvent(ListFutureEvents[] actualEvents, GroupEvent expectedEvent, Group expectedGroup)
         {
             var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Slug);
 

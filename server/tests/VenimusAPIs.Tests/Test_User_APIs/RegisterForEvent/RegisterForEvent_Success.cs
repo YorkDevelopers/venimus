@@ -13,7 +13,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     public class RegisterForEvent_Success : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
 
         public RegisterForEvent_Success(Fixture fixture) : base(fixture)

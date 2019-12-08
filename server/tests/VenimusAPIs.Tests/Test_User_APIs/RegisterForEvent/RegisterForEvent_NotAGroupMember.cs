@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     public class RegisterForEvent_NotAGroupMember : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
 
         public RegisterForEvent_NotAGroupMember(Fixture fixture) : base(fixture)

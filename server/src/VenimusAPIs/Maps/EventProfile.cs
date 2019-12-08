@@ -6,10 +6,10 @@ namespace VenimusAPIs.Maps
     {
         public EventProfile()
         {
-            CreateMap<ViewModels.CreateEvent, Models.Event>()
+            CreateMap<ViewModels.CreateEvent, Models.GroupEvent>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            CreateMap<ViewModels.UpdateEvent, Models.Event>()
+            CreateMap<ViewModels.UpdateEvent, Models.GroupEvent>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }

@@ -13,7 +13,7 @@ namespace VenimusAPIs.Tests.DeleteEvent
     {
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty; 
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
 
         public DeleteEvent_PastEvent(Fixture fixture) : base(fixture)

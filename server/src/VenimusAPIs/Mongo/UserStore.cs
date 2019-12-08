@@ -18,21 +18,21 @@ namespace VenimusAPIs.Mongo
         {
             var users = _mongoConnection.UsersCollection();
 
-            await users.InsertOneAsync(newUser);
+            await users.InsertOneAsync(newUser).ConfigureAwait(false);
         }
 
         internal async Task UpdateUser(User amendedUser)
         {
             var users = _mongoConnection.UsersCollection();
 
-            await users.ReplaceOneAsync(u => u.Id == amendedUser.Id, amendedUser);
+            await users.ReplaceOneAsync(u => u.Id == amendedUser.Id, amendedUser).ConfigureAwait(false);
         }
 
         internal async Task<Models.User> GetUserByEmailAddress(string emailAddress)
         {
             var users = _mongoConnection.UsersCollection();
 
-            var existingUser = await users.Find(u => u.EmailAddress == emailAddress).SingleOrDefaultAsync();
+            var existingUser = await users.Find(u => u.EmailAddress == emailAddress).SingleOrDefaultAsync().ConfigureAwait(false);
 
             return existingUser;
         }
@@ -41,7 +41,7 @@ namespace VenimusAPIs.Mongo
         {
             var users = _mongoConnection.UsersCollection();
 
-            var existingUser = await users.Find(u => u.Id == id).SingleOrDefaultAsync();
+            var existingUser = await users.Find(u => u.Id == id).SingleOrDefaultAsync().ConfigureAwait(false);
 
             return existingUser;
         }
@@ -50,7 +50,7 @@ namespace VenimusAPIs.Mongo
         {
             var users = _mongoConnection.UsersCollection();
 
-            var existingUser = await users.Find(u => u.DisplayName == displayName).SingleOrDefaultAsync();
+            var existingUser = await users.Find(u => u.DisplayName == displayName).SingleOrDefaultAsync().ConfigureAwait(false);
 
             return existingUser;
         }
@@ -60,7 +60,7 @@ namespace VenimusAPIs.Mongo
             var users = _mongoConnection.UsersCollection();
 
             var filter = Builders<Models.User>.Filter.AnyEq(x => x.Identities, uniqueId);
-            var existingUser = await users.Find(filter).SingleOrDefaultAsync();
+            var existingUser = await users.Find(filter).SingleOrDefaultAsync().ConfigureAwait(false);
 
             return existingUser;
         }

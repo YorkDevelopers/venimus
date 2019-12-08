@@ -12,7 +12,7 @@ namespace VenimusAPIs.Tests.DeleteEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to delete an existing event", SoThat = "People are kept informed")]
     public class DeleteEvent_NoPermission : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
 
         public DeleteEvent_NoPermission(Fixture fixture) : base(fixture)

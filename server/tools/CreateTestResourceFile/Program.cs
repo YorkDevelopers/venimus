@@ -44,7 +44,7 @@ namespace CreateTestResourceFile
             Console.WriteLine();
 
 
-            foreach (var inputFilename in Directory.GetFiles(inputFoldername, "Messages.resx", SearchOption.AllDirectories))
+            foreach (var inputFilename in Directory.GetFiles(inputFoldername, "ResourceMessages.resx", SearchOption.AllDirectories))
             {
                 ProcessResourceFile(inputFilename, inputFoldername.Length);
             }

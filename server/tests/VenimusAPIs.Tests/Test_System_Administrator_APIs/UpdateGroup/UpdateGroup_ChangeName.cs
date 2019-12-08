@@ -14,8 +14,8 @@ namespace VenimusAPIs.Tests.UpdateGroup
     {
         private ViewModels.UpdateGroup _amendedGroup;
         private Group _existingGroup;
-        private Event _event1;
-        private Event _event2;
+        private GroupEvent _event1;
+        private GroupEvent _event2;
 
         public UpdateGroup_ChangeName(Fixture fixture) : base(fixture)
         {

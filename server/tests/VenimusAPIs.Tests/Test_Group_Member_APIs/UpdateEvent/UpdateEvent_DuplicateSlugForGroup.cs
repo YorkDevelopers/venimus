@@ -13,10 +13,10 @@ namespace VenimusAPIs.Tests.UpdateEvent
     {
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty;
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
-        private Event _otherEvent;
+        private GroupEvent _otherEvent;
 
         public UpdateEvent_DuplicateSlugForGroup(Fixture fixture) : base(fixture)
         {

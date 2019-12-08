@@ -12,7 +12,7 @@ namespace VenimusAPIs.Tests.JoinGroup
     {
         private ViewModels.JoinGroup _group;
         private Group _existingGroup;
-        private Group.GroupMember _existingMemberDetails;
+        private GroupMember _existingMemberDetails;
 
         public JoinGroup_AlreadyAMember(Fixture fixture) : base(fixture)
         {

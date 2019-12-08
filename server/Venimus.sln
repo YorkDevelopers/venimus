@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs", "src\VenimusA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VenimusAPIs.Tests", "tests\VenimusAPIs.Tests\VenimusAPIs.Tests.csproj", "{82779B2C-C85D-4683-8AB3-EB581FD2D561}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateInitialData", "tools\CreateInitialData\CreateInitialData.csproj", "{7D49751C-A140-4EC9-9C33-06C77B09FE20}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YorkDeveloperEvents", "..\yorkdevelopersevents\YorkDeveloperEvents.csproj", "{C33FF857-19E1-42B6-9B66-0D7FB5D93580}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5780AFA1-1FF5-4D5C-86E0-22DED3966985}"
@@ -27,10 +25,6 @@ Global
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82779B2C-C85D-4683-8AB3-EB581FD2D561}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D49751C-A140-4EC9-9C33-06C77B09FE20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33FF857-19E1-42B6-9B66-0D7FB5D93580}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -13,7 +13,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     public class AmendRegistrationForEvent_NotSignedUp : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_NotSignedUp(Fixture fixture) : base(fixture)

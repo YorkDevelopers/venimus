@@ -19,7 +19,7 @@ namespace VenimusAPIs.Mongo
         internal async Task<List<Models.Group>> GetActiveGroups()
         {
             var groups = _mongoConnection.GroupsCollection();
-            var models = await groups.Find(u => u.IsActive).ToListAsync();
+            var models = await groups.Find(u => u.IsActive).ToListAsync().ConfigureAwait(false);
 
             return models;
         }
@@ -28,18 +28,18 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            await groups.DeleteOneAsync(grp => grp.Id == group.Id);
+            await groups.DeleteOneAsync(grp => grp.Id == group.Id).ConfigureAwait(false);
         }
 
         internal async Task<List<Group>> RetrieveMyActiveGroups(ObjectId userID)
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.UserId, userID);
+            var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, userID);
 
             var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch) &
                          Builders<Group>.Filter.Eq(ent => ent.IsActive, true);
-            var matchingGroups = await groups.Find(filter).ToListAsync();
+            var matchingGroups = await groups.Find(filter).ToListAsync().ConfigureAwait(false);
 
             return matchingGroups;
         }
@@ -48,19 +48,19 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            await groups.InsertOneAsync(group);
+            await groups.InsertOneAsync(group).ConfigureAwait(false);
         }
 
         public async Task<Models.Group?> RetrieveGroupBySlug(string groupSlug)
         {
             var groups = _mongoConnection.GroupsCollection();
-            var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync();
+            var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync().ConfigureAwait(false);
 
             if (group != null)
             {
                 if (group.Members == null)
                 {
-                    group.Members = new List<Group.GroupMember>();
+                    group.Members = new List<GroupMember>();
                 }
             }
 
@@ -70,13 +70,13 @@ namespace VenimusAPIs.Mongo
         public async Task<Models.Group?> RetrieveGroupByName(string groupName)
         {
             var groups = _mongoConnection.GroupsCollection();
-            var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync();
+            var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync().ConfigureAwait(false);
 
             if (group != null)
             {
                 if (group.Members == null)
                 {
-                    group.Members = new List<Group.GroupMember>();
+                    group.Members = new List<GroupMember>();
                 }
             }
 
@@ -87,19 +87,19 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            await groups.ReplaceOneAsync(grp => grp.Id == group.Id, group);
+            await groups.ReplaceOneAsync(grp => grp.Id == group.Id, group).ConfigureAwait(false);
         }
 
         public async Task<Models.Group?> RetrieveGroupByGroupId(ObjectId groupId)
         {
             var groups = _mongoConnection.GroupsCollection();
-            var group = await groups.Find(u => u.Id == groupId).SingleOrDefaultAsync();
+            var group = await groups.Find(u => u.Id == groupId).SingleOrDefaultAsync().ConfigureAwait(false);
 
             if (group != null)
             {
                 if (group.Members == null)
                 {
-                    group.Members = new List<Group.GroupMember>();
+                    group.Members = new List<GroupMember>();
                 }
             }
 
@@ -109,7 +109,7 @@ namespace VenimusAPIs.Mongo
         public async Task<List<Models.Group>> RetrieveAllGroups()
         {
             var groups = _mongoConnection.GroupsCollection();
-            var models = await groups.Find(u => true).ToListAsync();
+            var models = await groups.Find(u => true).ToListAsync().ConfigureAwait(false);
 
             return models;
         }
@@ -118,9 +118,9 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            var memberMatch = Builders<Group.GroupMember>.Filter.Eq(a => a.UserId, user.Id);
+            var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, user.Id);
             var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch);
-            var groupsTheUserBelongsTo = await groups.Find(filter).ToListAsync();
+            var groupsTheUserBelongsTo = await groups.Find(filter).ToListAsync().ConfigureAwait(false);
 
             foreach (var grp in groupsTheUserBelongsTo)
             {
@@ -130,7 +130,7 @@ namespace VenimusAPIs.Mongo
                 member.EmailAddress = user.EmailAddress;
                 member.Fullname = user.Fullname;
                 member.Pronoun = user.Pronoun;
-                await groups.ReplaceOneAsync(u => u.Id == grp.Id, grp);
+                await groups.ReplaceOneAsync(u => u.Id == grp.Id, grp).ConfigureAwait(false);
             }
         }
     }

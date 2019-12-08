@@ -38,7 +38,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ListActiveGroups[]>> Get()
         {
-            var groups = await _groupStore.GetActiveGroups();
+            var groups = await _groupStore.GetActiveGroups().ConfigureAwait(false);
 
             var server = $"{Request.Scheme}://{Request.Host}";
 

@@ -15,8 +15,8 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
     {
         private Group _group1;
         private Group _group2;
-        private Event _event1;
-        private Event _event2;
+        private GroupEvent _event1;
+        private GroupEvent _event2;
 
         public ViewAllMyRegistrations_Success(Fixture fixture) : base(fixture)
         {
@@ -109,7 +109,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
             AssertEvent(actualEvents, _event2);
         }
 
-        private void AssertEvent(ViewAllMyEventRegistrations[] actualEvents, Event theEvent)
+        private void AssertEvent(ViewAllMyEventRegistrations[] actualEvents, GroupEvent theEvent)
         {
             var actualEvent = actualEvents.Single(a => a.EventSlug == theEvent.Slug && a.GroupSlug == theEvent.GroupSlug);
             Assert.Equal(theEvent.GroupName, actualEvent.GroupName);

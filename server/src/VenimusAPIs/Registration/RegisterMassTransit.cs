@@ -7,7 +7,7 @@ using VenimusAPIs.ServiceBusMessages;
 
 namespace VenimusAPIs.Registration
 {
-    public static class Register_MassTransit
+    public static class RegisterMassTransit
     {
         public static void AddMassTransit(this IServiceCollection services)
         {

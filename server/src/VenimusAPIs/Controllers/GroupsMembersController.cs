@@ -11,13 +11,13 @@ using VenimusAPIs.ViewModels;
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class Groups_MembersController : Controller
+    public class GroupsMembersController : Controller
     {
         private readonly Mongo.GroupStore _groupStore;
-        private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
         private readonly URLBuilder _urlBuilder;
 
-        public Groups_MembersController(Mongo.GroupStore groupStore, IStringLocalizer<Messages> stringLocalizer, URLBuilder urlBuilder)
+        public GroupsMembersController(Mongo.GroupStore groupStore, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
         {
             _groupStore = groupStore;
             _stringLocalizer = stringLocalizer;
@@ -48,7 +48,7 @@ namespace VenimusAPIs.Controllers
         [CallerMustBeApprovedGroupMember]
         public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             return group!.Members.Select(m => new ListGroupMembers
             {
@@ -88,26 +88,26 @@ namespace VenimusAPIs.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromRoute, Slug]string groupSlug, [FromBody] ApproveMember approveMember)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             var newUser = group!.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
             if (newUser == null)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.NOT_A_MEMBER_OF_THE_GROUP).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.NOT_A_MEMBER_OF_THE_GROUP).Value;
                 var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }
 
             if (newUser.IsApproved == true)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.MEMBER_ALREADY_APPROVED).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.MEMBER_ALREADY_APPROVED).Value;
                 var details = new ValidationProblemDetails { Detail = message };
                 return ValidationProblem(details);
             }
 
             newUser.IsApproved = true;
 
-            await _groupStore.UpdateGroup(group);
+            await _groupStore.UpdateGroup(group).ConfigureAwait(false);
 
             return Ok();
         }

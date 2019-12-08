@@ -46,7 +46,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyGroupMembership>> Get([FromRoute, Slug]string groupSlug)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             var viewModel = _mapper.Map<ViewMyGroupMembership>(group);
 
@@ -71,9 +71,9 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
-            var groups = await _groupStore.RetrieveMyActiveGroups(existingUser.Id);
+            var groups = await _groupStore.RetrieveMyActiveGroups(existingUser.Id).ConfigureAwait(false);
 
             var server = $"{Request.Scheme}://{Request.Host}";
 
@@ -112,7 +112,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromBody] JoinGroup group)
         {
-            var model = await _groupStore.RetrieveGroupBySlug(group.GroupSlug);
+            var model = await _groupStore.RetrieveGroupBySlug(group.GroupSlug).ConfigureAwait(false);
             if (model == null)
             {
                 return NotFound();
@@ -120,11 +120,11 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             if (!model.Members.Any(m => m.UserId == existingUser.Id))
             {
-                model.Members.Add(new Group.GroupMember
+                model.Members.Add(new GroupMember
                 {
                     UserId = existingUser.Id,
                     Bio = existingUser.Bio,
@@ -135,7 +135,7 @@ namespace VenimusAPIs.UserControllers
                     Pronoun = existingUser.Pronoun,
                 });
 
-                await _groupStore.UpdateGroup(model);
+                await _groupStore.UpdateGroup(model).ConfigureAwait(false);
             }
 
             return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
@@ -163,13 +163,13 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DELETE([FromRoute, Slug] string groupSlug)
         {
-            var model = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var model = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             model!.Members.RemoveAll(m => m.UserId == existingUser.Id);
-            await _groupStore.UpdateGroup(model);
+            await _groupStore.UpdateGroup(model).ConfigureAwait(false);
 
             return NoContent();
         }

@@ -1,15 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 
 namespace VenimusAPIs.Models
 {
-    public class User
+    public class GroupEventAttendees
     {
+        public ObjectId UserId { get; set; }
+
         /// <summary>
-        ///     The internal ID for the user.
+        ///     Are they still signed up
         /// </summary>
-        public ObjectId Id { get; set; }
+        public bool SignedUp { get; set; }
+
+        /// <summary>
+        ///     Did they attend the event?
+        /// </summary>
+        public bool? Attended { get; set; }
+
+        /// <summary>
+        ///     Are they organising the event
+        /// </summary>
+        public bool Host { get; set; }
+
+        /// <summary>
+        ///     Are they presenting at the event
+        /// </summary>
+        public bool Speaker { get; set; }
+
+        /// <summary>
+        ///     Any Dietary Requirements the user has
+        /// </summary>
+        public string DietaryRequirements { get; set; } = default!;
+
+        /// <summary>
+        ///     Free format message to the organiser
+        /// </summary>
+        public string MessageToOrganiser { get; set; } = default!;
+
+        /// <summary>
+        ///     The number of unregistered guest the person is bringing
+        /// </summary>
+        public int NumberOfGuests { get; set; }
 
         /// <summary>
         ///     The email address which also links all the social media accounts together.
@@ -37,15 +67,5 @@ namespace VenimusAPIs.Models
         ///     Visible to all signed in members
         /// </summary>
         public string Bio { get; set; } = default!;
-
-        /// <summary>
-        ///     The user's profile picture
-        /// </summary>
-        public byte[] ProfilePicture { get; set; } = Array.Empty<byte>();
-
-        /// <summary>
-        ///     The user's social media identities
-        /// </summary>
-        public List<string> Identities { get; set; } = new List<string>();
     }
 }

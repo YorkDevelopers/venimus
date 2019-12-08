@@ -8,7 +8,7 @@ using Serilog;
 
 namespace VenimusAPIs
 {
-    public class Program
+    public static class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,6 +22,7 @@ namespace VenimusAPIs
 
         public static void Main(string[] args)
         {
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
             System.Console.WriteLine(@"************************************************************************");
             System.Console.WriteLine(@"____    ____  _______ .__   __.  __  .___  ___.  __    __       _______.");
             System.Console.WriteLine(@"\   \  /   / |   ____||  \ |  | |  | |   \/   | |  |  |  |     /       |");
@@ -31,6 +32,7 @@ namespace VenimusAPIs
             System.Console.WriteLine(@"    \__/     |_______||__| \__| |__| |__|  |__|  \______/  |_______/    ");
             System.Console.WriteLine();
             System.Console.WriteLine(@"************************************************************************");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
 
             IdentityModelEventSource.ShowPII = true;
 

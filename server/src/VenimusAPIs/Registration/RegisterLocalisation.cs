@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace VenimusAPIs.Registration
 {
-    public static class Register_Localisation
+    public static class RegisterLocalisation
     {
         public static void AddLocalisation(this IApplicationBuilder app)
         {

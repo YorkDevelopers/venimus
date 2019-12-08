@@ -10,7 +10,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     public class AmendRegistrationForEvent_NotAGroupMember : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_NotAGroupMember(Fixture fixture) : base(fixture)

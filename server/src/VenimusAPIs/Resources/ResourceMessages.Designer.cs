@@ -22,14 +22,14 @@ namespace VenimusAPIs.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Messages {
+    public class ResourceMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Messages() {
+        internal ResourceMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace VenimusAPIs.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VenimusAPIs.Resources.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VenimusAPIs.Resources.ResourceMessages", typeof(ResourceMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -147,6 +147,33 @@ namespace VenimusAPIs.Resources {
         public static string GUESTS_NOT_ALLOWED {
             get {
                 return ResourceManager.GetString("GUESTS_NOT_ALLOWED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Error - The group does not exist in the database..
+        /// </summary>
+        public static string INTERNALERROR_GROUP_DOES_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("INTERNALERROR_GROUP_DOES_NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Error - The user does not exist in the database..
+        /// </summary>
+        public static string INTERNALERROR_USER_DOES_NOT_EXIST {
+            get {
+                return ResourceManager.GetString("INTERNALERROR_USER_DOES_NOT_EXIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Error  -The user does not have an access token..
+        /// </summary>
+        public static string INTERNALERROR_USER_DOES_NOT_HAVE_ACCESS_TOKEN {
+            get {
+                return ResourceManager.GetString("INTERNALERROR_USER_DOES_NOT_HAVE_ACCESS_TOKEN", resourceCulture);
             }
         }
         

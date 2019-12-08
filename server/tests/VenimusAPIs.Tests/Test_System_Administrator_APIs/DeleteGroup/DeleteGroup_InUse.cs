@@ -13,8 +13,8 @@ namespace VenimusAPIs.Tests.DeleteGroup
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty; 
         private Group _existingGroup;
-        private Event _event1;
-        private Event _event2;
+        private GroupEvent _event1;
+        private GroupEvent _event2;
 
         public DeleteGroup_InUse(Fixture fixture) : base(fixture)
         {

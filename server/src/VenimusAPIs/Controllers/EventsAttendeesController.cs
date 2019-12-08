@@ -10,12 +10,12 @@ using VenimusAPIs.ViewModels;
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class Events_AttendeesController : BaseUserController
+    public class EventsAttendeesController : BaseUserController
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
 
-        public Events_AttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
+        public EventsAttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
         {
             _eventStore = eventStore;
             _userStore = userStore;
@@ -45,7 +45,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ListEventAttendees[]>> Get([FromRoute, Slug]string groupSlug, [FromRoute, Slug]string eventSlug)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();

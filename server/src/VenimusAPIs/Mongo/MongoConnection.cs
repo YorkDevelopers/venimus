@@ -19,9 +19,9 @@ namespace VenimusAPIs.Mongo
         public async Task ResetDatabase()
         {
             var mongoDatabase = ConnectToDatabase();
-            await mongoDatabase.DropCollectionAsync("events");
-            await mongoDatabase.DropCollectionAsync("groups");
-            await mongoDatabase.DropCollectionAsync("users");
+            await mongoDatabase.DropCollectionAsync("events").ConfigureAwait(false);
+            await mongoDatabase.DropCollectionAsync("groups").ConfigureAwait(false);
+            await mongoDatabase.DropCollectionAsync("users").ConfigureAwait(false);
         }
 
         public IMongoCollection<Group> GroupsCollection()
@@ -38,10 +38,10 @@ namespace VenimusAPIs.Mongo
             return users;
         }
 
-        public IMongoCollection<Event> EventsCollection()
+        public IMongoCollection<GroupEvent> EventsCollection()
         {
             var database = ConnectToDatabase();
-            var events = database.GetCollection<Models.Event>("events");
+            var events = database.GetCollection<Models.GroupEvent>("events");
             return events;
         }
 

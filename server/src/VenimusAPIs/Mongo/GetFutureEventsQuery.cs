@@ -24,27 +24,27 @@ namespace VenimusAPIs.Mongo
         {
             var database = _mongoConnection.ConnectToDatabase();
 
-            var events = database.GetCollection<Models.Event>("events");
+            var events = database.GetCollection<Models.GroupEvent>("events");
             var groups = database.GetCollection<Models.Group>("groups");
 
             var currentTime = DateTime.UtcNow;
 
-            var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty);
-            var groupsList = await allGroups.ToListAsync();
+            var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty).ConfigureAwait(false);
+            var groupsList = await allGroups.ToListAsync().ConfigureAwait(false);
 
             var result = new List<ViewModels.ListFutureEvents>();
             foreach (var group in groupsList)
             {
-                var filter = Builders<Event>.Filter.Eq(ent => ent.GroupId, group.Id) &
-                             Builders<Event>.Filter.Gt(ent => ent.StartTimeUTC, currentTime);
+                var filter = Builders<GroupEvent>.Filter.Eq(ent => ent.GroupId, group.Id) &
+                             Builders<GroupEvent>.Filter.Gt(ent => ent.StartTimeUTC, currentTime);
 
-                var sort = Builders<Event>.Sort.Ascending("StartTime");
+                var sort = Builders<GroupEvent>.Sort.Ascending("StartTime");
 
-                var nextEvents = await events.FindAsync(filter, new FindOptions<Event, Event>()
+                var nextEvents = await events.FindAsync(filter, new FindOptions<GroupEvent, GroupEvent>()
                 {
                     Limit = 10,
                     Sort = sort,
-                });
+                }).ConfigureAwait(false);
 
                 var viewModels = nextEvents.ToEnumerable().Select(e => new ListFutureEvents
                 {
@@ -54,7 +54,7 @@ namespace VenimusAPIs.Mongo
                     EventStartsUTC = e.StartTimeUTC,
                     EventTitle = e.Title,
                     GroupName = e.GroupName,
-                    GroupLogo = _groupLogoURLBuilder.BuildGroupLogoURL(e.GroupSlug),
+                    GroupLogo = _groupLogoURLBuilder.BuildGroupLogoURL(e.GroupSlug).ToString(),
                     GroupSlug = e.GroupSlug,
                 });
 

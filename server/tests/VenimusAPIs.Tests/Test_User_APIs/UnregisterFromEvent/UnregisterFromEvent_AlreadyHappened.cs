@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
 
         public UnregisterFromEvent_AlreadyHappened(Fixture fixture) : base(fixture)
         {

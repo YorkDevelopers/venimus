@@ -147,6 +147,15 @@
   <data name="GUESTS_NOT_ALLOWED" xml:space="preserve">
     <value>This event does not allow you to bring guests.  All attendees must be members of this group.</value>
   </data>
+  <data name="INTERNALERROR_GROUP_DOES_NOT_EXIST" xml:space="preserve">
+    <value>Internal Error - The group does not exist in the database.</value>
+  </data>
+  <data name="INTERNALERROR_USER_DOES_NOT_EXIST" xml:space="preserve">
+    <value>Internal Error - The user does not exist in the database.</value>
+  </data>
+  <data name="INTERNALERROR_USER_DOES_NOT_HAVE_ACCESS_TOKEN" xml:space="preserve">
+    <value>Internal Error  -The user does not have an access token.</value>
+  </data>
   <data name="MEMBER_ALREADY_APPROVED" xml:space="preserve">
     <value>The user's membership of this group has already been approved.</value>
   </data>

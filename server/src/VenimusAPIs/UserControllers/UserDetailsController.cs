@@ -13,9 +13,9 @@ namespace VenimusAPIs.UserControllers
     public class UserDetailsController : BaseUserController
     {
         private readonly Mongo.UserStore _userStore;
-        private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
 
-        public UserDetailsController(Mongo.UserStore userStore, IStringLocalizer<Messages> stringLocalizer)
+        public UserDetailsController(Mongo.UserStore userStore, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _userStore = userStore;
             _stringLocalizer = stringLocalizer;
@@ -40,7 +40,7 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var user = await _userStore.GetUserByID(uniqueID);
+            var user = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             return new ViewMyDetails
             {
@@ -79,14 +79,14 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var user = await _userStore.GetUserByID(uniqueID);
+            var user = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             if (!user.DisplayName.Equals(updateMyDetails.DisplayName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateUser = await _userStore.GetUserByDisplayName(updateMyDetails.DisplayName);
+                var duplicateUser = await _userStore.GetUserByDisplayName(updateMyDetails.DisplayName).ConfigureAwait(false);
                 if (duplicateUser != null)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.USER_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.USER_ALREADY_EXISTS_WITH_THIS_NAME).Value;
                     ModelState.AddModelError(nameof(updateMyDetails.DisplayName), message);
                 }
             }
@@ -102,10 +102,10 @@ namespace VenimusAPIs.UserControllers
             user.Fullname = updateMyDetails.Fullname;
             user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
 
-            await _userStore.UpdateUser(user);
+            await _userStore.UpdateUser(user).ConfigureAwait(false);
 
             var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
-            await bus.Publish(userChangedMessage);
+            await bus.Publish(userChangedMessage).ConfigureAwait(false);
 
             return NoContent();
         }

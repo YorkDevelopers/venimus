@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.UnregisterFromEvent
     public class UnregisterFromEvent_Success : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
 
         public UnregisterFromEvent_Success(Fixture fixture) : base(fixture)
         {

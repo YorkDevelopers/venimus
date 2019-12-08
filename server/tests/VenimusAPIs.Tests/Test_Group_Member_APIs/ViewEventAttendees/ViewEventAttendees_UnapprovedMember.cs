@@ -9,15 +9,15 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_UnapprovedMember : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _existingGroup;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
-        private Event.EventAttendees _userRegistration;
-        private Event.EventAttendees _otherUser1Registration;
-        private Event.EventAttendees _otherUser2Registration;
+        private GroupEventAttendees _userRegistration;
+        private GroupEventAttendees _otherUser1Registration;
+        private GroupEventAttendees _otherUser2Registration;
 
         public ViewEventAttendees_UnapprovedMember(Fixture fixture) : base(fixture)
         {

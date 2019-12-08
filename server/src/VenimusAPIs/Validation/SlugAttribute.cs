@@ -7,12 +7,12 @@ namespace VenimusAPIs.Validation
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var slug = (string)value;
-            
+
             if (string.IsNullOrWhiteSpace(slug))
             {
                 return new ValidationResult("The slug must be provided");
             }
-            else if (slug.Contains(" "))
+            else if (slug.Contains(" ", System.StringComparison.InvariantCultureIgnoreCase))
             {
                 return new ValidationResult("Slugs cannot contain spaces");
             }

@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
     [Story(AsA = "GroupAdministrator", IWant = "To be able to update the details of an existing event", SoThat = "People are kept informed")]
     public class UpdateEvent_NoPermission : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
         private ViewModels.UpdateEvent _amendedEvent;
 

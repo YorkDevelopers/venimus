@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using VenimusAPIs.Services;
 
 namespace VenimusAPIs.UserControllers
@@ -19,12 +21,15 @@ namespace VenimusAPIs.UserControllers
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder, IHttpClientFactory httpClientFactory)
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
+
+        public UserConnectedController(Mongo.UserStore userStore, Auth0API auth0API, URLBuilder urlBuilder, IHttpClientFactory httpClientFactory, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _userStore = userStore;
             _auth0API = auth0API;
             _urlBuilder = urlBuilder;
             _httpClientFactory = httpClientFactory;
+            _stringLocalizer = stringLocalizer;
         }
 
         /// <summary>
@@ -48,12 +53,12 @@ namespace VenimusAPIs.UserControllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var theUser = await _userStore.GetUserByID(uniqueID);
+            var theUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
             var newUser = theUser == null;
 
             if (theUser == null)
             {
-                (theUser, newUser) = await CreateOrMergeUser(uniqueID);
+                (theUser, newUser) = await CreateOrMergeUser(uniqueID).ConfigureAwait(false);
             }
 
             Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser)));
@@ -66,7 +71,7 @@ namespace VenimusAPIs.UserControllers
             else
             {
                 Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("false"));
-                Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL()));
+                Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL().ToString()));
                 return NoContent();
             }
         }
@@ -76,20 +81,20 @@ namespace VenimusAPIs.UserControllers
             var accessToken = User.FindFirst("access_token")?.Value;
             if (string.IsNullOrWhiteSpace(accessToken))
             {
-                throw new System.Exception("No access token!");
+                throw new System.Exception(_stringLocalizer.GetString(Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_HAVE_ACCESS_TOKEN).Value);
             }
 
-            var userInfo = await _auth0API.UserInfo(accessToken);
+            var userInfo = await _auth0API.UserInfo(accessToken).ConfigureAwait(false);
 
-            var theUser = await _userStore.GetUserByEmailAddress(userInfo.Email);
+            var theUser = await _userStore.GetUserByEmailAddress(userInfo.Email).ConfigureAwait(false);
             if (theUser == null)
             {
-                var newUser = await CreateNewUser(uniqueID, userInfo);
+                var newUser = await CreateNewUser(uniqueID, userInfo).ConfigureAwait(false);
                 return (newUser, true);
             }
             else
             {
-                await AddIdentityToExistingUser(uniqueID, theUser);
+                await AddIdentityToExistingUser(uniqueID, theUser).ConfigureAwait(false);
                 return (theUser, false);
             }
         }
@@ -98,7 +103,7 @@ namespace VenimusAPIs.UserControllers
         {
             existingUser.Identities.Add(uniqueID);
 
-            await _userStore.UpdateUser(existingUser);
+            await _userStore.UpdateUser(existingUser).ConfigureAwait(false);
         }
 
         private async Task<Models.User> CreateNewUser(string uniqueID, Services.Auth0Models.UserProfile userInfo)
@@ -111,18 +116,18 @@ namespace VenimusAPIs.UserControllers
                 DisplayName = string.Empty,
                 Fullname = userInfo.Name,
                 Pronoun = string.Empty,
-                ProfilePicture = await DownloadImage(userInfo.Picture),
+                ProfilePicture = await DownloadImage(new Uri(userInfo.Picture)).ConfigureAwait(false),
             };
 
-            await _userStore.InsertUser(newUser);
+            await _userStore.InsertUser(newUser).ConfigureAwait(false);
 
             return newUser;
         }
 
-        private async Task<byte[]> DownloadImage(string url)
+        private async Task<byte[]> DownloadImage(Uri url)
         {
             var client = _httpClientFactory.CreateClient("ImageSource");
-            return await client.GetByteArrayAsync(url);
+            return await client.GetByteArrayAsync(url).ConfigureAwait(false);
         }
     }
 }

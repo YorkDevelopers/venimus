@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
     {
         private ViewModels.UpdateMyDetails _amendedUser;
         private Group _group;
-        private Event _event;
+        private GroupEvent _event;
 
         public UpdateMyDetails_Success(Fixture fixture) : base(fixture)
         {

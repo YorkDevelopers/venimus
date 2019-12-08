@@ -2,6 +2,7 @@
 
 namespace VenimusAPIs.Validation
 {
+    [AttributeUsage(AttributeTargets.Method)]
     public class CallerMustBeGroupMemberAttribute : Attribute
     {
         /// <summary>

@@ -9,7 +9,7 @@ namespace VenimusAPIs.Tests.ViewEvent
     [Story(AsA = "ViewEvent", IWant = "To be able to view an existing event", SoThat = "I know the details")]
     public class ViewEvent_NoPermission : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
 
         public ViewEvent_NoPermission(Fixture fixture) : base(fixture)

@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 
 namespace VenimusAPIs.Models
 {
-    public class User
+    public class GroupMember
     {
         /// <summary>
-        ///     The internal ID for the user.
+        ///     Unique ID of the user
         /// </summary>
-        public ObjectId Id { get; set; }
+        public ObjectId UserId { get; set; }
+
+        /// <summary>
+        ///     Are they an administrator of the group?
+        /// </summary>
+        public bool IsAdministrator { get; set; }
 
         /// <summary>
         ///     The email address which also links all the social media accounts together.
@@ -39,13 +42,8 @@ namespace VenimusAPIs.Models
         public string Bio { get; set; } = default!;
 
         /// <summary>
-        ///     The user's profile picture
+        ///     Has their membership been approved by the group administrator?
         /// </summary>
-        public byte[] ProfilePicture { get; set; } = Array.Empty<byte>();
-
-        /// <summary>
-        ///     The user's social media identities
-        /// </summary>
-        public List<string> Identities { get; set; } = new List<string>();
+        public bool IsApproved { get; set; }
     }
 }

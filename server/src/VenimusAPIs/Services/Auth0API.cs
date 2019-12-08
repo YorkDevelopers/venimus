@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,7 +21,9 @@ namespace VenimusAPIs.Services
             var client = _httpClientFactory.CreateClient("Auth0");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var json = await client.GetStringAsync("/userinfo");
+#pragma warning disable CA2234 // Pass system uri objects instead of strings
+            var json = await client.GetStringAsync("/userinfo").ConfigureAwait(false);
+#pragma warning restore CA2234 // Pass system uri objects instead of strings
 
             var profile = JsonSerializer.Deserialize<UserProfile>(json);
 

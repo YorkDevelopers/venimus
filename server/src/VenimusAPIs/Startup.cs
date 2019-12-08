@@ -26,6 +26,48 @@ namespace VenimusAPIs
 
         public IConfiguration Configuration { get; }
 
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
+        {
+            app.StartMassTransitBusIfAvailable(busControl);
+
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+                await next().ConfigureAwait(false);
+            });
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.AddLocalisation();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            app.UseHealthChecks("/hc", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+            });
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(GetType().Assembly);
@@ -70,8 +112,7 @@ namespace VenimusAPIs
             services.AddMvc(options =>
             {
                 options.Filters.AddService<CheckGroupSecurityFilter>();
-            }
-            );
+            });
 
             services.AddScoped<CheckGroupSecurityFilter>();
 
@@ -100,48 +141,6 @@ namespace VenimusAPIs
             services.AddMassTransit();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
-        {
-            app.StartMassTransitBusIfAvailable(busControl);
-
-            app.Use(async (ctx, next) =>
-            {
-                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
-                await next();
-            });
-
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseSwagger();
-
-            app.AddLocalisation();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseHealthChecks("/hc", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-            });
         }
     }
 }

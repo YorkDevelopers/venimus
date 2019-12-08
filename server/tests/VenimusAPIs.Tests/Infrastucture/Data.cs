@@ -31,9 +31,9 @@ namespace VenimusAPIs.Tests.Infrastucture
             return result;
         }
 
-        public Models.Event CreateEvent(Models.Group group, Action<Models.Event> modifier = null)
+        public Models.GroupEvent CreateEvent(Models.Group group, Action<Models.GroupEvent> modifier = null)
         {
-            var newEvent = Create<Models.Event>(evt =>
+            var newEvent = Create<Models.GroupEvent>(evt =>
             {
                 evt.GroupId = group.Id;
                 evt.GroupSlug = group.Slug;
@@ -42,7 +42,7 @@ namespace VenimusAPIs.Tests.Infrastucture
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(2);
                 evt.MaximumNumberOfAttendees = 100;
                 evt.GuestsAllowed = true;
-                evt.Members = new List<Event.EventAttendees>();
+                evt.Members = new List<GroupEventAttendees>();
             });
 
             if (modifier != null)
@@ -164,14 +164,14 @@ namespace VenimusAPIs.Tests.Infrastucture
             return obj;
         }
 
-        internal Event.EventAttendees AddEventHost(Event theEvent, User user)
+        internal GroupEventAttendees AddEventHost(GroupEvent theEvent, User user)
         {
             if (theEvent.Members == null)
             {
-                theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
+                theEvent.Members = new System.Collections.Generic.List<GroupEventAttendees>();
             }
 
-            var attendee = new Event.EventAttendees
+            var attendee = new GroupEventAttendees
             {
                 UserId = user.Id,
                 Host = true,
@@ -187,14 +187,14 @@ namespace VenimusAPIs.Tests.Infrastucture
             return attendee;
         }
 
-        internal Event.EventAttendees AddEventSpeaker(Event theEvent, User user)
+        internal GroupEventAttendees AddEventSpeaker(GroupEvent theEvent, User user)
         {
             if (theEvent.Members == null)
             {
-                theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
+                theEvent.Members = new System.Collections.Generic.List<GroupEventAttendees>();
             }
 
-            var attendee = new Event.EventAttendees
+            var attendee = new GroupEventAttendees
             {
                 UserId = user.Id,
                 Speaker = true,
@@ -210,14 +210,14 @@ namespace VenimusAPIs.Tests.Infrastucture
             return attendee;
         }
 
-        internal Event.EventAttendees AddEventAttendee(Event theEvent, User user, int numberOfGuests = 0)
+        internal GroupEventAttendees AddEventAttendee(GroupEvent theEvent, User user, int numberOfGuests = 0)
         {
             if (theEvent.Members == null)
             {
-                theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
+                theEvent.Members = new System.Collections.Generic.List<GroupEventAttendees>();
             }
 
-            var newAttendee = new Event.EventAttendees
+            var newAttendee = new GroupEventAttendees
             {
                 UserId = user.Id,
                 NumberOfGuests = numberOfGuests,
@@ -236,14 +236,14 @@ namespace VenimusAPIs.Tests.Infrastucture
             return newAttendee;
         }
 
-        internal Event.EventAttendees AddEventNonAttendee(Event theEvent, User user, int numberOfGuests = 0)
+        internal GroupEventAttendees AddEventNonAttendee(GroupEvent theEvent, User user, int numberOfGuests = 0)
         {
             if (theEvent.Members == null)
             {
-                theEvent.Members = new System.Collections.Generic.List<Event.EventAttendees>();
+                theEvent.Members = new System.Collections.Generic.List<GroupEventAttendees>();
             }
 
-            var newAttendee = new Event.EventAttendees
+            var newAttendee = new GroupEventAttendees
             {
                 UserId = user.Id,
                 NumberOfGuests = numberOfGuests,
@@ -262,16 +262,16 @@ namespace VenimusAPIs.Tests.Infrastucture
             return newAttendee;
         }
 
-        internal Group.GroupMember AddApprovedGroupMember(Group group, User user) => AddGroupMember(group, user, isApproved: true);
+        internal GroupMember AddApprovedGroupMember(Group group, User user) => AddGroupMember(group, user, isApproved: true);
 
-        internal Group.GroupMember AddGroupMember(Group group, User user, bool isApproved = false)
+        internal GroupMember AddGroupMember(Group group, User user, bool isApproved = false)
         {
             if (group.Members == null)
             {
-                group.Members = new List<Group.GroupMember>();
+                group.Members = new List<GroupMember>();
             }
 
-            var newMember = new Group.GroupMember
+            var newMember = new GroupMember
             {
                 UserId = user.Id,
                 IsAdministrator = false,
@@ -292,10 +292,10 @@ namespace VenimusAPIs.Tests.Infrastucture
         {
             if (group.Members == null)
             {
-                group.Members = new List<Group.GroupMember>();
+                group.Members = new List<GroupMember>();
             }
 
-            group.Members.Add(new Group.GroupMember
+            group.Members.Add(new GroupMember
             {
                 UserId = user.Id,
                 IsAdministrator = true,

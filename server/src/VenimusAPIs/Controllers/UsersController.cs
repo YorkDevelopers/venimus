@@ -38,7 +38,7 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            var user = await _userStore.GetUserById(userID);
+            var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
             if (user == null)
             {
                 return NotFound();

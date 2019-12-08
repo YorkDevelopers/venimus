@@ -14,20 +14,20 @@ namespace VenimusAPIs.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string BuildGroupLogoURL(string groupSlug)
+        public Uri BuildGroupLogoURL(string groupSlug)
         {
             var request = _httpContextAccessor.HttpContext.Request;
             var server = $"{request.Scheme}://{request.Host}";
 
-            return $"{server}/api/groups/{groupSlug}/logo";
+            return new Uri($"{server}/api/groups/{groupSlug}/logo");
         }
 
-        public string BuildCurrentUserDetailsURL()
+        public Uri BuildCurrentUserDetailsURL()
         {
             var request = _httpContextAccessor.HttpContext.Request;
             var server = $"{request.Scheme}://{request.Host}";
 
-            return $"{server}/api/user";
+            return new Uri($"{server}/api/user");
         }
 
         internal string BuildUserDetailsProfilePictureURL(User theUser) => BuildUserDetailsProfilePictureURL(theUser.Id);

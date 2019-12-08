@@ -15,7 +15,7 @@ namespace VenimusAPIs.Tests.CreateEvent
         private string ExpectedMessage = string.Empty;
         private ViewModels.CreateEvent _event;
         private Group _group;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
 
         public CreateEvent_DuplicateSlugForGroup(Fixture fixture) : base(fixture)
         {

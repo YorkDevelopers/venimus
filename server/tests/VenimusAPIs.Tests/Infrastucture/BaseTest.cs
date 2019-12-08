@@ -41,10 +41,10 @@ namespace VenimusAPIs.Tests.Infrastucture
             await Task.Delay(TimeSpan.FromSeconds(.5));
         }
 
-        protected MongoDB.Driver.IMongoCollection<Models.Event> EventsCollection()
+        protected MongoDB.Driver.IMongoCollection<Models.GroupEvent> EventsCollection()
         {
             var mongoDatabase = Fixture.MongoDatabase();
-            var collection = mongoDatabase.GetCollection<Models.Event>("events");
+            var collection = mongoDatabase.GetCollection<Models.GroupEvent>("events");
 
             return collection;
         }

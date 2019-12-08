@@ -33,7 +33,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ListFutureEvents>>> Get()
         {
-            var futureEvents = await _getFutureEventsQuery.Evaluate();
+            var futureEvents = await _getFutureEventsQuery.Evaluate().ConfigureAwait(false);
 
             return futureEvents;
         }

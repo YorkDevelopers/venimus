@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
     public class ViewEventAttendees_NoPermission : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _existingGroup;
         private User _otherUserInGroup1;
         private User _otherUserInGroup2;

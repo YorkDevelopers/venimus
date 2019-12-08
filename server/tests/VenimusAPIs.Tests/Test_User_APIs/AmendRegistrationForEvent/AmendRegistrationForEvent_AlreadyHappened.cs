@@ -14,9 +14,9 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         private string Culture = string.Empty;
         private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
-        private Event.EventAttendees _currentRegistration;
+        private GroupEventAttendees _currentRegistration;
 
         public AmendRegistrationForEvent_AlreadyHappened(Fixture fixture) : base(fixture)
         {

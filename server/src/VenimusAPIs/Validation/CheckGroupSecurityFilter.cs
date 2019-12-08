@@ -55,14 +55,14 @@ namespace VenimusAPIs.Validation
 
                     var uniqueID = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-                    var existingUser = await _userStore.GetUserByID(uniqueID);
+                    var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
                     if (existingUser == null)
                     {
                         context.Result = new ForbidResult();
                         return;
                     }
 
-                    var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+                    var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
                     if (group == null)
                     {
                         context.Result = new NotFoundResult();
@@ -91,7 +91,7 @@ namespace VenimusAPIs.Validation
                 }
             }
 
-            await next();
+            await next().ConfigureAwait(false);
         }
 
         private static bool HasAttribute<T>(ActionDescriptor actionDescriptor, out T? attribute)

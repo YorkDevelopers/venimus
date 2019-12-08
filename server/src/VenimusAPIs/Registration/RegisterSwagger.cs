@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace VenimusAPIs.Registration
 {
-    public static class Register_Swagger
+    public static class RegisterSwagger
     {
         public static void AddSwagger(this IServiceCollection services)
         {

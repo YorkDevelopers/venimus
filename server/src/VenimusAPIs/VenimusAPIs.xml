@@ -4,6 +4,22 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
+        <member name="M:VenimusAPIs.Controllers.EventsAttendeesController.Get(System.String,System.String)">
+             <summary>
+                 Allows you to retrieve the members of an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/groups/YorkCodeDojo/Events/Nov2019/Members
+            
+             </remarks>
+             <returns>The ListEventAttendees view model</returns>
+             <response code="200">Success</response>
+             <response code="401">No Access.</response>
+             <response code="403">No Permission.</response>
+             <response code="404">Group does not exist.</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.EventsController.Post(System.String,VenimusAPIs.ViewModels.CreateEvent)">
              <summary>
                  Allows you to create a new event for your group.
@@ -78,22 +94,6 @@
              <returns>The GetEvent view model</returns>
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
-        </member>
-        <member name="M:VenimusAPIs.Controllers.Events_AttendeesController.Get(System.String,System.String)">
-             <summary>
-                 Allows you to retrieve the members of an event
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /api/groups/YorkCodeDojo/Events/Nov2019/Members
-            
-             </remarks>
-             <returns>The ListEventAttendees view model</returns>
-             <response code="200">Success</response>
-             <response code="401">No Access.</response>
-             <response code="403">No Permission.</response>
-             <response code="404">Group does not exist.</response>
         </member>
         <member name="M:VenimusAPIs.Controllers.GroupsController.Post(VenimusAPIs.ViewModels.CreateGroup)">
              <summary>
@@ -193,7 +193,7 @@
              <response code="204">NoContent</response>
              <response code="401">User is not authorized.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.Groups_MembersController.Get(System.String)">
+        <member name="M:VenimusAPIs.Controllers.GroupsMembersController.Get(System.String)">
              <summary>
                  Allows you to retrieve the members of a group
              </summary>
@@ -209,7 +209,7 @@
              <response code="403">No Permission.</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.Groups_MembersController.Post(System.String,VenimusAPIs.ViewModels.ApproveMember)">
+        <member name="M:VenimusAPIs.Controllers.GroupsMembersController.Post(System.String,VenimusAPIs.ViewModels.ApproveMember)">
              <summary>
                  Allows a group administrator to approve a new users membership
              </summary>
@@ -268,133 +268,6 @@
              <returns>Array of FutureEvent view models</returns>
              <response code="200">Success</response>
         </member>
-        <member name="P:VenimusAPIs.Models.Event.Id">
-            <summary>
-                The unique internal ID for the event
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.Slug">
-            <summary>
-                The unique external id for the event.  For example May2019
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.GroupId">
-            <summary>
-                The internal ID of the group to which this event belongs
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.GroupSlug">
-            <summary>
-                The external ID of the group to which this event belongs
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.GroupName">
-            <summary>
-                The name of the group the event belongs to
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.Title">
-            <summary>
-            The title of the event,  for example March 2019 Meetup. Must be unique for the group.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.Description">
-            <summary>
-            A description of the event,  in markdown format.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.Location">
-            <summary>
-            The location of the event, for example York Minster,  Room 201 York St John University
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.StartTimeUTC">
-            <summary>
-            Date and time the event starts
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EndTimeUTC">
-            <summary>
-            Date and time the event ends.  Must be after the StartTime
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.MaximumNumberOfAttendees">
-            <summary>
-                How many people + guests are allowed to sign up.  This includes hosts and speakers
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.GuestsAllowed">
-            <summary>
-                Are members allowed to bring guests to this event?
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.Members">
-            <summary>
-            Attendees of this group
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.SignedUp">
-            <summary>
-                Are they still signed up
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Attended">
-            <summary>
-                Did they attend the event?
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Host">
-            <summary>
-                Are they organising the event
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Speaker">
-            <summary>
-                Are they presenting at the event
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.DietaryRequirements">
-            <summary>
-                Any Dietary Requirements the user has
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.MessageToOrganiser">
-            <summary>
-                Free format message to the organiser
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.NumberOfGuests">
-            <summary>
-                The number of unregistered guest the person is bringing
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.EmailAddress">
-            <summary>
-                The email address which also links all the social media accounts together.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Pronoun">
-            <summary>
-                The users preferred personal pronon.  e.g. Him
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Fullname">
-            <summary>
-                The user's fullname.  e.g David Betteridge
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.DisplayName">
-            <summary>
-                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
-                (Has to be unique)
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Models.Event.EventAttendees.Bio">
-            <summary>
-                The user's biography.  This can include their place of work/student,  any interests etc.
-                Visible to all signed in members
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
             <summary>
                 The unique internal ID of this group
@@ -435,44 +308,171 @@
                 The name of this groups slack channel
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.UserId">
+        <member name="P:VenimusAPIs.Models.GroupEvent.Id">
             <summary>
-                Unique ID of the user
+                The unique internal ID for the event
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.IsAdministrator">
+        <member name="P:VenimusAPIs.Models.GroupEvent.Slug">
             <summary>
-                Are they an administrator of the group?
+                The unique external id for the event.  For example May2019
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.EmailAddress">
+        <member name="P:VenimusAPIs.Models.GroupEvent.GroupId">
+            <summary>
+                The internal ID of the group to which this event belongs
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.GroupSlug">
+            <summary>
+                The external ID of the group to which this event belongs
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.GroupName">
+            <summary>
+                The name of the group the event belongs to
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.Title">
+            <summary>
+            The title of the event,  for example March 2019 Meetup. Must be unique for the group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.Description">
+            <summary>
+            A description of the event,  in markdown format.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.Location">
+            <summary>
+            The location of the event, for example York Minster,  Room 201 York St John University
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.StartTimeUTC">
+            <summary>
+            Date and time the event starts
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.EndTimeUTC">
+            <summary>
+            Date and time the event ends.  Must be after the StartTime
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.MaximumNumberOfAttendees">
+            <summary>
+                How many people + guests are allowed to sign up.  This includes hosts and speakers
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.Members">
+            <summary>
+            Attendees of this group
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.SignedUp">
+            <summary>
+                Are they still signed up
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Attended">
+            <summary>
+                Did they attend the event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Host">
+            <summary>
+                Are they organising the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Speaker">
+            <summary>
+                Are they presenting at the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.DietaryRequirements">
+            <summary>
+                Any Dietary Requirements the user has
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.MessageToOrganiser">
+            <summary>
+                Free format message to the organiser
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.NumberOfGuests">
+            <summary>
+                The number of unregistered guest the person is bringing
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.EmailAddress">
             <summary>
                 The email address which also links all the social media accounts together.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.Pronoun">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Pronoun">
             <summary>
                 The users preferred personal pronon.  e.g. Him
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.Fullname">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Fullname">
             <summary>
                 The user's fullname.  e.g David Betteridge
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.DisplayName">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.DisplayName">
             <summary>
                 The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
                 (Has to be unique)
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.Bio">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Bio">
             <summary>
                 The user's biography.  This can include their place of work/student,  any interests etc.
                 Visible to all signed in members
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.Group.GroupMember.IsApproved">
+        <member name="P:VenimusAPIs.Models.GroupMember.UserId">
+            <summary>
+                Unique ID of the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.IsAdministrator">
+            <summary>
+                Are they an administrator of the group?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupMember.IsApproved">
             <summary>
                 Has their membership been approved by the group administrator?
             </summary>
@@ -519,93 +519,108 @@
                 The user's social media identities
             </summary>
         </member>
-        <member name="T:VenimusAPIs.Resources.Messages">
+        <member name="T:VenimusAPIs.Resources.ResourceMessages">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.ResourceManager">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.ResourceManager">
             <summary>
               Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.Culture">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.Culture">
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_ALREADY_EXISTS">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_ALREADY_EXISTS">
             <summary>
               Looks up a localized string similar to An event with this slug already exists for this group..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_END_BEFORE_START">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_END_BEFORE_START">
             <summary>
               Looks up a localized string similar to You cannot create an event which ends before it starts..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_HAS_HAPPENED">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_HAS_HAPPENED">
             <summary>
               Looks up a localized string similar to The event cannot be deleted as it has already taken place..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_HAS_TAKEN_PLACE">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_HAS_TAKEN_PLACE">
             <summary>
               Looks up a localized string similar to This event has already taken place.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_IN_THE_PAST">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_IN_THE_PAST">
             <summary>
               Looks up a localized string similar to You cannot create an event in the past..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.EVENT_IS_FULL">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_IS_FULL">
             <summary>
               Looks up a localized string similar to Sorry this is event is full..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME">
             <summary>
               Looks up a localized string similar to A group using this name already exists.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG">
             <summary>
               Looks up a localized string similar to A group using this slug already exists.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.GROUP_HAS_EVENTS">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.GROUP_HAS_EVENTS">
             <summary>
               Looks up a localized string similar to The group cannot be deleted as it has one or events.  Please mark the group as InActive instead..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.GUESTS_NOT_ALLOWED">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.GUESTS_NOT_ALLOWED">
             <summary>
               Looks up a localized string similar to This event does not allow you to bring guests.  All attendees must be members of this group..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.MEMBER_ALREADY_APPROVED">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.INTERNALERROR_GROUP_DOES_NOT_EXIST">
+            <summary>
+              Looks up a localized string similar to Internal Error - The group does not exist in the database..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_EXIST">
+            <summary>
+              Looks up a localized string similar to Internal Error - The user does not exist in the database..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_HAVE_ACCESS_TOKEN">
+            <summary>
+              Looks up a localized string similar to Internal Error  -The user does not have an access token..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.MEMBER_ALREADY_APPROVED">
             <summary>
               Looks up a localized string similar to The user&apos;s membership of this group has already been approved..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.NOT_A_MEMBER_OF_THE_GROUP">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.NOT_A_MEMBER_OF_THE_GROUP">
             <summary>
               Looks up a localized string similar to The user does not belong to this group.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.TOO_MANY_PEOPLE">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.TOO_MANY_PEOPLE">
             <summary>
               Looks up a localized string similar to Sorry this will exceed the maximum number of people allowed to attend this event..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.USER_ALREADY_EXISTS_WITH_THIS_NAME">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.USER_ALREADY_EXISTS_WITH_THIS_NAME">
             <summary>
               Looks up a localized string similar to A user with this display name already exists..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Resources.Messages.USER_ALREADY_SIGNED_UP">
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.USER_ALREADY_SIGNED_UP">
             <summary>
               Looks up a localized string similar to You are already signed up to this event..
             </summary>

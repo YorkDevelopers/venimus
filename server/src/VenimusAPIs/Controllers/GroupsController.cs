@@ -20,9 +20,9 @@ namespace VenimusAPIs.Controllers
         private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
-        private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
 
-        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<Messages> stringLocalizer)
+        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _eventStore = eventStore;
             _groupStore = groupStore;
@@ -55,17 +55,17 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] CreateGroup group)
         {
-            var duplicateGroup = await _groupStore.RetrieveGroupBySlug(group.Slug);
+            var duplicateGroup = await _groupStore.RetrieveGroupBySlug(group.Slug).ConfigureAwait(false);
             if (duplicateGroup != null)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
                 ModelState.AddModelError(nameof(CreateGroup.Slug), message);
             }
 
-            duplicateGroup = await _groupStore.RetrieveGroupByName(group.Name);
+            duplicateGroup = await _groupStore.RetrieveGroupByName(group.Name).ConfigureAwait(false);
             if (duplicateGroup != null)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
                 ModelState.AddModelError(nameof(CreateGroup.Name), message);
             }
 
@@ -76,7 +76,7 @@ namespace VenimusAPIs.Controllers
 
             var model = _mapper.Map<Models.Group>(group);
 
-            await _groupStore.StoreGroup(model);
+            await _groupStore.StoreGroup(model).ConfigureAwait(false);
 
             return CreatedAtRoute("Groups", new { groupSlug = model.Slug }, group);
         }
@@ -107,7 +107,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             if (group == null)
             {
@@ -118,10 +118,10 @@ namespace VenimusAPIs.Controllers
 
             if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateGroup = await _groupStore.RetrieveGroupBySlug(newDetails.Slug);
+                var duplicateGroup = await _groupStore.RetrieveGroupBySlug(newDetails.Slug).ConfigureAwait(false);
                 if (duplicateGroup != null)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_SLUG).Value;
                     ModelState.AddModelError(nameof(UpdateGroup.Slug), message);
                 }
 
@@ -130,10 +130,10 @@ namespace VenimusAPIs.Controllers
 
             if (!group.Name.Equals(newDetails.Name, System.StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicateGroup = await _groupStore.RetrieveGroupByName(newDetails.Name);
+                var duplicateGroup = await _groupStore.RetrieveGroupByName(newDetails.Name).ConfigureAwait(false);
                 if (duplicateGroup != null)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_ALREADY_EXISTS_WITH_THIS_NAME).Value;
                     ModelState.AddModelError(nameof(UpdateGroup.Name), message);
                 }
 
@@ -147,12 +147,12 @@ namespace VenimusAPIs.Controllers
 
             _mapper.Map(newDetails, group);
 
-            await _groupStore.UpdateGroup(group);
+            await _groupStore.UpdateGroup(group).ConfigureAwait(false);
 
             if (updateEvents)
             {
                 var groupChangedMessage = new ServiceBusMessages.GroupChangedMessage { GroupId = group.Id.ToString() };
-                await bus.Publish(groupChangedMessage);
+                await bus.Publish(groupChangedMessage).ConfigureAwait(false);
             }
 
             return NoContent();
@@ -177,7 +177,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetGroup>> Get(string groupSlug)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             if (group == null)
             {
@@ -205,7 +205,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder)
         {
-            var groups = await _groupStore.RetrieveAllGroups();
+            var groups = await _groupStore.RetrieveAllGroups().ConfigureAwait(false);
 
             var server = $"{Request.Scheme}://{Request.Host}";
 
@@ -216,7 +216,7 @@ namespace VenimusAPIs.Controllers
                 Name = grp.Name,
                 SlackChannelName = grp.SlackChannelName,
                 Slug = grp.Slug,
-                Logo = groupLogoURLBuilder.BuildGroupLogoURL(grp.Slug),
+                Logo = groupLogoURLBuilder.BuildGroupLogoURL(grp.Slug).ToString(),
             }).ToArray();
 
             return viewModels;
@@ -239,7 +239,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetLogo([FromRoute, Slug] string groupSlug)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
             if (group == null)
             {
                 return NotFound();
@@ -266,19 +266,19 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete([FromRoute] string groupSlug)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
             if (group != null)
             {
-                var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(groupSlug);
+                var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(groupSlug).ConfigureAwait(false);
                 if (eventsExistForGroup)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.GROUP_HAS_EVENTS).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_HAS_EVENTS).Value;
                     var details = new ValidationProblemDetails { Detail = message };
                     return ValidationProblem(details);
                 }
 
-                await _groupStore.DeleteGroup(group);
+                await _groupStore.DeleteGroup(group).ConfigureAwait(false);
             }
 
             return NoContent();

@@ -18,9 +18,9 @@ namespace VenimusAPIs.Controllers
         private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
-        private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
 
-        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<Messages> stringLocalizer)
+        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _eventStore = eventStore;
             _groupStore = groupStore;
@@ -59,20 +59,20 @@ namespace VenimusAPIs.Controllers
         {
             if (newEvent.StartTimeUTC < DateTime.UtcNow)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_IN_THE_PAST).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_IN_THE_PAST).Value;
                 ModelState.AddModelError(nameof(newEvent.StartTimeUTC), message);
             }
 
             if (newEvent.StartTimeUTC >= newEvent.EndTimeUTC)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_END_BEFORE_START).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_END_BEFORE_START).Value;
                 ModelState.AddModelError(nameof(newEvent.EndTimeUTC), message);
             }
 
-            var duplicate = await _eventStore.GetEvent(groupSlug, newEvent.Slug);
+            var duplicate = await _eventStore.GetEvent(groupSlug, newEvent.Slug).ConfigureAwait(false);
             if (duplicate != null)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_ALREADY_EXISTS).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_ALREADY_EXISTS).Value;
                 ModelState.AddModelError(nameof(newEvent.Slug), message);
             }
 
@@ -81,14 +81,14 @@ namespace VenimusAPIs.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
-            var model = _mapper.Map<Models.Event>(newEvent);
+            var model = _mapper.Map<Models.GroupEvent>(newEvent);
             model.GroupSlug = groupSlug;
             model.GroupId = group!.Id;
             model.GroupName = group.Name;
 
-            await _eventStore.StoreEvent(model);
+            await _eventStore.StoreEvent(model).ConfigureAwait(false);
             return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);
         }
 
@@ -123,7 +123,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] UpdateEvent amendedEvent)
         {
-            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (model == null)
             {
                 return NotFound();
@@ -131,17 +131,17 @@ namespace VenimusAPIs.Controllers
 
             if (!model.Slug.Equals(amendedEvent.Slug, StringComparison.InvariantCultureIgnoreCase))
             {
-                var duplicate = await _eventStore.GetEvent(groupSlug, amendedEvent.Slug);
+                var duplicate = await _eventStore.GetEvent(groupSlug, amendedEvent.Slug).ConfigureAwait(false);
                 if (duplicate != null)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.EVENT_ALREADY_EXISTS).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_ALREADY_EXISTS).Value;
                     ModelState.AddModelError(nameof(amendedEvent.Slug), message);
                 }
             }
 
             if (amendedEvent.StartTimeUTC >= amendedEvent.EndTimeUTC)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_END_BEFORE_START).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_END_BEFORE_START).Value;
                 ModelState.AddModelError(nameof(amendedEvent.EndTimeUTC), message);
             }
 
@@ -152,7 +152,7 @@ namespace VenimusAPIs.Controllers
 
             _mapper.Map(amendedEvent, model);
 
-            await _eventStore.UpdateEvent(model);
+            await _eventStore.UpdateEvent(model).ConfigureAwait(false);
             return NoContent();
         }
 
@@ -174,17 +174,17 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (model != null)
             {
                 if (model.EndTimeUTC < DateTime.UtcNow)
                 {
-                    var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_HAPPENED).Value;
+                    var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_HAS_HAPPENED).Value;
                     var details = new ValidationProblemDetails { Detail = message };
                     return ValidationProblem(details);
                 }
 
-                await _eventStore.DeleteEvent(model);
+                await _eventStore.DeleteEvent(model).ConfigureAwait(false);
             }
 
             return NoContent();
@@ -210,7 +210,7 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetEvent>> Get([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            var model = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var model = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (model == null)
             {
                 return NotFound();

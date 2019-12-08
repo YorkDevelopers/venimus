@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     public class AmendRegistrationForEvent_Success : BaseTest
     {
         private Group _existingGroup;
-        private Event _existingEvent;
+        private GroupEvent _existingEvent;
         private ViewModels.AmendRegistrationForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_Success(Fixture fixture) : base(fixture)

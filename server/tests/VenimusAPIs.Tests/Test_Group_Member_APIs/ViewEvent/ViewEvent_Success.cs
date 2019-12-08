@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.ViewEvent
     [Story(AsA = "ViewEvent", IWant = "To be able to view an existing event", SoThat = "I know the details")]
     public class ViewEvent_Success : BaseTest
     {
-        private Event _event;
+        private GroupEvent _event;
         private Group _group;
 
         public ViewEvent_Success(Fixture fixture) : base(fixture)

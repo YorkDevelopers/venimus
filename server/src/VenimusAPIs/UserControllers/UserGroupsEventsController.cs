@@ -15,9 +15,9 @@ namespace VenimusAPIs.UserControllers
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
-        private readonly IStringLocalizer<Messages> _stringLocalizer;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
 
-        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore, IStringLocalizer<Messages> stringLocalizer)
+        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _eventStore = eventStore;
             _userStore = userStore;
@@ -53,7 +53,7 @@ namespace VenimusAPIs.UserControllers
         public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
         {
             var eventSlug = signUpDetails.EventSlug;
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
@@ -61,12 +61,12 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member != null)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.USER_ALREADY_SIGNED_UP).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.USER_ALREADY_SIGNED_UP).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
@@ -75,7 +75,7 @@ namespace VenimusAPIs.UserControllers
 
             if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.GUESTS_NOT_ALLOWED).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.GUESTS_NOT_ALLOWED).Value;
                 ModelState.AddModelError(nameof(RegisterForEvent.NumberOfGuests), message);
             }
 
@@ -87,7 +87,7 @@ namespace VenimusAPIs.UserControllers
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
             if ((numberAttending + 1 + signUpDetails.NumberOfGuests) > theEvent.MaximumNumberOfAttendees)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_IS_FULL).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_IS_FULL).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
@@ -96,14 +96,14 @@ namespace VenimusAPIs.UserControllers
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
                 });
             }
 
-            theEvent.Members.Add(new Models.Event.EventAttendees
+            theEvent.Members.Add(new Models.GroupEventAttendees
             {
                 DietaryRequirements = signUpDetails.DietaryRequirements,
                 MessageToOrganiser = signUpDetails.MessageToOrganiser,
@@ -117,7 +117,7 @@ namespace VenimusAPIs.UserControllers
                 Pronoun = existingUser.Pronoun,
             });
 
-            await _eventStore.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
 
             return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
         }
@@ -149,7 +149,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] AmendRegistrationForEvent newDetails)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
@@ -157,13 +157,13 @@ namespace VenimusAPIs.UserControllers
 
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             var created = false;
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
             {
-                member = new Models.Event.EventAttendees
+                member = new Models.GroupEventAttendees
                 {
                     UserId = existingUser.Id,
                 };
@@ -174,7 +174,7 @@ namespace VenimusAPIs.UserControllers
 
             if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.GUESTS_NOT_ALLOWED).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.GUESTS_NOT_ALLOWED).Value;
                 ModelState.AddModelError(nameof(AmendRegistrationForEvent.NumberOfGuests), message);
             }
 
@@ -183,7 +183,7 @@ namespace VenimusAPIs.UserControllers
 
             if ((numberAttending + delta) > theEvent.MaximumNumberOfAttendees)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.TOO_MANY_PEOPLE).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.TOO_MANY_PEOPLE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
@@ -197,7 +197,7 @@ namespace VenimusAPIs.UserControllers
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
@@ -209,7 +209,7 @@ namespace VenimusAPIs.UserControllers
             member.NumberOfGuests = newDetails.NumberOfGuests;
             member.MessageToOrganiser = newDetails.MessageToOrganiser;
 
-            await _eventStore.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
 
             if (created)
             {
@@ -242,7 +242,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
@@ -250,32 +250,32 @@ namespace VenimusAPIs.UserControllers
 
             if (theEvent.EndTimeUTC < DateTime.UtcNow)
             {
-                var message = _stringLocalizer.GetString(Resources.Messages.EVENT_HAS_TAKEN_PLACE).Value;
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_HAS_TAKEN_PLACE).Value;
                 return ValidationProblem(new ValidationProblemDetails
                 {
                     Detail = message,
                 });
             }
 
-            var member = await GetUsersRegistrationForThisEvent(theEvent);
+            var member = await GetUsersRegistrationForThisEvent(theEvent).ConfigureAwait(false);
 
             member.SignedUp = false;
 
-            await _eventStore.UpdateEvent(theEvent);
+            await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
 
             return NoContent();
         }
 
-        private async Task<Models.Event.EventAttendees> GetUsersRegistrationForThisEvent(Models.Event theEvent)
+        private async Task<Models.GroupEventAttendees> GetUsersRegistrationForThisEvent(Models.GroupEvent theEvent)
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
             {
-                member = new Models.Event.EventAttendees
+                member = new Models.GroupEventAttendees
                 {
                     UserId = existingUser.Id,
                 };
@@ -306,14 +306,14 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug);
+            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
             }
 
             var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _userStore.GetUserByID(uniqueID);
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
