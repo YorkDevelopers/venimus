@@ -4,31 +4,32 @@
     ViewData["Title"] = "Home page";
 }
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome To York Developers</h1>
-        <br />
-        <h2>The following communities are active in York,  join up to get involved</h2>
-        <br />
-        <table>
-            @foreach (var item in Model.ViewModel)
-            {
-                <tr>
-                    <td><img class="groupLogo" src="@item.Logo" /></td>
-                    <td>@item.Description</td>
-                </tr>
-                <tr>
-                    <td>@item.Name</td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>
-                    
-                    <a href="/JoinGroup?groupSlug=@item.Slug">Join Now</a></td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-            }
-        </table>
-    </div>
+<div class="text-center">
+    <h1 class="display-4">Welcome To York Developers</h1>
+    <br />
+    <h2>The following communities are active in York,  join up to get involved</h2>
+    <br />
+    <table>
+        @foreach (var item in Model.ViewModel)
+        {
+            <tr>
+                <td><img class="groupLogo" src="@item.Logo" /></td>
+                <td><markdown>@item.Description</markdown></td>
+            </tr>
+            <tr>
+                <td>@item.Name</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>
+
+                    <a href="/JoinGroup?groupSlug=@item.Slug">Join Now</a>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        }
+    </table>
+</div>
