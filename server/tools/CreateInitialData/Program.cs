@@ -11,7 +11,7 @@ namespace CreateInitialData
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Please wait...");
 
             var s = new VenimusAPIs.Settings.MongoDBSettings();
             s.ConnectionString = "mongodb+srv://app:ZsZoyFiGaWWxx6kG@cluster0-mwrwp.azure.mongodb.net/test?retryWrites=true&w=majority";
@@ -36,6 +36,8 @@ Want to have some fun coding in a relaxed and friendly environment? Interested i
 **All languages and levels of experience welcome.**
 
 See our website for more information [yorkcodedojo.github.io](http://yorkcodedojo.github.io/)
+Some symbols are ' "" < >    (tab) & <script>alert(0);</alert>
+
 ",
                 Logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg"),
                 IsActive = true,
@@ -75,6 +77,8 @@ See our website for more information [yorkcodedojo.github.io](http://yorkcodedoj
             };
 
             await groups.InsertOneAsync(codeAndCoffee);
+
+            Console.WriteLine("Done");
         }
     }
 }

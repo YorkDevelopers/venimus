@@ -22,8 +22,7 @@ namespace YorkDeveloperEvents.TagHelpers
 
             var markdown = await GetContent(output);
 
-            var pipeline = new MarkdownPipelineBuilder().UseSoftlineBreakAsHardlineBreak().Build();
-            var html = Markdown.ToHtml(markdown, pipeline);
+            var html = Markdown.ToHtml(FixUnicodeEncoding(markdown));
             output.Content.SetHtmlContent(html ?? "");
         }
 
@@ -34,5 +33,10 @@ namespace YorkDeveloperEvents.TagHelpers
 
             return Content.Model?.ToString();
         }
+
+        private string FixUnicodeEncoding(string original) =>
+            original.Replace("&#xD;", "\r")
+                    .Replace("&#xA;", "\n")
+                    .Replace("&#x9;", "\t");
     }
 }
