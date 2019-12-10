@@ -36,7 +36,7 @@ Want to have some fun coding in a relaxed and friendly environment? Interested i
 **All languages and levels of experience welcome.**
 
 See our website for more information [yorkcodedojo.github.io](http://yorkcodedojo.github.io/)
-Some symbols are ' "" < >    (tab) & <script>alert(0);</alert>
+Some symbols are ' "" < >    (tab) & <script>alert(0);</script>
 
 ",
                 Logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg"),

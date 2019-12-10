@@ -25,7 +25,14 @@
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td><a href="/UnregisterFromEvent?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">Unregister From Event</a></td>
+                <td>
+                    <form action="/UnregisterFromEvent" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="groupSlug" name="groupSlug" value="@item.GroupSlug" />
+                        <input type="hidden" id="eventSlug" name="eventSlug" value="@item.EventSlug" />
+                        <button type="submit">Unregister From Event</button>
+                    </form>
+                </td>
             </tr>
             <tr>
                 <td>&nbsp;</td>

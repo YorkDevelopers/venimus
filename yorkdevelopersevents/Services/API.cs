@@ -34,6 +34,13 @@ namespace YorkDeveloperEvents.Services
             var response = await client.PostAsJsonAsync($"api/User/Groups/{groupSlug}/Events", registerForEvent);
             response.EnsureSuccessStatusCode();
         }
+        internal async Task UnRegisterFromEvent(string groupSlug, string eventSlug)
+        {
+            var client = await Client();
+
+            var response = await client.DeleteAsync($"api/user/groups/{groupSlug}/Events/{eventSlug}");
+            response.EnsureSuccessStatusCode();
+        }
 
         public async Task<ListMyGroups[]> ListMyGroups()
         {
