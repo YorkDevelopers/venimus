@@ -84,6 +84,7 @@ namespace VenimusAPIs.UserControllers
                 SlackChannelName = grp.SlackChannelName,
                 Slug = grp.Slug,
                 Logo = $"{server}/api/groups/{grp.Slug}/logo",
+                CanViewMembers = UserIsASystemAdministrator || grp.Members.First(m => m.UserId == existingUser.Id).IsApproved,
             }).ToArray();
 
             return viewModels;

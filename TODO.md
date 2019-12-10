@@ -1,6 +1,18 @@
 
 TODO!
 
+
+Frontend
+--------
+Hide show group members button
+Allow the user to change their registration details
+Improve the registration details screen.
+Allow the user to view the attendees of an event.
+Create button test data
+Email support
+Slack integration 
+
+
 System adminstrators can :  Ban Users
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}

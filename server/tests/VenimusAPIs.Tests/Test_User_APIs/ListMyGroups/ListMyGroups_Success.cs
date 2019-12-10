@@ -50,7 +50,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
 
             _inGroup2 = Data.Create<Models.Group>(g =>
             {
-                Data.AddGroupMember(g, User);
+                Data.AddApprovedGroupMember(g, User);
                 g.IsActive = true;
             });
 
@@ -78,11 +78,11 @@ namespace VenimusAPIs.Tests.ListMyGroups
             var groups = JsonSerializer.Deserialize<ViewModels.ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, groups.Length);
-            AssertGroup(groups, _inGroup1);
-            AssertGroup(groups, _inGroup2);
+            AssertGroup(groups, _inGroup1, false);
+            AssertGroup(groups, _inGroup2, true);
         }
 
-        private void AssertGroup(ViewModels.ListMyGroups[] actualGroups, Group expectedGroup)
+        private void AssertGroup(ViewModels.ListMyGroups[] actualGroups, Group expectedGroup, bool approvedGroupMember)
         {
             var actualGroup = actualGroups.Single(e => e.Slug == expectedGroup.Slug);
 
@@ -90,6 +90,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
             Assert.Equal(expectedGroup.Name, actualGroup.Name);
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.Equal(approvedGroupMember, actualGroup.CanViewMembers);
             Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
         }
     }

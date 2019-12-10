@@ -1231,6 +1231,11 @@
                 The group's logo as either an URL or in Base64.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ListMyGroups.CanViewMembers">
+            <summary>
+                Can this user view the list of members in this group?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.EventSlug">
             <summary>
                 The unique ID for the event.

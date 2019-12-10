@@ -26,5 +26,10 @@
         ///     The group's logo as either an URL or in Base64.
         /// </summary>
         public string Logo { get; set; }
+
+        /// <summary>
+        ///     Can this user view the list of members in this group?
+        /// </summary>
+        public bool CanViewMembers { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace VenimusAPIs.ViewModels
+﻿using System.Collections.Generic;
+
+namespace VenimusAPIs.ViewModels
 {
     public class ListMyGroups
     {
@@ -26,5 +28,10 @@
         ///     The group's logo as either an URL or in Base64.
         /// </summary>
         public string Logo { get; set; } = default!;
+        
+        /// <summary>
+        ///     Can this user view the list of members in this group?
+        /// </summary>
+        public bool CanViewMembers { get; set; }
     }
 }
