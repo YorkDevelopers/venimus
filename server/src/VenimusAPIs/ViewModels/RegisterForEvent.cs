@@ -5,11 +5,6 @@ namespace VenimusAPIs.ViewModels
     public class RegisterForEvent
     {
         /// <summary>
-        ///     The unique ID for the event.
-        /// </summary>
-        public string EventSlug { get; set; } = default!;
-
-        /// <summary>
         ///     The number of unregistered guests joining the user
         /// </summary>
         [Range(0, int.MaxValue)]

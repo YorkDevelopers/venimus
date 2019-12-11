@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VenimusAPIs.ViewModels
+﻿namespace YorkDeveloperEvents.ViewModels
 {
-    public class AmendRegistrationForEvent
+    public class ViewMyEventRegistration
     {
         /// <summary>
         ///     The number of unregistered guests joining the user
         /// </summary>
-        [Range(0, int.MaxValue)]
         public int NumberOfGuests { get; set; }
 
         /// <summary>
@@ -19,5 +16,10 @@ namespace VenimusAPIs.ViewModels
         ///     Free format message to the event host.
         /// </summary>
         public string MessageToOrganiser { get; set; } = default!;
+
+        /// <summary>
+        ///     Has the user said they are attending the event?
+        /// </summary>
+        public bool Attending { get; set; }
     }
 }

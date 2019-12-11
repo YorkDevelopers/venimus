@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     {
         private Group _existingGroup;
         private GroupEvent _existingEvent;
-        private ViewModels.AmendRegistrationForEvent _amendedDetails;
+        private ViewModels.RegisterForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_NotSignedUp(Fixture fixture) : base(fixture)
         {
@@ -49,7 +49,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 
         private async Task WhenICallTheApi()
         {
-            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+            _amendedDetails = Data.Create<ViewModels.RegisterForEvent>();
             _amendedDetails.NumberOfGuests = 5;
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);

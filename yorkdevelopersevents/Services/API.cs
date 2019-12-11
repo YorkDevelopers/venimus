@@ -27,13 +27,14 @@ namespace YorkDeveloperEvents.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        internal async Task RegisterForEvent(string groupSlug, RegisterForEvent registerForEvent)
+        internal async Task RegisterForEvent(string groupSlug, string eventSlug, RegisterForEvent registerForEvent)
         {
             var client = await Client();
 
-            var response = await client.PostAsJsonAsync($"api/User/Groups/{groupSlug}/Events", registerForEvent);
+            var response = await client.PutAsJsonAsync($"api/User/Groups/{groupSlug}/Events/{eventSlug}", registerForEvent);
             response.EnsureSuccessStatusCode();
         }
+
         internal async Task UnRegisterFromEvent(string groupSlug, string eventSlug)
         {
             var client = await Client();
@@ -84,6 +85,12 @@ namespace YorkDeveloperEvents.Services
         {
             var client = await Client();
             return await client.GetAsJson<ViewAllMyEventRegistrations[]>("api/user/events");
+        }
+
+        internal async Task<ViewMyEventRegistration> GetEventRegistrationDetails(string groupSlug, string eventSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<ViewMyEventRegistration>($"api/user/groups/{groupSlug}/events/{eventSlug}");
         }
     }
 }

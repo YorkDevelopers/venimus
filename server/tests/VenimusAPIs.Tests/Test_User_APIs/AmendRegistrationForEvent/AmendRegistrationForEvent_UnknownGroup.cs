@@ -8,7 +8,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class AmendRegistrationForEvent_UnknownGroup : BaseTest
     {
-        private ViewModels.AmendRegistrationForEvent _amendedDetails;
+        private ViewModels.RegisterForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_UnknownGroup(Fixture fixture) : base(fixture)
         {
@@ -24,7 +24,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 
         private async Task WhenICallTheApiForAnUnknownGroup()
         {
-            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+            _amendedDetails = Data.Create<ViewModels.RegisterForEvent>();
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/MADEUP/Events/MADEUP", _amendedDetails);
         }

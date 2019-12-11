@@ -26,7 +26,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
 
-            Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/MADEUP/Events", _signUpToEvent);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/MADEUP/Events/MADEUP", _signUpToEvent);
         }
 
         private void ThenNotFoundResponseIsReturned()

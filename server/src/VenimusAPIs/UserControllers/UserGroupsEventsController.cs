@@ -25,104 +25,6 @@ namespace VenimusAPIs.UserControllers
         }
 
         /// <summary>
-        ///     Allows the current user to sign up to an event
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /api/user/groups/YorkCodeDojo/Events
-        ///     {
-        ///         "eventSlug" : "Nov2019",
-        ///         "numberOfGuest" : 1,
-        ///         "dietaryRequirements" : "Milk free",
-        ///         "messageToOrganiser" : "I might be 10 minutes late"
-        ///     }
-        ///
-        /// </remarks>
-        /// <returns>The route to the created group</returns>
-        /// <response code="204">Success</response>
-        /// <response code="401">User is not authorized.</response>
-        /// <response code="404">Group does not exist</response>
-        [Authorize]
-        [CallerMustBeGroupMember]
-        [HttpPost]
-        [Route("api/User/Groups/{groupSlug}/Events")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Post([FromRoute, Slug] string groupSlug, [FromBody] RegisterForEvent signUpDetails)
-        {
-            var eventSlug = signUpDetails.EventSlug;
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
-            if (theEvent == null)
-            {
-                return NotFound();
-            }
-
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
-            if (member != null)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.USER_ALREADY_SIGNED_UP).Value;
-                return ValidationProblem(new ValidationProblemDetails
-                {
-                    Detail = message,
-                });
-            }
-
-            if (signUpDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.GUESTS_NOT_ALLOWED).Value;
-                ModelState.AddModelError(nameof(RegisterForEvent.NumberOfGuests), message);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return ValidationProblem(ModelState);
-            }
-
-            var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
-            if ((numberAttending + 1 + signUpDetails.NumberOfGuests) > theEvent.MaximumNumberOfAttendees)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_IS_FULL).Value;
-                return ValidationProblem(new ValidationProblemDetails
-                {
-                    Detail = message,
-                });
-            }
-
-            if (theEvent.EndTimeUTC < DateTime.UtcNow)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_HAS_TAKEN_PLACE).Value;
-                return ValidationProblem(new ValidationProblemDetails
-                {
-                    Detail = message,
-                });
-            }
-
-            theEvent.Members.Add(new Models.GroupEventAttendees
-            {
-                DietaryRequirements = signUpDetails.DietaryRequirements,
-                MessageToOrganiser = signUpDetails.MessageToOrganiser,
-                NumberOfGuests = signUpDetails.NumberOfGuests,
-                UserId = existingUser.Id,
-                SignedUp = true,
-                Bio = existingUser.Bio,
-                DisplayName = existingUser.DisplayName,
-                EmailAddress = existingUser.EmailAddress,
-                Fullname = existingUser.Fullname,
-                Pronoun = existingUser.Pronoun,
-            });
-
-            await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
-
-            return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
-        }
-
-        /// <summary>
         ///     Allows the current user to update their registration for an event
         /// </summary>
         /// <remarks>
@@ -147,7 +49,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] AmendRegistrationForEvent newDetails)
+        public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] RegisterForEvent newDetails)
         {
             var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
@@ -166,6 +68,11 @@ namespace VenimusAPIs.UserControllers
                 member = new Models.GroupEventAttendees
                 {
                     UserId = existingUser.Id,
+                    Bio = existingUser.Bio,
+                    DisplayName = existingUser.DisplayName,
+                    EmailAddress = existingUser.EmailAddress,
+                    Fullname = existingUser.Fullname,
+                    Pronoun = existingUser.Pronoun,
                 };
 
                 theEvent.Members.Add(member);
@@ -175,7 +82,7 @@ namespace VenimusAPIs.UserControllers
             if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
                 var message = _stringLocalizer.GetString(Resources.ResourceMessages.GUESTS_NOT_ALLOWED).Value;
-                ModelState.AddModelError(nameof(AmendRegistrationForEvent.NumberOfGuests), message);
+                ModelState.AddModelError(nameof(RegisterForEvent.NumberOfGuests), message);
             }
 
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);

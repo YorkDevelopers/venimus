@@ -39,9 +39,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApiForAnEventWhichDoesNotExist()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.EventSlug = "MADEUP";
 
-            Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/MADEUP", _signUpToEvent);
         }
 
         private void ThenNotFoundResponseIsReturned()

@@ -14,7 +14,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         private string ExpectedMessage = string.Empty; 
         private Group _existingGroup;
         private GroupEvent _existingEvent;
-        private ViewModels.AmendRegistrationForEvent _amendedDetails;
+        private ViewModels.RegisterForEvent _amendedDetails;
         private GroupEventAttendees _currentRegistration;
 
         public AmendRegistrationForEvent_TooManyPeople(Fixture fixture) : base(fixture)
@@ -59,7 +59,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 
         private async Task WhenICallTheApiWithTooManyGuests()
         {
-            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+            _amendedDetails = Data.Create<ViewModels.RegisterForEvent>();
             _amendedDetails.NumberOfGuests = 10;
 
             Fixture.APIClient.SetCulture(Culture);

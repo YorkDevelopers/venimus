@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
     public class RegisterForEvent_Full : BaseTest
     {
         private string Culture = string.Empty;
-        private string ExpectedMessage = string.Empty; 
+        private string ExpectedMessage = string.Empty;
         private Group _existingGroup;
         private GroupEvent _existingEvent;
         private ViewModels.RegisterForEvent _signUpToEvent;
@@ -25,8 +25,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         {
             this.WithExamples(new ExampleTable("Culture", "ExpectedMessage")
             {
-                { Cultures.Normal, "Sorry this is event is full." },
-                { Cultures.Test, "'\u20AC'Sorry this is event is full." },
+                { Cultures.Normal, "Sorry this will exceed the maximum number of people allowed to attend this event." },
+                { Cultures.Test, "'\u20AC'Sorry this will exceed the maximum number of people allowed to attend this event." },
             }).BDDfy();
         }
 
@@ -64,10 +64,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApi()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.EventSlug = _existingEvent.Slug;
 
             Fixture.APIClient.SetCulture(Culture);
-            Response = await Fixture.APIClient.PostAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events", _signUpToEvent);
+            Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()

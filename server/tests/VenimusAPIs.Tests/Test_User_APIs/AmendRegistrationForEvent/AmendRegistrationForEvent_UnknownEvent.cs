@@ -10,7 +10,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
     public class AmendRegistrationForEvent_UnknownEvent : BaseTest
     {
         private Group _existingGroup;
-        private ViewModels.AmendRegistrationForEvent _amendedDetails;
+        private ViewModels.RegisterForEvent _amendedDetails;
 
         public AmendRegistrationForEvent_UnknownEvent(Fixture fixture) : base(fixture)
         {
@@ -36,7 +36,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
 
         private async Task WhenICallTheApiForAnUnknownEvent()
         {
-            _amendedDetails = Data.Create<ViewModels.AmendRegistrationForEvent>();
+            _amendedDetails = Data.Create<ViewModels.RegisterForEvent>();
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/MADEUP", _amendedDetails);
         }

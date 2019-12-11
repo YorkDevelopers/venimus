@@ -50,31 +50,9 @@ Allows the user to view all the future events they have signed up to.  The follo
 
 ---
 
-## POST api/user/groups/{GroupSlug}/Events
-
-Allows the user to sign up for an event.  The following details must be provided:
-
-* __EventSlug__ - the ID of the event within the group.
-* __NumberOfGuests__ - the number of unregistered guests
-* __DietaryRequirements__ - any dietary requirements
-* __MessageToOrganiser__ - free format message
-
-### Business Rules
-
-* Group does not exist
-* Event does not belong to the group
-* Event is in the past
-* Event is full
-* NumberOfGuests is positive
-* Guests not allowed  
-* User is not a member of the group
-* A user can only sign up once.
-
----
-
 ## PUT api/user/groups/{GroupSlug}/Events/{EventSlug}
 
-Allows the user to amend their registration for an event.  The following details must be provided:
+Allows the user to register or amend their registration for an event.  The following details must be provided:
 
 * __NumberOfGuests__ - the number of unregistered guests
 * __DietaryRequirements__ - any dietary requirements

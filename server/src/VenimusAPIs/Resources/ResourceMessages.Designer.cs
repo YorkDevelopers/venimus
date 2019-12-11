@@ -106,15 +106,6 @@ namespace VenimusAPIs.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry this is event is full..
-        /// </summary>
-        public static string EVENT_IS_FULL {
-            get {
-                return ResourceManager.GetString("EVENT_IS_FULL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A group using this name already exists.
         /// </summary>
         public static string GROUP_ALREADY_EXISTS_WITH_THIS_NAME {

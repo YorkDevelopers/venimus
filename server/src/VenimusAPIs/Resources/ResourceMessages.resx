@@ -132,9 +132,6 @@
   <data name="EVENT_IN_THE_PAST" xml:space="preserve">
     <value>You cannot create an event in the past.</value>
   </data>
-  <data name="EVENT_IS_FULL" xml:space="preserve">
-    <value>Sorry this is event is full.</value>
-  </data>
   <data name="GROUP_ALREADY_EXISTS_WITH_THIS_NAME" xml:space="preserve">
     <value>A group using this name already exists</value>
   </data>

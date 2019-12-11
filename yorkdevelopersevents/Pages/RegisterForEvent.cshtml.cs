@@ -13,26 +13,43 @@ namespace YorkDeveloperEvents
         [BindProperty]
         public RegisterForEvent RegisterForEvent { get; set; }
 
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string EventSlug { get; set; }
+
+        [BindProperty]
+        public bool CurrentlyRegistered { get; set; }
 
         public GetEvent Event;
 
-        public async Task OnGet([FromServices] API api, string groupSlug, string eventSlug)
+        public async Task OnGet([FromServices] API api)
         {
-            await api.JoinGroup(groupSlug);
+            await api.JoinGroup(GroupSlug);
 
-            Event = await api.GetEvent(groupSlug, eventSlug);
+            Event = await api.GetEvent(GroupSlug, EventSlug);
 
-            GroupSlug = groupSlug;
+            var currentRegistration = await api.GetEventRegistrationDetails(GroupSlug, EventSlug);
+
+            if (currentRegistration != null)
+            {
+                RegisterForEvent = new RegisterForEvent
+                {
+                    DietaryRequirements = currentRegistration.DietaryRequirements,
+                    MessageToOrganiser = currentRegistration.MessageToOrganiser,
+                    NumberOfGuests = currentRegistration.NumberOfGuests,
+                };
+
+                CurrentlyRegistered = currentRegistration.Attending;
+            }
         }
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
-            await api.RegisterForEvent(GroupSlug, RegisterForEvent);
+            await api.RegisterForEvent(GroupSlug, EventSlug, RegisterForEvent);
 
             return LocalRedirect("/MyEvents");
-
         }
     }
 }

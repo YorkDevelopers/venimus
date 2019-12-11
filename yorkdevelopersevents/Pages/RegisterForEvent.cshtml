@@ -9,18 +9,28 @@
 <form action="/RegisterForEvent" method="post">
     @Html.AntiForgeryToken()
 
-    <label asp-for="RegisterForEvent.DietaryRequirements"  ></label>
+    <label asp-for="RegisterForEvent.DietaryRequirements"></label>
     <input asp-for="RegisterForEvent.DietaryRequirements" /><br />
 
     <label asp-for="RegisterForEvent.MessageToOrganiser"></label>
     <input asp-for="RegisterForEvent.MessageToOrganiser" /><br />
 
-    <label asp-for="RegisterForEvent.NumberOfGuests" ></label>
+    <label asp-for="RegisterForEvent.NumberOfGuests"></label>
     <input asp-for="RegisterForEvent.NumberOfGuests" type="number" /><br />
 
-    <input name="RegisterForEvent.EventSlug" type="hidden" value="@Model.Event.EventSlug" />
+    <input name="EventSlug" type="hidden" value="@Model.EventSlug" />
 
     <input name="GroupSlug" type="hidden" value="@Model.GroupSlug" />
+    <input name="CurrentlyRegistered" type="hidden" value="@(Model.CurrentlyRegistered ? "true" : "false")" />
 
-    <button type="submit">Register</button>
+    @if (Model.CurrentlyRegistered)
+    {
+        <button type="submit">Amend Registration</button>
+    }
+    else
+    {
+        <button type="submit">Register</button>
+    }
+
+
 </form>
