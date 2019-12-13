@@ -159,6 +159,12 @@
   <data name="NOT_A_MEMBER_OF_THE_GROUP" xml:space="preserve">
     <value>The user does not belong to this group</value>
   </data>
+  <data name="NUMBER_OF_GUESTS_IS_NEGATIVE" xml:space="preserve">
+    <value>The NumberOfGuests cannot be less than zero.</value>
+  </data>
+  <data name="QUESTION_NUMBEROFGUESTS" xml:space="preserve">
+    <value>Number of Guests</value>
+  </data>
   <data name="TOO_MANY_PEOPLE" xml:space="preserve">
     <value>Sorry this will exceed the maximum number of people allowed to attend this event.</value>
   </data>

@@ -1,23 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VenimusAPIs.ViewModels
 {
     public class RegisterForEvent
     {
         /// <summary>
-        ///     The number of unregistered guests joining the user
+        ///     The user's answers
         /// </summary>
-        [Range(0, int.MaxValue)]
-        public int NumberOfGuests { get; set; }
-
-        /// <summary>
-        ///     Any Dietary Requirements.
-        /// </summary>
-        public string DietaryRequirements { get; set; } = default!;
-
-        /// <summary>
-        ///     Free format message to the event host.
-        /// </summary>
-        public string MessageToOrganiser { get; set; } = default!;
+        /// <returns></returns>
+        public List<Answer> Answers { get; set; } = new List<Answer>();
     }
 }

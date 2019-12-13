@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -59,7 +60,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApi()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.NumberOfGuests = 0;
+            _signUpToEvent.AddAnswer("NumberOfGuests", "0");
+            _signUpToEvent.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
+            _signUpToEvent.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
 
             Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);

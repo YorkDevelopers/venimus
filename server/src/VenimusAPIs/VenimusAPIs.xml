@@ -373,6 +373,11 @@
             Attendees of this group
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.Questions">
+            <summary>
+                Questions to ask the user when they are registering
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.GroupEventAttendees.SignedUp">
             <summary>
                 Are they still signed up
@@ -475,6 +480,21 @@
         <member name="P:VenimusAPIs.Models.GroupMember.IsApproved">
             <summary>
                 Has their membership been approved by the group administrator?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Question.Code">
+            <summary>
+                Unique ID for this question.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Question.Caption">
+            <summary>
+                Question shown to the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Question.QuestionType">
+            <summary>
+                Type of question,  text, date, boolean etc
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.User.Id">
@@ -603,6 +623,16 @@
         <member name="P:VenimusAPIs.Resources.ResourceMessages.NOT_A_MEMBER_OF_THE_GROUP">
             <summary>
               Looks up a localized string similar to The user does not belong to this group.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.NUMBER_OF_GUESTS_IS_NEGATIVE">
+            <summary>
+              Looks up a localized string similar to The NumberOfGuests cannot be less than zero..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS">
+            <summary>
+              Looks up a localized string similar to Number of Guests.
             </summary>
         </member>
         <member name="P:VenimusAPIs.Resources.ResourceMessages.TOO_MANY_PEOPLE">
@@ -821,6 +851,16 @@
             The caller doesn't need to be a member of the group if they have the System Administrator role.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.Answer.Code">
+            <summary>
+                Unique ID for this question.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.Answer.UsersAnswer">
+            <summary>
+                Answer from the user
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ApproveMember.UserSlug">
             <summary>
                 The Slug of the user we are approving.
@@ -934,6 +974,11 @@
         <member name="P:VenimusAPIs.ViewModels.GetEvent.GuestsAllowed">
             <summary>
                 Are members allowed to bring guests to this event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetEvent.Questions">
+            <summary>
+                Questions to ask the user when they are registering
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.Slug">
@@ -1195,20 +1240,26 @@
                 Can this user view the list of members in this group?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.NumberOfGuests">
+        <member name="P:VenimusAPIs.ViewModels.Question.Code">
             <summary>
-                The number of unregistered guests joining the user
+                Unique ID for this question.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.DietaryRequirements">
+        <member name="P:VenimusAPIs.ViewModels.Question.Caption">
             <summary>
-                Any Dietary Requirements.
+                Question shown to the user
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.MessageToOrganiser">
+        <member name="P:VenimusAPIs.ViewModels.Question.QuestionType">
             <summary>
-                Free format message to the event host.
+                Type of question,  text, date, boolean etc
             </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.RegisterForEvent.Answers">
+            <summary>
+                The user's answers
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateEvent.Slug">
             <summary>

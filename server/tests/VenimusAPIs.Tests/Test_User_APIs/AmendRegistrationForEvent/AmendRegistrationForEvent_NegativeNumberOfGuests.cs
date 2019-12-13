@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -55,14 +56,16 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         private async Task WhenICallTheApiWithANegativeNubmerOfGuests()
         {
             _amendedDetails = Data.Create<ViewModels.RegisterForEvent>();
-            _amendedDetails.NumberOfGuests = -3;
+            _amendedDetails.AddAnswer("NumberOfGuests", "-3");
+            _amendedDetails.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
+            _amendedDetails.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _amendedDetails);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("NumberOfGuests", "The field NumberOfGuests must be between 0 and 2147483647.");
+            return AssertBadRequest("NumberOfGuests", "The NumberOfGuests cannot be less than zero.");
         }
 
         private async Task ThenTheUsersRegistrationIsNotUpdated()

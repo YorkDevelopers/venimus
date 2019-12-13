@@ -70,5 +70,10 @@ namespace VenimusAPIs.Models
         /// Attendees of this group
         /// </summary>
         public List<GroupEventAttendees> Members { get; set; } = new List<GroupEventAttendees>();
+
+        /// <summary>
+        ///     Questions to ask the user when they are registering
+        /// </summary>
+        public List<Question> Questions { get; set; } = new List<Question>();
     }
 }

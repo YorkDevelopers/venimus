@@ -187,6 +187,24 @@ namespace VenimusAPIs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The NumberOfGuests cannot be less than zero..
+        /// </summary>
+        public static string NUMBER_OF_GUESTS_IS_NEGATIVE {
+            get {
+                return ResourceManager.GetString("NUMBER_OF_GUESTS_IS_NEGATIVE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of Guests.
+        /// </summary>
+        public static string QUESTION_NUMBEROFGUESTS {
+            get {
+                return ResourceManager.GetString("QUESTION_NUMBEROFGUESTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sorry this will exceed the maximum number of people allowed to attend this event..
         /// </summary>
         public static string TOO_MANY_PEOPLE {

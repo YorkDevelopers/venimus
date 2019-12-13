@@ -64,6 +64,23 @@ Some symbols are ' "" < >    (tab) & <script>alert(0);</script>
             };
             await events.InsertOneAsync(evt);
 
+            evt = new Event
+            {
+                Description = "This month will work together on some TDD problems",
+                GroupName = yorkDevelopers.Name,
+                GroupId = yorkDevelopers.Id,
+                Location = "TBA",
+                GroupSlug = yorkDevelopers.Slug,
+                Members = new System.Collections.Generic.List<Event.EventAttendees>(),
+                Title = "Jan Meeting",
+                StartTimeUTC = new DateTime(2020, 1, 8, 18, 30, 0),
+                EndTimeUTC = new DateTime(2020, 1, 8, 21, 00, 0),
+                GuestsAllowed = true,
+                MaximumNumberOfAttendees = 26,
+                Slug = "JAN2020",
+            };
+            await events.InsertOneAsync(evt);
+
 
             var codeAndCoffee = new Group
             {

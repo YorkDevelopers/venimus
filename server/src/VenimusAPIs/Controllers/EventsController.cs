@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
@@ -26,6 +27,16 @@ namespace VenimusAPIs.Controllers
             _groupStore = groupStore;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
+        }
+
+        private static ViewModels.Question MapQuestion(Models.Question model)
+        {
+            return new Question
+            {
+                Caption = model.Caption,
+                Code = model.Code,
+                QuestionType = model.QuestionType.ToString(),
+            };
         }
 
         /// <summary>
@@ -227,7 +238,29 @@ namespace VenimusAPIs.Controllers
                 GuestsAllowed = model.GuestsAllowed,
                 GroupName = model.GroupName,
                 EventLocation = model.Location,
+                Questions = AddNumberOfGuestsQuestionIfApplicable(model.GuestsAllowed, model.Questions.Select(q => MapQuestion(q)).ToArray()),
             };
+        }
+
+        private ViewModels.Question CreateNumberOfGuestsQuestion()
+        {
+            return new Question
+            {
+                Caption = _stringLocalizer.GetString(Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS).Value,
+                Code = "NumberOfGuests",
+                QuestionType = Models.QuestionType.NumberOfGuests.ToString(),
+            };
+        }
+
+        private Question[] AddNumberOfGuestsQuestionIfApplicable(bool guestsAllowed, Question[] questions)
+        {
+            if (guestsAllowed)
+            {
+                var extraQuestion = new Question[] { CreateNumberOfGuestsQuestion() };
+                questions = extraQuestion.Union(questions).ToArray();
+            }
+
+            return questions;
         }
     }
 }

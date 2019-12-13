@@ -9,11 +9,11 @@
 <form action="/RegisterForEvent" method="post">
     @Html.AntiForgeryToken()
 
-    <label asp-for="RegisterForEvent.DietaryRequirements"></label>
-    <input asp-for="RegisterForEvent.DietaryRequirements" /><br />
-
-    <label asp-for="RegisterForEvent.MessageToOrganiser"></label>
-    <input asp-for="RegisterForEvent.MessageToOrganiser" /><br />
+    @foreach (var question in @Model.Event.Questions)
+    {
+        <label for="@question.Code">@question.Caption</label>
+        <input type="text" id="@question.Code" name="@question.Code" /><br />
+    }
 
     <label asp-for="RegisterForEvent.NumberOfGuests"></label>
     <input asp-for="RegisterForEvent.NumberOfGuests" type="number" /><br />

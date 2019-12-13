@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -48,14 +49,16 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApiWithANegativeNumberOfGuests()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.NumberOfGuests = -2;
+            _signUpToEvent.AddAnswer("NumberOfGuests", "-2");
+            _signUpToEvent.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
+            _signUpToEvent.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);
         }
 
         private Task ThenABadRequestResponseIsReturned()
         {
-            return AssertBadRequest("NumberOfGuests", "The field NumberOfGuests must be between 0 and 2147483647.");
+            return AssertBadRequest("NumberOfGuests", "The NumberOfGuests cannot be less than zero.");
         }
 
         private async Task ThenTheUserIsNotAMemberOfTheEvent()

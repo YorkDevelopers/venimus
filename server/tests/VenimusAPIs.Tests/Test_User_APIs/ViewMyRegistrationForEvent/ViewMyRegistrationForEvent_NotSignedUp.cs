@@ -1,7 +1,9 @@
+using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
+using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
@@ -46,9 +48,12 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             Response = await Fixture.APIClient.GetAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}");
         }
 
-        private void ThenANotFoundResponseIsReturned()
+        private async Task ThenTheDetailsOfTheRegistrationAreReturned()
         {
-            Assert.Equal(System.Net.HttpStatusCode.NotFound, Response.StatusCode);
+            var json = await Response.Content.ReadAsStringAsync();
+            var actualRegistration = JsonSerializer.Deserialize<ViewMyEventRegistration>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            Assert.False(actualRegistration.Attending);
         }
     }
 }

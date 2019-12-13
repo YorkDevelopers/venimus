@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -48,7 +49,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApi()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.NumberOfGuests = 5;
+            _signUpToEvent.AddAnswer("NumberOfGuests", "5");
+            _signUpToEvent.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
+            _signUpToEvent.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);
         }
@@ -72,9 +75,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
 
             var member = actualEvent.Members[0];
             Assert.Equal(User.Id.ToString(), member.UserId.ToString());
-            Assert.Equal(_signUpToEvent.DietaryRequirements, member.DietaryRequirements);
-            Assert.Equal(_signUpToEvent.MessageToOrganiser, member.MessageToOrganiser);
-            Assert.Equal(_signUpToEvent.NumberOfGuests, member.NumberOfGuests);
+            Assert.Equal("ExampleDietaryRequirements", member.DietaryRequirements);
+            Assert.Equal("ExampleMessageToOrganiser", member.MessageToOrganiser);
+            Assert.Equal(5, member.NumberOfGuests);
 
             Assert.Equal(User.Bio, member.Bio);
             Assert.Equal(User.DisplayName, member.DisplayName);

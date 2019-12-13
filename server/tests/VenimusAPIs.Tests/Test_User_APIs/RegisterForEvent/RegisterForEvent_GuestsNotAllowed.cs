@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
@@ -57,7 +58,9 @@ namespace VenimusAPIs.Tests.RegisterForEvent
         private async Task WhenICallTheApiWithGuests()
         {
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
-            _signUpToEvent.NumberOfGuests = 2;
+            _signUpToEvent.AddAnswer("NumberOfGuests", "2");
+            _signUpToEvent.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
+            _signUpToEvent.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
 
             Fixture.APIClient.SetCulture(Culture);
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);

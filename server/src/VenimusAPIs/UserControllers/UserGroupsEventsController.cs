@@ -57,6 +57,20 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
+            var numberOfGuestsAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "NumberOfGuests");
+            if (!int.TryParse(numberOfGuestsAnswer?.UsersAnswer ?? "0", out var numberOfGuests) || numberOfGuests < 0)
+            {
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.NUMBER_OF_GUESTS_IS_NEGATIVE).Value;
+                ModelState.AddModelError("NumberOfGuests", message);
+                return ValidationProblem(ModelState);
+            }
+           
+            var dietaryRequirementsAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "DietaryRequirements");
+            var dietaryRequirements = dietaryRequirementsAnswer?.UsersAnswer ?? string.Empty;
+
+            var messageToOrganiserAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "MessageToOrganiser");
+            var messageToOrganiser = messageToOrganiserAnswer?.UsersAnswer ?? string.Empty;
+
             var uniqueID = UniqueIDForCurrentUser;
 
             var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
@@ -79,14 +93,14 @@ namespace VenimusAPIs.UserControllers
                 created = true;
             }
 
-            if (newDetails.NumberOfGuests > 0 && !theEvent.GuestsAllowed)
+            if (numberOfGuests > 0 && !theEvent.GuestsAllowed)
             {
                 var message = _stringLocalizer.GetString(Resources.ResourceMessages.GUESTS_NOT_ALLOWED).Value;
-                ModelState.AddModelError(nameof(RegisterForEvent.NumberOfGuests), message);
+                ModelState.AddModelError("NumberOfGuests", message);
             }
 
             var numberAttending = theEvent.Members.Where(member => member.SignedUp).Sum(member => member.NumberOfGuests + 1);
-            var delta = (newDetails.NumberOfGuests - member.NumberOfGuests) + (member.SignedUp ? 0 : 1);
+            var delta = (numberOfGuests - member.NumberOfGuests) + (member.SignedUp ? 0 : 1);
 
             if ((numberAttending + delta) > theEvent.MaximumNumberOfAttendees)
             {
@@ -112,9 +126,9 @@ namespace VenimusAPIs.UserControllers
             }
 
             member.SignedUp = true;
-            member.DietaryRequirements = newDetails.DietaryRequirements;
-            member.NumberOfGuests = newDetails.NumberOfGuests;
-            member.MessageToOrganiser = newDetails.MessageToOrganiser;
+            member.DietaryRequirements = dietaryRequirements;
+            member.NumberOfGuests = numberOfGuests;
+            member.MessageToOrganiser = messageToOrganiser;
 
             await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
 
@@ -225,7 +239,10 @@ namespace VenimusAPIs.UserControllers
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
             {
-                return NotFound();
+                return new ViewMyEventRegistration
+                {
+                    Attending = false,
+                };
             }
 
             return new ViewMyEventRegistration

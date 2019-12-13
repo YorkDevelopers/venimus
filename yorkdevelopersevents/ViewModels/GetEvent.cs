@@ -45,8 +45,8 @@ namespace YorkDeveloperEvents.ViewModels
         public int MaximumNumberOfAttendees { get; set; }
 
         /// <summary>
-        ///     Are members allowed to bring guests to this event?
+        ///     Questions to ask the user when they are registering
         /// </summary>
-        public bool GuestsAllowed { get; set; }
+        public Question[] Questions { get; set; } = Array.Empty<Question>();
     }
 }
