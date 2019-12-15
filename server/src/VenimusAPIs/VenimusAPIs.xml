@@ -635,6 +635,16 @@
               Looks up a localized string similar to Number of Guests.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.SLACK_APPROVE_BUTTON">
+            <summary>
+              Looks up a localized string similar to Approve.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.SLACK_REJECT_BUTTON">
+            <summary>
+              Looks up a localized string similar to Reject.
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Resources.ResourceMessages.TOO_MANY_PEOPLE">
             <summary>
               Looks up a localized string similar to Sorry this will exceed the maximum number of people allowed to attend this event..
@@ -658,6 +668,11 @@
         <member name="P:VenimusAPIs.ServiceBusMessages.UserChangedMessage.UserId">
             <summary>
                 The unique internal ID of this user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Settings.SlackSettings.ApproversWebhookUrl">
+            <summary>
+                The webhook to send the approve membership messaeg to.
             </summary>
         </member>
         <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
@@ -748,7 +763,7 @@
              <returns>An array of ListMyGroups view models</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup,VenimusAPIs.Services.Slack)">
              <summary>
                  Allows the current user to join a group
              </summary>

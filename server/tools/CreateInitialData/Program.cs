@@ -36,8 +36,8 @@ Want to have some fun coding in a relaxed and friendly environment? Interested i
 **All languages and levels of experience welcome.**
 
 See our website for more information [yorkcodedojo.github.io](http://yorkcodedojo.github.io/)
-Some symbols are ' "" < >    (tab) & <script>alert(0);</script>
 
+Follow [@YorkCodeDojo](https://twitter.com/YorkCodeDojo/) on Twitter.
 ",
                 Logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg"),
                 IsActive = true,
@@ -46,6 +46,43 @@ Some symbols are ' "" < >    (tab) & <script>alert(0);</script>
             };
 
             await groups.InsertOneAsync(yorkDevelopers);
+
+
+            var codeAndCoffee = new Group
+            {
+                Name = "York Code and Coffee",
+                Slug = "YORKCODEANDCOFFEE",
+                Description = "York Code And Coffee - An informal meeting of Software Developers and Tech Professionals before we start our working day. We meet at in a coffee shop from 7:30am onwards twice a week.",
+                Logo = await File.ReadAllBytesAsync("images/code_and_coffee_logo_small.bmp"),
+                IsActive = true,
+                SlackChannelName = "codeandcoffee",
+                Members = new System.Collections.Generic.List<Group.GroupMember>(),
+            };
+
+            await groups.InsertOneAsync(codeAndCoffee);
+
+
+            var frontEndYork = new Group
+            {
+                Name = "Front-End-York",
+                Slug = "FRONTENDYORK",
+                Description = @"Front-End-York is the perfect MeetUp for anyone interested in Front End Web Development, Design and UX. From HTML to React, UI to interaction design; we’re going to be discussing absolutely everything front end.
+We’re a friendly bunch and everyone is welcome - regardless if you’re just starting out in the industry or have over a decade of experience, if you pop along we promise you won’t be bored!
+Fancy speaking at one of our MeetUps? Great! Get in touch with an organiser so we can pencil something in. Speakers of any experience welcome.
+Endorsed by YorkDevelopers.
+Follow [@FrontEndYork](https://twitter.com/frontendyork/) on Twitter.",
+                Logo = await File.ReadAllBytesAsync("images/front_end_york_logo.bmp"),
+                IsActive = true,
+                SlackChannelName = "front-end-york",
+                Members = new System.Collections.Generic.List<Group.GroupMember>(),
+            };
+
+            await groups.InsertOneAsync(frontEndYork);
+
+
+
+
+
 
             var evt = new Event
             {
@@ -82,18 +119,7 @@ Some symbols are ' "" < >    (tab) & <script>alert(0);</script>
             await events.InsertOneAsync(evt);
 
 
-            var codeAndCoffee = new Group
-            {
-                Name = "York Code and Coffee",
-                Slug = "YORKCODEANDCOFFEE",
-                Description = "York Code And Coffee - An informal meeting of Software Developers and Tech Professionals before we start our working day. We meet at in a coffee shop from 7:30am onwards twice a week.",
-                Logo = await File.ReadAllBytesAsync("images/code_and_coffee_logo_small.bmp"),
-                IsActive = true,
-                SlackChannelName = "codeandcoffee",
-                Members = new System.Collections.Generic.List<Group.GroupMember>(),
-            };
 
-            await groups.InsertOneAsync(codeAndCoffee);
 
             Console.WriteLine("Done");
         }

@@ -15,11 +15,7 @@
         <input type="text" id="@question.Code" name="@question.Code" /><br />
     }
 
-    <label asp-for="RegisterForEvent.NumberOfGuests"></label>
-    <input asp-for="RegisterForEvent.NumberOfGuests" type="number" /><br />
-
     <input name="EventSlug" type="hidden" value="@Model.EventSlug" />
-
     <input name="GroupSlug" type="hidden" value="@Model.GroupSlug" />
     <input name="CurrentlyRegistered" type="hidden" value="@(Model.CurrentlyRegistered ? "true" : "false")" />
 
