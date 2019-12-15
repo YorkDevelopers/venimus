@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
+using System;
 using System.Collections.Generic;
 using VenimusAPIs.Services.SlackModels;
 
@@ -41,7 +42,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
+                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
                              AltText = "Profile Picture",
                          },
                     },
@@ -109,7 +110,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
+                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
                              AltText = "Profile Picture",
                          },
                     },
@@ -144,7 +145,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
+                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
                              AltText = "Profile Picture",
                          },
                     },

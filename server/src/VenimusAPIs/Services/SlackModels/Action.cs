@@ -1,4 +1,6 @@
-﻿namespace VenimusAPIs.Services.SlackModels
+﻿using Newtonsoft.Json;
+
+namespace VenimusAPIs.Services.SlackModels
 {
     public class Action
     {
