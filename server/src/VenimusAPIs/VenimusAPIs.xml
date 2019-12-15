@@ -748,7 +748,7 @@
              <returns>An array of ListMyGroups view models</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup,VenimusAPIs.Services.Slack)">
              <summary>
                  Allows the current user to join a group
              </summary>

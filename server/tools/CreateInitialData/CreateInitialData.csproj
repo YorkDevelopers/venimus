@@ -15,6 +15,9 @@
     <None Update="images\code_and_coffee_logo_small.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="images\front_end_york_logo.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="images\York_Code_Dojo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

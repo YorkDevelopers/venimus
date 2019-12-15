@@ -44,8 +44,6 @@ namespace VenimusAPIs
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseSwagger();
 
             app.AddLocalisation();
@@ -124,6 +122,7 @@ namespace VenimusAPIs
 
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
+            services.AddSingleton<Services.Slack>();
             services.AddHttpContextAccessor();
             services.AddControllers();
 
