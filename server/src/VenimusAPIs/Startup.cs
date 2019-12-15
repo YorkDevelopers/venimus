@@ -126,6 +126,7 @@ namespace VenimusAPIs
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
             services.AddSingleton<Services.Slack>();
+            services.AddSingleton<Services.SlackMessages>();
             services.AddHttpContextAccessor();
             services.AddControllers();
 

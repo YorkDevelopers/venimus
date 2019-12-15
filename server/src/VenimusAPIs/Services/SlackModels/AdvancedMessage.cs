@@ -7,5 +7,8 @@ namespace VenimusAPIs.Services.SlackModels
     {
         [JsonProperty("blocks", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<IBlock> Blocks { get; set; } = new List<IBlock>();
+
+        [JsonProperty("replace_original", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? ReplaceOriginal { get; set; }
     }
 }
