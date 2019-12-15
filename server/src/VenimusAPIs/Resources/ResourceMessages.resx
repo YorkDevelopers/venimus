@@ -165,6 +165,12 @@
   <data name="QUESTION_NUMBEROFGUESTS" xml:space="preserve">
     <value>Number of Guests</value>
   </data>
+  <data name="SLACK_APPROVE_BUTTON" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="SLACK_REJECT_BUTTON" xml:space="preserve">
+    <value>Reject</value>
+  </data>
   <data name="TOO_MANY_PEOPLE" xml:space="preserve">
     <value>Sorry this will exceed the maximum number of people allowed to attend this event.</value>
   </data>

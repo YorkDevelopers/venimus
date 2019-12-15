@@ -139,7 +139,8 @@ namespace VenimusAPIs.UserControllers
 
                 await _groupStore.UpdateGroup(model).ConfigureAwait(false);
 
-                await slack.SendMessage(existingUser).ConfigureAwait(false);
+                var message = slack.BuildApprovalRequestMessage(existingUser);
+                await slack.SendAdvancedMessage(message).ConfigureAwait(false);
             }
 
             return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);

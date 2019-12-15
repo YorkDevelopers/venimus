@@ -205,6 +205,24 @@ namespace VenimusAPIs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string SLACK_APPROVE_BUTTON {
+            get {
+                return ResourceManager.GetString("SLACK_APPROVE_BUTTON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reject.
+        /// </summary>
+        public static string SLACK_REJECT_BUTTON {
+            get {
+                return ResourceManager.GetString("SLACK_REJECT_BUTTON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sorry this will exceed the maximum number of people allowed to attend this event..
         /// </summary>
         public static string TOO_MANY_PEOPLE {

@@ -1,6 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using AutoMapper;
 using HealthChecks.UI.Client;
 using MassTransit;
@@ -12,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using VenimusAPIs.Registration;
 using VenimusAPIs.Validation;
 
@@ -72,6 +72,9 @@ namespace VenimusAPIs
 
             services.Configure<Settings.MongoDBSettings>(
                 options => Configuration.GetSection("MongoDB").Bind(options));
+
+            services.Configure<Settings.SlackSettings>(
+                options => Configuration.GetSection("Slack").Bind(options));
 
             services.AddAuthentication(options =>
             {
@@ -134,6 +137,8 @@ namespace VenimusAPIs
             {
                 client.BaseAddress = new System.Uri($"https://{Configuration["Auth0:Domain"]}");
             });
+
+            services.AddHttpClient("Slack");
 
             services.AddHttpClient("ImageSource");
 

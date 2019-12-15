@@ -1,23 +1,31 @@
-﻿using System;
+﻿using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VenimusAPIs.Extensions;
+using VenimusAPIs.Services.SlackModels;
+using VenimusAPIs.Settings;
 
 namespace VenimusAPIs.Services
 {
-#pragma warning disable SA1027 // Use tabs correctly
-#pragma warning disable SA1300 // Element should begin with upper-case letter
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-
-    public class Slack
+    public partial class Slack
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
+        private readonly URLBuilder _urlBuilder;
+        private readonly SlackSettings _slackSettings;
 
-        public Slack(IHttpClientFactory httpClientFactory)
+        public Slack(
+                     IHttpClientFactory httpClientFactory,
+                     IOptions<SlackSettings> settings,
+                     IStringLocalizer<ResourceMessages> stringLocalizer,
+                     URLBuilder urlBuilder)
         {
             _httpClientFactory = httpClientFactory;
+            _stringLocalizer = stringLocalizer;
+            _urlBuilder = urlBuilder;
+            _slackSettings = settings.Value;
         }
 
         public async Task SendBasicMessage(string message)
@@ -28,136 +36,83 @@ namespace VenimusAPIs.Services
             };
 
             var client = _httpClientFactory.CreateClient("Slack");
-            var response = await client.PostAsJsonAsync(new Uri("XXXXXX), data).ConfigureAwait(false);
+            var response = await client.PostAsJsonAsync(_slackSettings.ApproversWebhookUrl, data).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task SendMessage(Models.User user)
+        public async Task SendAdvancedMessage(AdvancedMessage message)
         {
-            var data = new AdvancedMessage
+            var client = _httpClientFactory.CreateClient("Slack");
+            var response = await client.PostAsJsonAsync(_slackSettings.ApproversWebhookUrl, message).ConfigureAwait(false);
+            var txt = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public AdvancedMessage BuildApprovalRequestMessage(Models.User user)
+        {
+            var advancedMessage = new AdvancedMessage
             {
-                blocks = new List<Block>()
+                Blocks = new List<IBlock>()
                 {
                     new SectionBlock
                     {
-                         type = "section",
-                         text = new Text
+                         Type = "section",
+                         Text = new MarkdownText
                          {
-                             type = "mrkdwn",
-                             text = $"{user.Fullname} would like to join the group YorkCodeDojo:",
+                             Text = $"{user.Fullname} would like to join YorkDevelopers",
                          },
                     },
                     new SectionBlock
                     {
-                         type = "section",
-                         text = new Text
+                         Type = "section",
+                         Text = new MarkdownText
                          {
-                             type = "mrkdwn",
-                             text = $"<mailto:{user.EmailAddress}|{user.EmailAddress}> \n \n {user.Bio}",
+                             Text = $"<mailto:{user.EmailAddress}|{user.EmailAddress}> \n \n {user.Bio}",
                          },
-                         accessory = new Accessory
+                         Accessory = new Accessory
                          {
-                             type = "image",
-                             image_url = "https://venimus-api.azurewebsites.net/api/users/5df4172d3f14e0a4c0c03ecd/profilepicture",
-                             alt_text = "Profile Picture",
+                             Type = "image",
+                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
+                             AltText = "Profile Picture",
                          },
                     },
                     new ActionBlock
                     {
-                        type = "actions",
-                        elements = new Element[]
+                        Type = "actions",
+                        Elements = new Element[]
                         {
                             new Element
                             {
-                                type = "button",
-                                text = new ButtonText
+                                Type = "button",
+                                ActionID = "APPROVE_MEMBERSHIP",
+                                Text = new ButtonText
                                 {
-                                    type = "plain_text",
-                                    text = "Approve",
-                                    emoji = true,
+                                    Type = "plain_text",
+                                    Text = _stringLocalizer.GetString(Resources.ResourceMessages.SLACK_APPROVE_BUTTON).Value,
+                                    Emoji = true,
                                 },
-                                style = "primary",
-                                value = user.Id.ToString(),
+                                Style = "primary",
+                                Value = user.Id.ToString(),
                             },
                             new Element
                             {
-                                type = "button",
-                                text = new ButtonText
+                                Type = "button",
+                                ActionID = "REJECT_MEMBERSHIP",
+                                Text = new ButtonText
                                 {
-                                    type = "plain_text",
-                                    text = "Reject",
-                                    emoji = true,
+                                    Type = "plain_text",
+                                    Text = _stringLocalizer.GetString(Resources.ResourceMessages.SLACK_REJECT_BUTTON).Value,
+                                    Emoji = true,
                                 },
-                                style = "danger",
-                                value = user.Id.ToString(),
+                                Style = "danger",
+                                Value = user.Id.ToString(),
                             },
                         },
                     },
                 },
             };
 
-            var client = _httpClientFactory.CreateClient("Slack");
-            var response = await client.PostAsJsonAsync(new Uri("XXXX"), data).ConfigureAwait(false);
-            var txt = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-        }
-
-        private class AdvancedMessage
-        {
-            public List<Block> blocks { get; set; }
-        }
-
-        private class Block
-        {
-            public string type { get; set; }
-        }
-
-        private class ActionBlock : Block
-        {
-            public Element[] elements { get; set; }
-        }
-
-        private class SectionBlock : Block
-        {
-            public Text text { get; set; }
-
-            public Accessory accessory { get; set; }
-        }
-
-        private class Text
-        {
-            public string type { get; set; }
-
-            public string text { get; set; }
-        }
-
-        private class ButtonText
-        {
-            public string type { get; set; }
-
-            public string text { get; set; }
-
-            public bool emoji { get; set; }
-        }
-
-        private class Accessory
-        {
-            public string type { get; set; }
-
-            public string image_url { get; set; }
-
-            public string alt_text { get; set; }
-        }
-
-        private class Element
-        {
-            public string type { get; set; }
-            
-            public string style { get; set; }
-
-            public string value { get; set; }
-
-            public ButtonText text { get; set; }
+            return advancedMessage;
         }
     }
 }
