@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
+using VenimusAPIs.Services.SlackModels;
 
 namespace VenimusAPIs.PublicControllers
 {
@@ -88,21 +89,6 @@ namespace VenimusAPIs.PublicControllers
 
             var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
             await _bus.Publish(userChangedMessage).ConfigureAwait(false);
-        }
-
-        public class Action
-        {
-            [JsonProperty("action_id", DefaultValueHandling = DefaultValueHandling.Ignore)]
-            public string ActionID { get; set; } = default!;
-
-            [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-            public string Value { get; set; } = default!;
-        }
-
-        public class InteractionUser
-        {
-            [JsonProperty("username", DefaultValueHandling = DefaultValueHandling.Ignore)]
-            public string UserName { get; set; } = default!;
         }
     }
 }

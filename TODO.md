@@ -1,11 +1,14 @@
-
 TODO!
+
+Add tests around call from slack.  Maybe mock using PACT
+
+Add approvedBy,  approvedOn,  rejectedBy,  rejectedOn to the User model.
+
+Can the user login if they have been rejected?  Is that the same as banned?
 
 
 Frontend
 --------
-Hide show group members button
-Allow the user to change their registration details
 Improve the registration details screen.
 Allow the user to view the attendees of an event.
 Create button test data
@@ -13,7 +16,7 @@ Email support
 Slack integration 
 
 
-System adminstrators can :  Ban Users
+System adminstrators can :  Ban Users (same as reject?)
 ### POST /api/BannedUsers/{userslug}
 ### DELETE /api/BannedUsers/{userslug}
 
@@ -31,34 +34,10 @@ Logging (driven by events?)
 
 Automatically call /user/connected from Auth0?   Or should /user/connected indicate if this is a new user?
 
-
-
 Allow an email address to be changed.  What should happen?  Confirm via email?  Update member details in groups+events
-
-
-
-Denormalise Groups into the user record
 
 Notify members when things happen
 
 Groups are sometimes retrieved twice.  Could cache.   
 
 Rename controllers
-
-
-## User Images
-    group members
-    event members
-
-Add ImageURL to the user
-Include the ImageURL in these results
-Add endpoint to serve up the image URL.
-
-
-Include user's profile picture.
-Base64 images  as per Kevin's suggestion
-
-
-## Future Ideas
-
-Move images to Blob storage
