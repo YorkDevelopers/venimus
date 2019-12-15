@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 
 namespace VenimusAPIs.PublicControllers
 {
@@ -9,19 +12,40 @@ namespace VenimusAPIs.PublicControllers
         [Route("public/SlackWebHook")]
         [HttpPost]
         [Consumes("application/x-www-form-urlencoded")]
-        public IActionResult Post()
+        public async Task<IActionResult> Post([FromServices] Mongo.UserStore userStore)
         {
             var data = Request.Form["payload"];
             var interaction = JsonConvert.DeserializeObject<Interaction>(data);
+            var action = interaction.Actions[0];
 
-            return Ok(interaction.type);
+            if (action.ActionID == "APPROVE_MEMBERSHIP")
+            {
+                var userID = new ObjectId(action.Value);
+                var user = await userStore.GetUserById(userID).ConfigureAwait(false);
+                user.IsApproved = true;
+                await userStore.UpdateUser(user).ConfigureAwait(false);
+            }
+
+            return Ok();
         }
 
 #pragma warning disable CA1034 // Nested types should not be visible
-#pragma warning disable SA1300 // Element should begin with upper-case letter
         public class Interaction
         {
-            public string type { get; set; } = default!;
+            [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+            public string Type { get; set; } = default!;
+
+            [JsonProperty("actions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+            public Action[] Actions { get; set; } = Array.Empty<Action>();
+        }
+
+        public class Action
+        {
+            [JsonProperty("action_id", DefaultValueHandling = DefaultValueHandling.Ignore)]
+            public string ActionID { get; set; } = default!;
+
+            [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+            public string Value { get; set; } = default!;
         }
     }
 }
