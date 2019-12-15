@@ -37,12 +37,16 @@ namespace VenimusAPIs.Tests
                 {
                     services.AddSingleton(sp => MockAuth0);
                     services.AddSingleton(sp => MockImageSource);
+                    services.AddSingleton(sp => MockSlack);
 
                     services.AddHttpClient("Auth0")
                         .AddHttpMessageHandler<MockAuth0>();
 
                     services.AddHttpClient("ImageSource")
                         .AddHttpMessageHandler<MockImageSource>();
+
+                    services.AddHttpClient("Slack")
+                        .AddHttpMessageHandler<MockSlack>();
                 });
             }
 
@@ -56,6 +60,7 @@ namespace VenimusAPIs.Tests
 
             MockAuth0 = new MockAuth0();
             MockImageSource = new MockImageSource();
+            MockSlack = new MockSlack();
 
             _fixture = new WebApplicationFactory<Startup>();
             _factory = _fixture.Factories.FirstOrDefault() ?? _fixture.WithWebHostBuilder(ConfigureWebHostBuilder);
@@ -69,6 +74,8 @@ namespace VenimusAPIs.Tests
         public MockAuth0 MockAuth0 { get; }
 
         public MockImageSource MockImageSource { get; }
+
+        public MockSlack MockSlack { get; }
 
         private readonly HttpClient _client;
 
