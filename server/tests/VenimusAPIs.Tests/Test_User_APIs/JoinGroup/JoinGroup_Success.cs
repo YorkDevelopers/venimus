@@ -66,7 +66,7 @@ namespace VenimusAPIs.Tests.JoinGroup
             Assert.Equal(User.Fullname, newMember.Fullname);
             Assert.Equal(User.Pronoun, newMember.Pronoun);
             Assert.False(newMember.IsAdministrator);
-            Assert.False(newMember.IsApproved);
+            Assert.False(newMember.IsUserApproved);
         }
     }
 }

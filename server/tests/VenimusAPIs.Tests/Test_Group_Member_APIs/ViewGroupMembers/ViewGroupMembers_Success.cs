@@ -35,10 +35,10 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
 
         private async Task GivenThereAreOtherUsers()
         {
-            _otherUserInGroup1 = Data.Create<Models.User>();
-            _otherUserInGroup2 = Data.Create<Models.User>();
-            _otherUserInGroup3 = Data.Create<Models.User>();
-            _otherUserNotInGroup1 = Data.Create<Models.User>();
+            _otherUserInGroup1 = Data.Create<Models.User>(u => u.IsApproved = false);
+            _otherUserInGroup2 = Data.Create<Models.User>(u => u.IsApproved = true);
+            _otherUserInGroup3 = Data.Create<Models.User>(u => u.IsApproved = true);
+            _otherUserNotInGroup1 = Data.Create<Models.User>(u => u.IsApproved = true);
 
             var collection = UsersCollection();
 
@@ -49,9 +49,9 @@ namespace VenimusAPIs.Tests.ViewGroupMembers
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddApprovedGroupMember(g, User);
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
-                Data.AddApprovedGroupMember(g, _otherUserInGroup2);
+                Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
             });
 

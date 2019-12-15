@@ -71,7 +71,7 @@ namespace VenimusAPIs.Validation
 
                     if (group.Members == null || !group.Members.Any(m => m.UserId == existingUser.Id
                                                                     && (!mustBeAGroupAdministrator || m.IsAdministrator)
-                                                                    && (!mustBeAnApprovedGroupMember || m.IsApproved)))
+                                                                    && (!mustBeAnApprovedGroupMember || existingUser.IsApproved)))
                     {
                         if (useNotFoundRatherThanForbidden)
                         {

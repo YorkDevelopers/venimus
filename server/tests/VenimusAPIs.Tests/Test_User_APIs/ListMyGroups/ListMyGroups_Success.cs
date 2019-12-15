@@ -16,6 +16,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
         private Group _inGroup2;
         private Group _groupNotActive;
         private Group _notInGroup;
+        private bool _userIsApproved = false;
 
         public ListMyGroups_Success(Fixture fixture) : base(fixture)
         {
@@ -24,10 +25,16 @@ namespace VenimusAPIs.Tests.ListMyGroups
         [Fact]
         public void Execute()
         {
-            this.BDDfy();
+            _userIsApproved = false;
+
+            this.WithExamples(new ExampleTable("_userIsApproved")
+            {
+                { false },
+                { true },
+            }).BDDfy();
         }
 
-        private Task GivenIAmUser() => IAmANormalUser();
+        private Task GivenIAmUser() => IAmANormalUser(_userIsApproved);
 
         private async Task GivenGroupsToWhichIBelongToExists()
         {
@@ -50,7 +57,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
 
             _inGroup2 = Data.Create<Models.Group>(g =>
             {
-                Data.AddApprovedGroupMember(g, User);
+                Data.AddGroupMember(g, User);
                 g.IsActive = true;
             });
 
@@ -78,8 +85,8 @@ namespace VenimusAPIs.Tests.ListMyGroups
             var groups = JsonSerializer.Deserialize<ViewModels.ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, groups.Length);
-            AssertGroup(groups, _inGroup1, false);
-            AssertGroup(groups, _inGroup2, true);
+            AssertGroup(groups, _inGroup1, _userIsApproved);
+            AssertGroup(groups, _inGroup2, _userIsApproved);
         }
 
         private void AssertGroup(ViewModels.ListMyGroups[] actualGroups, Group expectedGroup, bool approvedGroupMember)

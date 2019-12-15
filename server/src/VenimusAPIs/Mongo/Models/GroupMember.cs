@@ -42,8 +42,8 @@ namespace VenimusAPIs.Models
         public string Bio { get; set; } = default!;
 
         /// <summary>
-        ///     Has their membership been approved by the group administrator?
+        ///     Has their membership to YorkDevelopers been approved by an administrator?
         /// </summary>
-        public bool IsApproved { get; set; }
+        public bool IsUserApproved { get; set; }
     }
 }

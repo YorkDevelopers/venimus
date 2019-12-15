@@ -118,7 +118,7 @@ namespace VenimusAPIs.Tests.Infrastucture
             Fixture.APIClient.SetBearerToken(Token);
         }
 
-        public async Task IAmANormalUser()
+        public async Task IAmANormalUser(bool isApproved = true)
         {
             UniqueID = Guid.NewGuid().ToString();
             Token = await Fixture.GetTokenForNormalUser(UniqueID);
@@ -126,6 +126,7 @@ namespace VenimusAPIs.Tests.Infrastucture
             User = Data.Create<Models.User>();
             User.Identities = new List<string> { UniqueID };
             User.ProfilePicture = System.IO.File.ReadAllBytes("images/profile.jpg");
+            User.IsApproved = isApproved;
 
             var collection = UsersCollection();
 

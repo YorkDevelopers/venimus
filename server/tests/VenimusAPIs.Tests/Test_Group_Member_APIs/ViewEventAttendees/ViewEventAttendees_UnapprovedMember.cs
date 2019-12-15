@@ -29,7 +29,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             this.BDDfy();
         }
 
-        private Task GivenIAmAUser() => IAmANormalUser();
+        private Task GivenIAmAUser() => IAmANormalUser(isApproved: false);
 
         private async Task GivenThereAreOtherUsers()
         {

@@ -45,7 +45,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
-                Data.AddApprovedGroupMember(g, User);
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
                 Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);

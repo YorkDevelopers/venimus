@@ -59,57 +59,9 @@ namespace VenimusAPIs.Controllers
                 Pronoun = m.Pronoun,
                 Slug = m.UserId.ToString(),
                 IsAdministrator = m.IsAdministrator,
-                IsApproved = m.IsApproved,
+                IsApproved = m.IsUserApproved,
                 ProfilePicture = _urlBuilder.BuildUserDetailsProfilePictureURL(m.UserId),
             }).ToArray();
-        }
-
-        /// <summary>
-        ///     Allows a group administrator to approve a new users membership
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /api/groups/YorkCodeDojo/ApprovedMembers
-        ///     {
-        ///         userSlug : 123455
-        ///     }
-        ///
-        /// </remarks>
-        /// <returns>OK</returns>
-        /// <response code="200">Success</response>
-        /// <response code="400">User cannot be approved.</response>
-        /// <response code="401">No Access.</response>
-        /// <response code="403">No Permission.</response>
-        /// <response code="404">Group does not exist.</response>
-        [Authorize]
-        [Route("api/Groups/{groupSlug}/ApprovedMembers")]
-        [CallerMustBeGroupAdministrator]
-        [HttpPost]
-        public async Task<ActionResult> Post([FromRoute, Slug]string groupSlug, [FromBody] ApproveMember approveMember)
-        {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-
-            var newUser = group!.Members.SingleOrDefault(m => m.UserId == new MongoDB.Bson.ObjectId(approveMember.UserSlug));
-            if (newUser == null)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.NOT_A_MEMBER_OF_THE_GROUP).Value;
-                var details = new ValidationProblemDetails { Detail = message };
-                return ValidationProblem(details);
-            }
-
-            if (newUser.IsApproved == true)
-            {
-                var message = _stringLocalizer.GetString(Resources.ResourceMessages.MEMBER_ALREADY_APPROVED).Value;
-                var details = new ValidationProblemDetails { Detail = message };
-                return ValidationProblem(details);
-            }
-
-            newUser.IsApproved = true;
-
-            await _groupStore.UpdateGroup(group).ConfigureAwait(false);
-
-            return Ok();
         }
     }
 }

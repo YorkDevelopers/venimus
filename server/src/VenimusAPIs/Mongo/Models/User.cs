@@ -47,5 +47,10 @@ namespace VenimusAPIs.Models
         ///     The user's social media identities
         /// </summary>
         public List<string> Identities { get; set; } = new List<string>();
+
+        /// <summary>
+        ///     Has their membership been approved by an administrator?
+        /// </summary>
+        public bool IsApproved { get; set; }
     }
 }
