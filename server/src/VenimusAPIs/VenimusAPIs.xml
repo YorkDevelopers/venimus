@@ -675,7 +675,7 @@
                 The webhook to send the approve membership messaeg to.
             </summary>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
+        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post(VenimusAPIs.Services.Slack)">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
              </summary>
@@ -763,7 +763,7 @@
              <returns>An array of ListMyGroups view models</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup,VenimusAPIs.Services.Slack)">
+        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
              <summary>
                  Allows the current user to join a group
              </summary>

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
-using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -112,7 +111,7 @@ namespace VenimusAPIs.UserControllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Post([FromBody] JoinGroup group, [FromServices] Slack slack)
+        public async Task<IActionResult> Post([FromBody] JoinGroup group)
         {
             var model = await _groupStore.RetrieveGroupBySlug(group.GroupSlug).ConfigureAwait(false);
             if (model == null)
@@ -138,9 +137,6 @@ namespace VenimusAPIs.UserControllers
                 });
 
                 await _groupStore.UpdateGroup(model).ConfigureAwait(false);
-
-                var message = slack.BuildApprovalRequestMessage(existingUser);
-                await slack.SendAdvancedMessage(message).ConfigureAwait(false);
             }
 
             return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
