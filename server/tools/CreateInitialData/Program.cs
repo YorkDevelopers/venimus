@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
@@ -23,103 +24,65 @@ namespace CreateInitialData
             var groups = m.GroupsCollection();
             var events = m.EventsCollection();
 
-            var yorkDevelopers = new Group
+
+            foreach (var meetupFilename in Directory.GetFiles("Meetups", "*.markdown"))
             {
-                Name = "York Code Dojo",
-                Slug = "YORKCODEDOJO",
-                Description = @"York Code Dojo is a group dedicated to programming. We focus on practical coding sessions , where you can learn by doing.
+                Console.WriteLine($"{meetupFilename}"); 
+                var fileContents = File.ReadAllLines(meetupFilename);
+                var title = fileContents.First(line => line.StartsWith("title:")).Substring(7).Trim() ;
+                var slug = title.ToUpper().Replace(" ", "").Replace("-", "");
+                var imageName = fileContents.First(line => line.StartsWith("img:")).Substring("img: img/meetups/".Length).Trim();
+                var strapLine = fileContents[8];
+                var description = string.Join(System.Environment.NewLine, fileContents.Skip(8));
 
-We are based at York St. John University in the City of York and normally meet on the second Wednesday of month.
+                var newGroup = new Group
+                {
+                    Name = title,
+                    Slug = slug,
+                    // StrapLine= strapLine,
+                    Description = description,
+                    Logo = await File.ReadAllBytesAsync("images/" + imageName),
+                    IsActive = true,
+                    SlackChannelName = "yorkcodedoj",
+                    Members = new System.Collections.Generic.List<Group.GroupMember>(),
+                };
 
-Want to have some fun coding in a relaxed and friendly environment? Interested in self-improvement through deliberate practice? Want to see what you can learn from fellow programmers, and teach them what you know? Then York Code Dojo is for you!
+                await groups.InsertOneAsync(newGroup);
+            }
 
-**All languages and levels of experience welcome.**
+            //var evt = new Event
+            //{
+            //    Description = "This month will work together on some Advent of Code problems",
+            //    GroupName = yorkDevelopers.Name,
+            //    GroupId = yorkDevelopers.Id,
+            //    Location = "York St John",
+            //    GroupSlug = yorkDevelopers.Slug,
+            //    Members = new System.Collections.Generic.List<Event.EventAttendees>(),
+            //    Title = "December Meeting",
+            //    StartTimeUTC = new DateTime(2019, 12, 11, 18, 30, 0),
+            //    EndTimeUTC = new DateTime(2019, 12, 11, 21, 00, 0),
+            //    GuestsAllowed = true,
+            //    MaximumNumberOfAttendees = 26,
+            //    Slug = "DEC2019",
+            //};
+            //await events.InsertOneAsync(evt);
 
-See our website for more information [yorkcodedojo.github.io](http://yorkcodedojo.github.io/)
-
-Follow [@YorkCodeDojo](https://twitter.com/YorkCodeDojo/) on Twitter.
-",
-                Logo = await File.ReadAllBytesAsync("images/York_Code_Dojo.jpg"),
-                IsActive = true,
-                SlackChannelName = "yorkcodedoj",
-                Members = new System.Collections.Generic.List<Group.GroupMember>(),
-            };
-
-            await groups.InsertOneAsync(yorkDevelopers);
-
-
-            var codeAndCoffee = new Group
-            {
-                Name = "York Code and Coffee",
-                Slug = "YORKCODEANDCOFFEE",
-                Description = "York Code And Coffee - An informal meeting of Software Developers and Tech Professionals before we start our working day. We meet at in a coffee shop from 7:30am onwards twice a week.",
-                Logo = await File.ReadAllBytesAsync("images/code_and_coffee_logo_small.bmp"),
-                IsActive = true,
-                SlackChannelName = "codeandcoffee",
-                Members = new System.Collections.Generic.List<Group.GroupMember>(),
-            };
-
-            await groups.InsertOneAsync(codeAndCoffee);
-
-
-            var frontEndYork = new Group
-            {
-                Name = "Front-End-York",
-                Slug = "FRONTENDYORK",
-                Description = @"Front-End-York is the perfect MeetUp for anyone interested in Front End Web Development, Design and UX. From HTML to React, UI to interaction design; we’re going to be discussing absolutely everything front end.
-We’re a friendly bunch and everyone is welcome - regardless if you’re just starting out in the industry or have over a decade of experience, if you pop along we promise you won’t be bored!
-Fancy speaking at one of our MeetUps? Great! Get in touch with an organiser so we can pencil something in. Speakers of any experience welcome.
-Endorsed by YorkDevelopers.
-Follow [@FrontEndYork](https://twitter.com/frontendyork/) on Twitter.",
-                Logo = await File.ReadAllBytesAsync("images/front_end_york_logo.bmp"),
-                IsActive = true,
-                SlackChannelName = "front-end-york",
-                Members = new System.Collections.Generic.List<Group.GroupMember>(),
-            };
-
-            await groups.InsertOneAsync(frontEndYork);
-
-
-
-
-
-
-            var evt = new Event
-            {
-                Description = "This month will work together on some Advent of Code problems",
-                GroupName = yorkDevelopers.Name,
-                GroupId = yorkDevelopers.Id,
-                Location = "York St John",
-                GroupSlug = yorkDevelopers.Slug,
-                Members = new System.Collections.Generic.List<Event.EventAttendees>(),
-                Title = "December Meeting",
-                StartTimeUTC = new DateTime(2019, 12, 11, 18, 30, 0),
-                EndTimeUTC = new DateTime(2019, 12, 11, 21, 00, 0),
-                GuestsAllowed = true,
-                MaximumNumberOfAttendees = 26,
-                Slug = "DEC2019",
-            };
-            await events.InsertOneAsync(evt);
-
-            evt = new Event
-            {
-                Description = "This month will work together on some TDD problems",
-                GroupName = yorkDevelopers.Name,
-                GroupId = yorkDevelopers.Id,
-                Location = "TBA",
-                GroupSlug = yorkDevelopers.Slug,
-                Members = new System.Collections.Generic.List<Event.EventAttendees>(),
-                Title = "Jan Meeting",
-                StartTimeUTC = new DateTime(2020, 1, 8, 18, 30, 0),
-                EndTimeUTC = new DateTime(2020, 1, 8, 21, 00, 0),
-                GuestsAllowed = true,
-                MaximumNumberOfAttendees = 26,
-                Slug = "JAN2020",
-            };
-            await events.InsertOneAsync(evt);
-
-
-
+            //evt = new Event
+            //{
+            //    Description = "This month will work together on some TDD problems",
+            //    GroupName = yorkDevelopers.Name,
+            //    GroupId = yorkDevelopers.Id,
+            //    Location = "TBA",
+            //    GroupSlug = yorkDevelopers.Slug,
+            //    Members = new System.Collections.Generic.List<Event.EventAttendees>(),
+            //    Title = "Jan Meeting",
+            //    StartTimeUTC = new DateTime(2020, 1, 8, 18, 30, 0),
+            //    EndTimeUTC = new DateTime(2020, 1, 8, 21, 00, 0),
+            //    GuestsAllowed = true,
+            //    MaximumNumberOfAttendees = 26,
+            //    Slug = "JAN2020",
+            //};
+            //await events.InsertOneAsync(evt);
 
             Console.WriteLine("Done");
         }

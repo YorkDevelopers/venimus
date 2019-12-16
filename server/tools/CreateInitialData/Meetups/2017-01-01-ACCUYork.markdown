@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "ACCU York"
+date:   2017-01-01 15:08:10 -0500
+img: img/meetups/accu_york_logo.jpg
+modalID: modalACCUYork
+category: Meetup
+---
+ACCU York is a local group of the [ACCU][accu-site], meeting most months to discuss a wide range of topics relating to software development.
+
+What is ACCU? No longer an acronym, ACCU stands for professionalism in programming. We promote self-improvement for software practitioners. C++, Java, Agile, functional: whatever you're interested in, our members are too.
+
+See ACCU on [Twitter][accu-york-twitter] and [Facebook][accu-york-facebook] for more information on when we meet.
+
+[accu-site]: http://accu.org
+[accu-york-twitter]: https://twitter.com/accuYork
+[accu-york-facebook]: https://www.facebook.com/accuYork

@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "Data York"
+date:   2017-01-01 15:08:10 -0500
+img: img/meetups/data_york_logo.jpg
+modalID: modalDataYork
+category: Meetup
+---
+Data York is a new tech non-profit group to share knowledge around SQL Server and Data.
+
+See DataYork on [Twitter][data-york-twitter] for more information on when we meet.
+
+[data-york-twitter]: https://twitter.com/DataYork
