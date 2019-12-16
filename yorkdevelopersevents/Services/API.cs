@@ -21,6 +21,12 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<GetEvent>($"/api/Groups/{groupSlug}/Events/{eventSlug}");
         }
 
+        internal async Task<GetGroup> GetGroup(string groupSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<GetGroup>($"/api/Groups/{groupSlug}");
+        }
+
         public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
         {
             _client = client;

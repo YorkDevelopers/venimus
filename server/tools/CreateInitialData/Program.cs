@@ -29,7 +29,7 @@ namespace CreateInitialData
             {
                 Console.WriteLine($"{meetupFilename}"); 
                 var fileContents = File.ReadAllLines(meetupFilename);
-                var title = fileContents.First(line => line.StartsWith("title:")).Substring(7).Trim() ;
+                var title = fileContents.First(line => line.StartsWith("title:")).Substring(7).Trim().Replace(@"""","") ;
                 var slug = title.ToUpper().Replace(" ", "").Replace("-", "");
                 var imageName = fileContents.First(line => line.StartsWith("img:")).Substring("img: img/meetups/".Length).Trim();
                 var strapLine = fileContents[8];

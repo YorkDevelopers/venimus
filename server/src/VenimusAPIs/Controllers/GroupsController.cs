@@ -21,13 +21,15 @@ namespace VenimusAPIs.Controllers
 
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
+        private readonly URLBuilder _urlBuilder;
 
-        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer)
+        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
         {
             _eventStore = eventStore;
             _groupStore = groupStore;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
+            _urlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -170,7 +172,6 @@ namespace VenimusAPIs.Controllers
         /// <returns>The GetGroup view model</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Group does not exist.</response>
-        [Authorize]
         [Route("{groupSlug}", Name = "Groups")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -184,7 +185,16 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            var viewModel = _mapper.Map<GetGroup>(group);
+            var viewModel = new GetGroup
+            {
+                Description = group.Description,
+                Name = group.Name,
+                Slug = group.Slug,
+                StrapLine = group.StrapLine,
+                Logo = _urlBuilder.BuildGroupLogoURL(groupSlug),
+                IsActive = group.IsActive,
+                SlackChannelName = group.SlackChannelName,
+            };
 
             return viewModel;
         }

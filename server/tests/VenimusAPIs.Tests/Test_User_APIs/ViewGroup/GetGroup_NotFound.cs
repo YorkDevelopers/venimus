@@ -4,7 +4,7 @@ using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.GetGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to retrieve existing groups", SoThat = "I can maintain them")]
     public class GetGroup_NotFound : BaseTest

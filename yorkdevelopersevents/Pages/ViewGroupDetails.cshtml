@@ -1,0 +1,18 @@
+﻿@page
+@model YorkDeveloperEvents.ViewGroupDetailsModel
+@{
+    ViewData["Title"] = "ViewGroupDetails";
+}
+
+    <h1>@Model.ViewModel.Name</h1>
+
+    <img src="@Model.ViewModel.Logo" />
+    <markdown>@Model.ViewModel.Description</markdown><br /><br /><br />
+
+    <a href="/ViewGroupMembers?groupSlug=@@Model.ViewModel.Slug">View Members</a>
+
+    <a href="/JoinGroup?groupSlug=@Model.ViewModel.Slug">Join Group</a>
+
+<h2>Future Events</h2>
+
+<h2>Past Events</h2>

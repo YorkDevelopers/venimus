@@ -5,7 +5,7 @@ using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests
+namespace VenimusAPIs.Tests.GetGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to retrieve existing groups", SoThat = "I can maintain them")]
     public class GetGroup_Success : BaseTest
@@ -21,8 +21,6 @@ namespace VenimusAPIs.Tests
         {
             this.BDDfy();
         }
-
-        private Task GivenIAmNormalUser() => IAmANormalUser();
 
         private async Task GivenAGroupAlreadyExists()
         {
@@ -51,9 +49,10 @@ namespace VenimusAPIs.Tests
             Assert.Equal(_expectedGroup.Slug, actualGroup.Slug);
             Assert.Equal(_expectedGroup.Name, actualGroup.Name);
             Assert.Equal(_expectedGroup.Description, actualGroup.Description);
+            Assert.Equal(_expectedGroup.StrapLine, actualGroup.StrapLine);
             Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
-            Assert.Equal(_expectedGroup.Logo, Convert.FromBase64String(actualGroup.LogoInBase64));
+            Assert.Equal($"http://localhost/api/groups/{_expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }
 }

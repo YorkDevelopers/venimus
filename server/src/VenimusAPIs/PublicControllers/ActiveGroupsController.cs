@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VenimusAPIs.Services;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -14,11 +15,13 @@ namespace VenimusAPIs.Controllers
         private readonly Mongo.GroupStore _groupStore;
 
         private readonly IMapper _mapper;
+        private readonly URLBuilder _urlBuilder;
 
-        public ActiveGroupsController(Mongo.GroupStore groupStore, IMapper mapper)
+        public ActiveGroupsController(Mongo.GroupStore groupStore, IMapper mapper, URLBuilder urlBuilder)
         {
             _groupStore = groupStore;
             _mapper = mapper;
+            _urlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace VenimusAPIs.Controllers
                 Name = grp.Name,
                 Slug = grp.Slug,
                 StrapLine = grp.StrapLine,
-                Logo = $"{server}/api/groups/{grp.Slug}/logo",
+                Logo = _urlBuilder.BuildGroupLogoURL(grp.Slug),
             }).ToArray();
 
             return viewModels;

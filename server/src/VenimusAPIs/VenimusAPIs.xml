@@ -1026,14 +1026,19 @@
             A description of the group in markdown
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.StrapLine">
+            <summary>
+            A very short one-line description of the group
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.GetGroup.SlackChannelName">
             <summary>
                 The name of this groups slack channel
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.GetGroup.LogoInBase64">
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.Logo">
             <summary>
-                The group's logo.
+                The group's logo. (Either URL or Base64)
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.JoinGroup.GroupSlug">
@@ -1063,7 +1068,7 @@
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Logo">
             <summary>
-                The group's logo. (Either URL or Base64)
+                The URL to retrieve the groups logo.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.Slug">

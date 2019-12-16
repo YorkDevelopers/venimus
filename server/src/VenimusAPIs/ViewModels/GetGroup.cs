@@ -1,4 +1,6 @@
-﻿namespace VenimusAPIs.ViewModels
+﻿using System;
+
+namespace VenimusAPIs.ViewModels
 {
     public class GetGroup
     {
@@ -23,13 +25,18 @@
         public string Description { get; set; } = default!;
 
         /// <summary>
+        /// A very short one-line description of the group
+        /// </summary>
+        public string StrapLine { get; set; } = default!;
+
+        /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
         public string SlackChannelName { get; set; } = default!;
 
         /// <summary>
-        ///     The group's logo.
+        ///     The group's logo. (Either URL or Base64)
         /// </summary>
-        public string LogoInBase64 { get; set; } = default!;
+        public Uri Logo { get; set; } = default!;
     }
 }
