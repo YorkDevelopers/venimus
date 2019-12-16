@@ -47,6 +47,7 @@ namespace VenimusAPIs.Controllers
                 Description = grp.Description,
                 Name = grp.Name,
                 Slug = grp.Slug,
+                StrapLine = grp.StrapLine,
                 Logo = $"{server}/api/groups/{grp.Slug}/logo",
             }).ToArray();
 

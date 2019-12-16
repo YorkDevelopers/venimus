@@ -273,6 +273,11 @@
             A description of the group in markdown
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.Group.StrapLine">
+            <summary>
+            A very short one-line description of the group
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Group.Logo">
             <summary>
                 The group's logo.
@@ -524,6 +529,21 @@
                 Has their membership been approved by an administrator?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.User.IsRejected">
+            <summary>
+                Has their membership been blocked by an administrator?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.ApprovedorRejectedBy">
+            <summary>
+                Who approved/rejected their membership?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.User.ApprovedorRejectedOnUtc">
+            <summary>
+                When were they approved/rejected?
+            </summary>
+        </member>
         <member name="T:VenimusAPIs.Resources.ResourceMessages">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -660,7 +680,7 @@
                 The webhook to send the approve membership messaeg to.
             </summary>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post(VenimusAPIs.Services.Slack,VenimusAPIs.Services.SlackMessages)">
+        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post(VenimusAPIs.Services.Slack,VenimusAPIs.Services.SlackMessages,Microsoft.Extensions.Options.IOptions{VenimusAPIs.Settings.SlackSettings})">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
              </summary>
@@ -921,6 +941,11 @@
             A description of the group in markdown
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateGroup.StrapLine">
+            <summary>
+            A very short one-line description of the group
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.SlackChannelName">
             <summary>
                 The name of this groups slack channel
@@ -1029,6 +1054,11 @@
         <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Description">
             <summary>
             A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.StrapLine">
+            <summary>
+            A very short one-line description of the group
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Logo">
@@ -1319,6 +1349,11 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Description">
             <summary>
             A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateGroup.StrapLine">
+            <summary>
+            A very short one-line description of the group
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.SlackChannelName">

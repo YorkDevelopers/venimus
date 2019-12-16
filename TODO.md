@@ -1,5 +1,9 @@
 TODO!
 
+Add strap line to groups model.
+Use APIs to create initial data
+Tidy up home page
+
 Add tests around call from slack.  Maybe mock using PACT
 
 Can the user login if they have been rejected?  Is that the same as banned?

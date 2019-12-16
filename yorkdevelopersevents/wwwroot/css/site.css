@@ -96,3 +96,7 @@ body {
     height: 50px;
     border-radius: 50%;
 }
+
+.brightness img:hover {
+    opacity: .5;
+}

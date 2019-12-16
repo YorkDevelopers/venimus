@@ -32,6 +32,11 @@ namespace VenimusAPIs.ViewModels
         public string Description { get; set; } = default!;
 
         /// <summary>
+        /// A very short one-line description of the group
+        /// </summary>
+        public string StrapLine { get; set; } = default!;
+
+        /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
         public string SlackChannelName { get; set; } = default!;

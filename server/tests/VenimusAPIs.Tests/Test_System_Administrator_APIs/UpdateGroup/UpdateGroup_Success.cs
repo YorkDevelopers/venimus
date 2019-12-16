@@ -60,6 +60,7 @@ namespace VenimusAPIs.Tests.UpdateGroup
 
             Assert.Equal(_amendedGroup.Slug, actualGroup.Slug);
             Assert.Equal(_amendedGroup.Name, actualGroup.Name);
+            Assert.Equal(_amendedGroup.StrapLine, actualGroup.StrapLine);
             Assert.Equal(_amendedGroup.Description, actualGroup.Description);
             Assert.Equal(_amendedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(_amendedGroup.LogoInBase64, Convert.ToBase64String(actualGroup.Logo));

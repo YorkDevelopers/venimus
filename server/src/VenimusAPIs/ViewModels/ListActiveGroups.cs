@@ -18,6 +18,11 @@
         public string Description { get; set; } = default!;
 
         /// <summary>
+        /// A very short one-line description of the group
+        /// </summary>
+        public string StrapLine { get; set; } = default!;
+
+        /// <summary>
         ///     The group's logo. (Either URL or Base64)
         /// </summary>
         public string Logo { get; set; } = default!;

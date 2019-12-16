@@ -12,9 +12,9 @@
     <table>
         @foreach (var item in Model.ViewModel)
         {
-            <tr>
+            <tr class="brightness">
                 <td><img class="groupLogo" src="@item.Logo" /></td>
-                <td><markdown>@item.Description</markdown></td>
+                <td><markdown>@item.StrapLine</markdown></td>
             </tr>
             <tr>
                 <td>@item.Name</td>

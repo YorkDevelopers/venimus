@@ -31,6 +31,11 @@ namespace VenimusAPIs.Models
         public string Description { get; set; } = default!;
 
         /// <summary>
+        /// A very short one-line description of the group
+        /// </summary>
+        public string StrapLine { get; set; } = default!;
+
+        /// <summary>
         ///     The group's logo.
         /// </summary>
         public byte[] Logo { get; set; } = default!;

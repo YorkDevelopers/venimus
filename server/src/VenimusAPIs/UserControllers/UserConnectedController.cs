@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using VenimusAPIs.Services;
 
 namespace VenimusAPIs.UserControllers
@@ -49,7 +50,7 @@ namespace VenimusAPIs.UserControllers
         [Authorize]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Post([FromServices] Slack slack, [FromServices] SlackMessages slackMessages, [FromServices] Settings.SlackSettings slackSettings)
+        public async Task<IActionResult> Post([FromServices] Slack slack, [FromServices] SlackMessages slackMessages, [FromServices] IOptions<Settings.SlackSettings> slackSettings)
         {
             var uniqueID = UniqueIDForCurrentUser;
 
@@ -68,7 +69,7 @@ namespace VenimusAPIs.UserControllers
                 // TODO:  Move this into a consumer.
                 theUser.Bio = "The user's bio will go here.";
                 var message = slackMessages.BuildApprovalRequestMessage(theUser);
-                await slack.SendAdvancedMessage(message, slackSettings.ApproversWebhookUrl).ConfigureAwait(false);
+                await slack.SendAdvancedMessage(message, slackSettings.Value.ApproversWebhookUrl).ConfigureAwait(false);
 
                 Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("true"));
                 return CreatedAtRoute("CurrentUserDetails", new { }, null);

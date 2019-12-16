@@ -39,12 +39,12 @@ namespace CreateInitialData
                 {
                     Name = title,
                     Slug = slug,
-                    // StrapLine= strapLine,
+                    StrapLine= strapLine,
                     Description = description,
                     Logo = await File.ReadAllBytesAsync("images/" + imageName),
                     IsActive = true,
                     SlackChannelName = "yorkcodedoj",
-                    Members = new System.Collections.Generic.List<Group.GroupMember>(),
+                    Members = new System.Collections.Generic.List<GroupMember>(),
                 };
 
                 await groups.InsertOneAsync(newGroup);

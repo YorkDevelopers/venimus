@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\VenimusAPIs\VenimusAPIs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="images\accu_york_logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
