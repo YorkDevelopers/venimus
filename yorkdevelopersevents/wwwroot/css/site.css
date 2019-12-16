@@ -97,6 +97,20 @@ body {
     border-radius: 50%;
 }
 
-.brightness img:hover {
+.groupSummary {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.groupSummary img:hover {
     opacity: .5;
+}
+
+.groupSummaryLogo {
+    width: 200px;
+}
+
+.groupSummaryInfo {
+    flex: 1;
+    background-color: lightgrey;
 }
