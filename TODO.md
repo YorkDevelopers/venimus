@@ -2,8 +2,6 @@ TODO!
 
 Add tests around call from slack.  Maybe mock using PACT
 
-Add approvedBy,  approvedOn,  rejectedBy,  rejectedOn to the User model.
-
 Can the user login if they have been rejected?  Is that the same as banned?
 
 

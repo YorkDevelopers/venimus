@@ -52,5 +52,20 @@ namespace VenimusAPIs.Models
         ///     Has their membership been approved by an administrator?
         /// </summary>
         public bool IsApproved { get; set; }
+
+        /// <summary>
+        ///     Has their membership been blocked by an administrator?
+        /// </summary>
+        public bool IsRejected { get; set; }
+
+        /// <summary>
+        ///     Who approved/rejected their membership?
+        /// </summary>
+        public string? ApprovedorRejectedBy { get; set; }
+
+        /// <summary>
+        ///     When were they approved/rejected?
+        /// </summary>
+        public DateTime? ApprovedorRejectedOnUtc { get; set; }
     }
 }

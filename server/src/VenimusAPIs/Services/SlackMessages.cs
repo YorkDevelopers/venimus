@@ -85,7 +85,7 @@ namespace VenimusAPIs.Services
             return advancedMessage;
         }
 
-        public AdvancedMessage BuildApprovedRequestMessage(Models.User user, string approvedBy)
+        public AdvancedMessage BuildApprovedRequestMessage(Models.User user)
         {
             var advancedMessage = new AdvancedMessage
             {
@@ -97,7 +97,7 @@ namespace VenimusAPIs.Services
                          Type = "section",
                          Text = new MarkdownText
                          {
-                             Text = $"The request for {user.Fullname} to join YorkDevelopers as been approved by {approvedBy}.",
+                             Text = $"The request for {user.Fullname} to join YorkDevelopers as been approved by {user.ApprovedorRejectedBy}.",
                          },
                     },
                     new SectionBlock
@@ -120,7 +120,7 @@ namespace VenimusAPIs.Services
             return advancedMessage;
         }
 
-        public AdvancedMessage BuildRejectedRequestMessage(Models.User user, string rejectedBy)
+        public AdvancedMessage BuildRejectedRequestMessage(Models.User user)
         {
             var advancedMessage = new AdvancedMessage
             {
@@ -132,7 +132,7 @@ namespace VenimusAPIs.Services
                          Type = "section",
                          Text = new MarkdownText
                          {
-                             Text = $"The request for {user.Fullname} to join YorkDevelopers as been rejected by {rejectedBy}.",
+                             Text = $"The request for {user.Fullname} to join YorkDevelopers as been rejected by {user.ApprovedorRejectedBy}.",
                          },
                     },
                     new SectionBlock

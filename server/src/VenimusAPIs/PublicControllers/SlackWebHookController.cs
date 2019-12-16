@@ -56,14 +56,16 @@ namespace VenimusAPIs.PublicControllers
             var userID = new ObjectId(action.Value);
             var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
             user.IsApproved = true;
+            user.IsRejected = false;
+            user.ApprovedorRejectedBy = interaction.User.UserName;
+            user.ApprovedorRejectedOnUtc = System.DateTime.UtcNow;
             await _userStore.UpdateUser(user).ConfigureAwait(false);
 
-            var approvedBy = interaction.User.UserName;
             var sendTo = interaction.ResponseURL;
 
             // TODO:
             user.Bio = "The user's bio will go here.";
-            var message = _slackMessages.BuildApprovedRequestMessage(user, approvedBy);
+            var message = _slackMessages.BuildApprovedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
             var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
@@ -75,16 +77,17 @@ namespace VenimusAPIs.PublicControllers
             var userID = new ObjectId(action.Value);
             var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
             user.IsApproved = false;
-            
-            // user.IsRejected = true;
+            user.IsRejected = true;
+            user.ApprovedorRejectedBy = interaction.User.UserName;
+            user.ApprovedorRejectedOnUtc = System.DateTime.UtcNow;
+
             await _userStore.UpdateUser(user).ConfigureAwait(false);
 
-            var rejectedBy = interaction.User.UserName;
             var sendTo = interaction.ResponseURL;
 
             // TODO:
-            user.Bio = "The user's bio will go here."; 
-            var message = _slackMessages.BuildRejectedRequestMessage(user, rejectedBy);
+            user.Bio = "The user's bio will go here.";
+            var message = _slackMessages.BuildRejectedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
             var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
