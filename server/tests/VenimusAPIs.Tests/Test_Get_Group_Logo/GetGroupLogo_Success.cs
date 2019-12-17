@@ -1,19 +1,17 @@
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ListGroupsLogo
+namespace VenimusAPIs.Tests.GetGroupsLogo
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the logo for a group", SoThat = "I can join a community")]
-    public class ListGroups_Logo_Success : BaseTest
+    public class GetGroupLogo_Success : BaseTest
     {
         private Group _group1;
 
-        public ListGroups_Logo_Success(Fixture fixture) : base(fixture)
+        public GetGroupLogo_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -26,7 +24,7 @@ namespace VenimusAPIs.Tests.ListGroupsLogo
 
         private Task GivenIAmNormalUser() => IAmANormalUser();
 
-        private async Task GivenThatSeveralGroupsExists()
+        private async Task GivenAGroupsExists()
         {
             _group1 = Data.Create<Models.Group>();
 

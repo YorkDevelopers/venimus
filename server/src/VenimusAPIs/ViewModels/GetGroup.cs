@@ -38,5 +38,10 @@ namespace VenimusAPIs.ViewModels
         ///     The group's logo. (Either URL or Base64)
         /// </summary>
         public Uri Logo { get; set; } = default!;
+
+        /// <summary>
+        ///     Can this user view the list of members in this group?
+        /// </summary>
+        public bool CanViewMembers { get; set; }
     }
 }

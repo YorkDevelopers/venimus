@@ -153,7 +153,7 @@
              <response code="200">Success</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(VenimusAPIs.Services.URLBuilder)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(VenimusAPIs.Services.URLBuilder,System.Boolean)">
              <summary>
                  Allows you to retrieve the list of all groups
              </summary>
@@ -220,19 +220,6 @@
             
              </remarks>
              <returns>byte array for the image</returns>
-             <response code="200">Success</response>
-        </member>
-        <member name="M:VenimusAPIs.Controllers.ActiveGroupsController.Get">
-             <summary>
-                 Allows you request the list of active groups
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /public/Groups
-            
-             </remarks>
-             <returns>Array of ListActiveGroups view models</returns>
              <response code="200">Success</response>
         </member>
         <member name="M:VenimusAPIs.Controllers.FutureEventsController.Get">
@@ -741,20 +728,6 @@
              <returns>Array of the ViewAllMyEventRegistrations view model</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get(System.String)">
-             <summary>
-                 Allows you to retrieve the details of a group
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /api/user/groups/YorkCodeDojo
-            
-             </remarks>
-             <returns>The ViewMyGroupMembership view model</returns>
-             <response code="200">Success</response>
-             <response code="404">Group does not exist or the user is not a member</response>
-        </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Get">
              <summary>
                  Allows the current user to see the groups they are a member of
@@ -879,11 +852,6 @@
         <member name="P:VenimusAPIs.ViewModels.Answer.UsersAnswer">
             <summary>
                 Answer from the user
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ApproveMember.UserSlug">
-            <summary>
-                The Slug of the user we are approving.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.Slug">
@@ -1041,34 +1009,14 @@
                 The group's logo. (Either URL or Base64)
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.CanViewMembers">
+            <summary>
+                Can this user view the list of members in this group?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.JoinGroup.GroupSlug">
             <summary>
                 The slug of the group that the user is joining.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Slug">
-            <summary>
-                The unique external code for the group.  For example YorkCodeDojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Name">
-            <summary>
-            The unique name for the group / community.  For example York Code Dojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Description">
-            <summary>
-            A description of the group in markdown
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.StrapLine">
-            <summary>
-            A very short one-line description of the group
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ListActiveGroups.Logo">
-            <summary>
-                The URL to retrieve the groups logo.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.Slug">
@@ -1233,6 +1181,11 @@
         <member name="P:VenimusAPIs.ViewModels.ListGroups.Description">
             <summary>
             A description of the group in markdown
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListGroups.StrapLine">
+            <summary>
+            A very short one-line description of the group
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroups.SlackChannelName">
@@ -1483,31 +1436,6 @@
         <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.Attending">
             <summary>
                 Has the user said they are attending the event?
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupSlug">
-            <summary>
-                The unique external code for the group.  For example YorkCodeDojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupName">
-            <summary>
-            The unique name for the group / community.  For example York Code Dojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupDescription">
-            <summary>
-            A description of the group in markdown
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupSlackChannelName">
-            <summary>
-                The name of this groups slack channel
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyGroupMembership.GroupLogoInBase64">
-            <summary>
-                The group's logo.
             </summary>
         </member>
     </members>

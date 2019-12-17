@@ -1,27 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
+using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents.Pages
 {
     public class IndexModel : PageModel
     {
-        public ListActiveGroups[] ViewModel { get; set; }
+        public ListGroups[] ViewModel { get; set; }
 
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        public IndexModel(IHttpClientFactory httpClientFactory)
+        public async Task OnGet([FromServices] API api)
         {
-            _httpClientFactory = httpClientFactory;
-        }
-
-        public async Task OnGet()
-        {
-            var httpClient = _httpClientFactory.CreateClient("API");
-            var publicGroupsJSON = await httpClient.GetStringAsync("/public/Groups");
-            ViewModel = JsonSerializer.Deserialize<ListActiveGroups[]>(publicGroupsJSON, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            ViewModel = await api.ListGroups(includeInActiveGroups: false);
         }
     }
 }

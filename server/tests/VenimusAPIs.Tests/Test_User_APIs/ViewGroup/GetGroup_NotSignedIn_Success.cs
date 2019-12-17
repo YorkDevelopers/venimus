@@ -8,11 +8,11 @@ using Xunit;
 namespace VenimusAPIs.Tests.GetGroup
 {
     [Story(AsA = "SystemAdministrator", IWant = "To be able to retrieve existing groups", SoThat = "I can maintain them")]
-    public class GetGroup_Success : BaseTest
+    public class GetGroup_NotSignedIn_Success : BaseTest
     {
         private Models.Group _expectedGroup;
 
-        public GetGroup_Success(Fixture fixture) : base(fixture)
+        public GetGroup_NotSignedIn_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -51,6 +51,7 @@ namespace VenimusAPIs.Tests.GetGroup
             Assert.Equal(_expectedGroup.Description, actualGroup.Description);
             Assert.Equal(_expectedGroup.StrapLine, actualGroup.StrapLine);
             Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
+            Assert.False(actualGroup.CanViewMembers);
             Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal($"http://localhost/api/groups/{_expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }

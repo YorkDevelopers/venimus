@@ -27,33 +27,6 @@ namespace VenimusAPIs.UserControllers
         }
 
         /// <summary>
-        ///     Allows you to retrieve the details of a group
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /api/user/groups/YorkCodeDojo
-        ///
-        /// </remarks>
-        /// <returns>The ViewMyGroupMembership view model</returns>
-        /// <response code="200">Success</response>
-        /// <response code="404">Group does not exist or the user is not a member</response>
-        [Authorize]
-        [CallerMustBeGroupMember(UseNotFoundRatherThanForbidden = true)]
-        [Route("{groupSlug}", Name = "GroupMembership")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ViewMyGroupMembership>> Get([FromRoute, Slug]string groupSlug)
-        {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-
-            var viewModel = _mapper.Map<ViewMyGroupMembership>(group);
-
-            return viewModel;
-        }
-
-        /// <summary>
         ///     Allows the current user to see the groups they are a member of
         /// </summary>
         /// <remarks>
@@ -139,7 +112,7 @@ namespace VenimusAPIs.UserControllers
                 await _groupStore.UpdateGroup(model).ConfigureAwait(false);
             }
 
-            return CreatedAtRoute("GroupMembership", new { groupSlug = group.GroupSlug }, null);
+            return CreatedAtRoute("Groups", new { groupSlug = group.GroupSlug }, null);
         }
 
         /// <summary>

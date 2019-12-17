@@ -9,14 +9,14 @@ using Xunit;
 namespace VenimusAPIs.Tests.ListGroups
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the list of all groups", SoThat = "I can join a community")]
-    public class ListGroups_Success : BaseTest
+    public class ListGroups_Signedin_Success : BaseTest
     {
-        private Group _expectedGroup1;
-        private Group _expectedGroup2;
-        private Group _expectedGroup3;
-        private Group _expectedGroup4;
+        private Group _expectedActiveGroup1;
+        private Group _expectedActiveGroup2;
+        private Group _expectedActiveGroup3;
+        private Group _expectedInactiveGroup;
 
-        public ListGroups_Success(Fixture fixture) : base(fixture)
+        public ListGroups_Signedin_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -31,14 +31,21 @@ namespace VenimusAPIs.Tests.ListGroups
 
         private async Task GivenThatSeveralGroupsExists()
         {
-            _expectedGroup1 = Data.Create<Models.Group>();
-            _expectedGroup2 = Data.Create<Models.Group>();
-            _expectedGroup3 = Data.Create<Models.Group>();
-            _expectedGroup4 = Data.Create<Models.Group>();
+            _expectedActiveGroup1 = Data.Create<Models.Group>();
+            _expectedActiveGroup1.IsActive = true;
+
+            _expectedActiveGroup2 = Data.Create<Models.Group>();
+            _expectedActiveGroup2.IsActive = true;
+
+            _expectedActiveGroup3 = Data.Create<Models.Group>();
+            _expectedActiveGroup3.IsActive = true;
+
+            _expectedInactiveGroup = Data.Create<Models.Group>();
+            _expectedInactiveGroup.IsActive = false;
 
             var groups = GroupsCollection();
 
-            await groups.InsertManyAsync(new[] { _expectedGroup1, _expectedGroup2, _expectedGroup3, _expectedGroup4 });
+            await groups.InsertManyAsync(new[] { _expectedActiveGroup1, _expectedActiveGroup2, _expectedActiveGroup3, _expectedInactiveGroup });
         }
 
         private async Task WhenICallTheGetGroupApi()
@@ -54,9 +61,10 @@ namespace VenimusAPIs.Tests.ListGroups
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var actualGroups = JsonSerializer.Deserialize<ViewModels.ListGroups[]>(json, options);
 
-            AssertGroup(_expectedGroup1, actualGroups);
-            AssertGroup(_expectedGroup2, actualGroups);
-            AssertGroup(_expectedGroup3, actualGroups);
+            Assert.Equal(3, actualGroups.Length);
+            AssertGroup(_expectedActiveGroup1, actualGroups);
+            AssertGroup(_expectedActiveGroup2, actualGroups);
+            AssertGroup(_expectedActiveGroup3, actualGroups);
         }
 
         private void AssertGroup(Group expectedGroup, ViewModels.ListGroups[] actualGroups)
@@ -67,6 +75,7 @@ namespace VenimusAPIs.Tests.ListGroups
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(expectedGroup.IsActive, actualGroup.IsActive);
+            Assert.Equal(expectedGroup.StrapLine, actualGroup.StrapLine);
             Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
         }
     }

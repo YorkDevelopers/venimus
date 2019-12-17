@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -106,10 +108,17 @@ namespace VenimusAPIs.Mongo
             return group;
         }
 
-        public async Task<List<Models.Group>> RetrieveAllGroups()
+        public async Task<List<Models.Group>> RetrieveAllGroups(bool includeInActiveGroups)
         {
             var groups = _mongoConnection.GroupsCollection();
-            var models = await groups.Find(u => true).ToListAsync().ConfigureAwait(false);
+
+            Expression<Func<Group, bool>> filter = includeInActiveGroups switch
+            {
+                true => allGroups => true,
+                false => group => group.IsActive,
+            };
+
+            var models = await groups.Find(filter).ToListAsync<Group>().ConfigureAwait(false);
 
             return models;
         }

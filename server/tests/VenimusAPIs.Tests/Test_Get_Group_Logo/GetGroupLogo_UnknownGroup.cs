@@ -3,12 +3,12 @@ using TestStack.BDDfy;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ListGroupsLogo
+namespace VenimusAPIs.Tests.GetGroupsLogo
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the logo for a group", SoThat = "I can join a community")]
-    public class ListGroups_Logo_UnknownGroup : BaseTest
+    public class GetGroupLogo_UnknownGroup : BaseTest
     {
-        public ListGroups_Logo_UnknownGroup(Fixture fixture) : base(fixture)
+        public GetGroupLogo_UnknownGroup(Fixture fixture) : base(fixture)
         {
         }
 

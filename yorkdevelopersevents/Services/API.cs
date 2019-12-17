@@ -55,6 +55,12 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<ListMyGroups[]>("/api/user/groups");
         }
 
+        public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups)
+        {
+            var client = await Client();
+            return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}");
+        }
+
         private async Task<HttpClient> Client()
         {
             var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");

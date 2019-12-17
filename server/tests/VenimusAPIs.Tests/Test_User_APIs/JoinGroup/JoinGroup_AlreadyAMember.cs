@@ -50,7 +50,7 @@ namespace VenimusAPIs.Tests.JoinGroup
 
         private void ThenThePathToGroupIsReturned()
         {
-            Assert.Equal($"http://localhost/api/User/Groups/{_existingGroup.Slug}", Response.Headers.Location.ToString());
+            Assert.Equal($"http://localhost/api/Groups/{_existingGroup.Slug}", Response.Headers.Location.ToString());
         }
 
         private async Task ThenTheUserIsStillAMemberOfTheGroup()

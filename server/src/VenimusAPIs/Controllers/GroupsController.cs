@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
+using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -14,17 +16,19 @@ namespace VenimusAPIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroupsController : ControllerBase
+    public class GroupsController : BaseUserController
     {
-        private readonly Mongo.EventStore _eventStore;
-        private readonly Mongo.GroupStore _groupStore;
+        private readonly UserStore _userStore;
+        private readonly EventStore _eventStore;
+        private readonly GroupStore _groupStore;
 
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
         private readonly URLBuilder _urlBuilder;
 
-        public GroupsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
+        public GroupsController(UserStore userStore, EventStore eventStore, GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
         {
+            _userStore = userStore;
             _eventStore = eventStore;
             _groupStore = groupStore;
             _mapper = mapper;
@@ -185,15 +189,24 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
+            var canViewMembers = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+                canViewMembers = existingUser.IsApproved;
+            }
+
             var viewModel = new GetGroup
             {
                 Description = group.Description,
                 Name = group.Name,
                 Slug = group.Slug,
-                StrapLine = group.StrapLine,
                 Logo = _urlBuilder.BuildGroupLogoURL(groupSlug),
                 IsActive = group.IsActive,
                 SlackChannelName = group.SlackChannelName,
+                StrapLine = group.StrapLine,
+                CanViewMembers = canViewMembers,
             };
 
             return viewModel;
@@ -210,17 +223,17 @@ namespace VenimusAPIs.Controllers
         /// </remarks>
         /// <returns>An array of ListGroup view models</returns>
         /// <response code="200">Success</response>
-        [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder)
+        public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder, [FromQuery] bool includeInActiveGroups = false)
         {
-            var groups = await _groupStore.RetrieveAllGroups().ConfigureAwait(false);
+            var groups = await _groupStore.RetrieveAllGroups(includeInActiveGroups).ConfigureAwait(false);
 
             var server = $"{Request.Scheme}://{Request.Host}";
 
             var viewModels = groups.Select(grp => new ListGroups
             {
+                StrapLine = grp.StrapLine,
                 Description = grp.Description,
                 IsActive = grp.IsActive,
                 Name = grp.Name,
