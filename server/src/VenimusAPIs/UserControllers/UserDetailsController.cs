@@ -49,6 +49,7 @@ namespace VenimusAPIs.UserControllers
                 Bio = user.Bio,
                 DisplayName = user.DisplayName,
                 Fullname = user.Fullname,
+                IsRegistered = user.IsRegistered,
                 ProfilePictureAsBase64 = Convert.ToBase64String(user.ProfilePicture),
             };
         }
