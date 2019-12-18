@@ -12,7 +12,7 @@ namespace YorkDeveloperEvents.Pages
 
         public async Task OnGet([FromServices] API api)
         {
-            ViewModel = await api.ListGroups(includeInActiveGroups: false);
+            ViewModel = await api.ListGroups(includeInActiveGroups: false, groupsIBelongToOnly: false);
         }
     }
 }

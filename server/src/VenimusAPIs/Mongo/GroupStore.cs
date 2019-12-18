@@ -18,32 +18,11 @@ namespace VenimusAPIs.Mongo
             _mongoConnection = mongoConnection;
         }
 
-        internal async Task<List<Models.Group>> GetActiveGroups()
-        {
-            var groups = _mongoConnection.GroupsCollection();
-            var models = await groups.Find(u => u.IsActive).ToListAsync().ConfigureAwait(false);
-
-            return models;
-        }
-
         internal async Task DeleteGroup(Group group)
         {
             var groups = _mongoConnection.GroupsCollection();
 
             await groups.DeleteOneAsync(grp => grp.Id == group.Id).ConfigureAwait(false);
-        }
-
-        internal async Task<List<Group>> RetrieveMyActiveGroups(ObjectId userID)
-        {
-            var groups = _mongoConnection.GroupsCollection();
-
-            var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, userID);
-
-            var filter = Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch) &
-                         Builders<Group>.Filter.Eq(ent => ent.IsActive, true);
-            var matchingGroups = await groups.Find(filter).ToListAsync().ConfigureAwait(false);
-
-            return matchingGroups;
         }
 
         public async Task StoreGroup(Models.Group group)
@@ -108,17 +87,11 @@ namespace VenimusAPIs.Mongo
             return group;
         }
 
-        public async Task<List<Models.Group>> RetrieveAllGroups(bool includeInActiveGroups)
+        public async Task<List<Models.Group>> RetrieveAllGroups(FilterDefinition<Group> filters)
         {
             var groups = _mongoConnection.GroupsCollection();
 
-            Expression<Func<Group, bool>> filter = includeInActiveGroups switch
-            {
-                true => allGroups => true,
-                false => group => group.IsActive,
-            };
-
-            var models = await groups.Find(filter).ToListAsync<Group>().ConfigureAwait(false);
+            var models = await groups.Find(filters).ToListAsync<Group>().ConfigureAwait(false);
 
             return models;
         }

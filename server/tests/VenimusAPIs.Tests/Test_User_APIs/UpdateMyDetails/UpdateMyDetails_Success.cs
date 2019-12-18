@@ -73,6 +73,7 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             Assert.Equal(_amendedUser.Pronoun, actualUser.Pronoun);
             Assert.Equal(_amendedUser.DisplayName, actualUser.DisplayName);
             Assert.Equal(_amendedUser.Fullname, actualUser.Fullname);
+            Assert.Equal(_amendedUser.IsRegistered, actualUser.IsRegistered);
             Assert.Equal(_amendedUser.ProfilePictureAsBase64, Convert.ToBase64String(actualUser.ProfilePicture));
         }
 

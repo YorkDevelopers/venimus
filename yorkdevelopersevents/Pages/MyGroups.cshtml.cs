@@ -10,11 +10,11 @@ namespace YorkDeveloperEvents.Pages
     [Authorize]
     public class MyGroupsModel : PageModel
     {
-        public ListMyGroups[] ViewModel { get; set; }
+        public ListGroups[] ViewModel { get; set; }
 
         public async Task OnGet([FromServices] API api)
         {
-            ViewModel = await api.ListMyGroups();
+            ViewModel = await api.ListGroups(includeInActiveGroups: false, groupsIBelongToOnly: true);
         }
     }
 }

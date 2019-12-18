@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Westwind.AspNetCore.LiveReload;
 using YorkDeveloperEvents.Services;
 
 namespace YorkDeveloperEvents
@@ -134,10 +135,15 @@ namespace YorkDeveloperEvents
                 client.BaseAddress = new Uri(backendSettings.URL);
             });
 
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddMvc().AddRazorRuntimeCompilation();
+            services.AddLiveReload();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseLiveReload();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -162,7 +168,6 @@ namespace YorkDeveloperEvents
             {
                 endpoints.MapRazorPages();
             });
-
         }
     }
 }

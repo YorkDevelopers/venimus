@@ -74,7 +74,7 @@ namespace VenimusAPIs.Tests.ListGroups
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal(expectedGroup.StrapLine, actualGroup.StrapLine);
-            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
+            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }
 }

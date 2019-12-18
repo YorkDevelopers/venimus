@@ -15,6 +15,20 @@ namespace YorkDeveloperEvents.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        internal async Task<ViewMyDetails> GetCurrentUser()
+        {
+            var client = await Client();
+            return await client.GetAsJson<ViewMyDetails>($"/api/User");
+        }
+
+        internal async Task UpdateUser(UpdateMyDetails updatedDetails)
+        {
+            var client = await Client();
+            var response = await client.PutAsJsonAsync($"/api/User", updatedDetails);
+            var text = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+        }
+
         internal async Task<GetEvent> GetEvent(string groupSlug, string eventSlug)
         {
             var client = await Client();
@@ -49,16 +63,10 @@ namespace YorkDeveloperEvents.Services
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<ListMyGroups[]> ListMyGroups()
+        public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups, bool groupsIBelongToOnly)
         {
             var client = await Client();
-            return await client.GetAsJson<ListMyGroups[]>("/api/user/groups");
-        }
-
-        public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups)
-        {
-            var client = await Client();
-            return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}");
+            return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}&groupsIBelongToOnly={groupsIBelongToOnly}");
         }
 
         private async Task<HttpClient> Client()

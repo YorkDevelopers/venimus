@@ -13,18 +13,22 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using VenimusAPIs.Registration;
+using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
 
 namespace VenimusAPIs
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IWebHostEnvironment _env;
 
         public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        {
+            Configuration = configuration;
+            _env = env;
+        }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
         {
@@ -125,6 +129,19 @@ namespace VenimusAPIs
 
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
+
+            if (_env.IsDevelopment())
+            {
+                services.AddSingleton<MockSlack>();
+
+                services.AddHttpClient("Slack")
+                        .AddHttpMessageHandler<MockSlack>();
+            }
+            else
+            {
+                services.AddHttpClient("Slack");
+            }
+
             services.AddSingleton<Services.Slack>();
             services.AddSingleton<Services.SlackMessages>();
             services.AddHttpContextAccessor();
@@ -138,8 +155,6 @@ namespace VenimusAPIs
             {
                 client.BaseAddress = new System.Uri($"https://{Configuration["Auth0:Domain"]}");
             });
-
-            services.AddHttpClient("Slack");
 
             services.AddHttpClient("ImageSource");
 

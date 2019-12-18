@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -17,50 +16,10 @@ namespace VenimusAPIs.UserControllers
         private readonly Mongo.GroupStore _groupStore;
         private readonly Mongo.UserStore _userStore;
 
-        private readonly IMapper _mapper;
-
-        public UserGroupsController(Mongo.GroupStore groupStore, Mongo.UserStore userStore, IMapper mapper)
+        public UserGroupsController(Mongo.GroupStore groupStore, Mongo.UserStore userStore)
         {
             _groupStore = groupStore;
             _userStore = userStore;
-            _mapper = mapper;
-        }
-
-        /// <summary>
-        ///     Allows the current user to see the groups they are a member of
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     GET /api/user/groups
-        ///
-        /// </remarks>
-        /// <returns>An array of ListMyGroups view models</returns>
-        /// <response code="200">Success</response>
-        [Authorize]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ListMyGroups[]>> Get()
-        {
-            var uniqueID = UniqueIDForCurrentUser;
-
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-
-            var groups = await _groupStore.RetrieveMyActiveGroups(existingUser.Id).ConfigureAwait(false);
-
-            var server = $"{Request.Scheme}://{Request.Host}";
-
-            var viewModels = groups.Select(grp => new ListMyGroups
-            {
-                Description = grp.Description,
-                Name = grp.Name,
-                SlackChannelName = grp.SlackChannelName,
-                Slug = grp.Slug,
-                Logo = $"{server}/api/groups/{grp.Slug}/logo",
-                CanViewMembers = UserIsASystemAdministrator || existingUser.IsApproved,
-            }).ToArray();
-
-            return viewModels;
         }
 
         /// <summary>

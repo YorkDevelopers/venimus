@@ -1,0 +1,39 @@
+﻿@page
+@model YorkDeveloperEvents.NewUserModel
+@{
+    ViewData["Title"] = "NewUser";
+}
+
+<h1>Thankyou for joining York Developers.</h1>
+
+You are now able to join our community and sign up for our events.  In order to complete the registration process could you please ensure that the details below are correct.
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Pronoun"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.Pronoun" /></td>
+        </tr>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Fullname"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.Fullname" /></td>
+        </tr>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.DisplayName"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.DisplayName" /></td>
+        </tr>
+        @*<tr>
+            <td><label asp-for="@Model.UpdatedDetails.EmailAddress"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.EmailAddress" /></td>
+        </tr>*@
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Bio"></label></td>
+            <td><textarea asp-for="@Model.UpdatedDetails.Bio"></textarea></td>
+        </tr>
+    </table>
+
+    <button type="submit">Save Settings</button>
+</form>
+

@@ -7,10 +7,10 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ListMyGroups
+namespace VenimusAPIs.Tests.ListGroups
 {
     [Story(AsA = "User", IWant = "To be able to see what groups I'm a member of", SoThat = "I can belong to the communities")]
-    public class ListMyGroups_Success : BaseTest
+    public class ListGroups_IBelongTo_Success : BaseTest
     {
         private Group _inGroup1;
         private Group _inGroup2;
@@ -18,7 +18,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
         private Group _notInGroup;
         private bool _userIsApproved = false;
 
-        public ListMyGroups_Success(Fixture fixture) : base(fixture)
+        public ListGroups_IBelongTo_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -71,7 +71,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
 
         private async Task WhenICallTheApi()
         {
-            Response = await Fixture.APIClient.GetAsync($"api/User/Groups");
+            Response = await Fixture.APIClient.GetAsync($"api/Groups?GroupsIBelongToOnly=true");
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -82,14 +82,14 @@ namespace VenimusAPIs.Tests.ListMyGroups
         private async Task ThenTheListOfActiveGroupsTheUserBelongsToAreReturned()
         {
             var json = await Response.Content.ReadAsStringAsync();
-            var groups = JsonSerializer.Deserialize<ViewModels.ListMyGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var groups = JsonSerializer.Deserialize<ViewModels.ListGroups[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, groups.Length);
             AssertGroup(groups, _inGroup1, _userIsApproved);
             AssertGroup(groups, _inGroup2, _userIsApproved);
         }
 
-        private void AssertGroup(ViewModels.ListMyGroups[] actualGroups, Group expectedGroup, bool approvedGroupMember)
+        private void AssertGroup(ViewModels.ListGroups[] actualGroups, Group expectedGroup, bool approvedGroupMember)
         {
             var actualGroup = actualGroups.Single(e => e.Slug == expectedGroup.Slug);
 
@@ -97,8 +97,7 @@ namespace VenimusAPIs.Tests.ListMyGroups
             Assert.Equal(expectedGroup.Name, actualGroup.Name);
             Assert.Equal(expectedGroup.Description, actualGroup.Description);
             Assert.Equal(expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
-            Assert.Equal(approvedGroupMember, actualGroup.CanViewMembers);
-            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo);
+            Assert.Equal($"http://localhost/api/groups/{expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }
 }

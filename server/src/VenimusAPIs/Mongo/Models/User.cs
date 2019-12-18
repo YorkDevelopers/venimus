@@ -49,6 +49,11 @@ namespace VenimusAPIs.Models
         public List<string> Identities { get; set; } = new List<string>();
 
         /// <summary>
+        ///     Has the user completed the registration stage (ie. entered all their details)
+        /// </summary>
+        public bool IsRegistered { get; set; }
+
+        /// <summary>
         ///     Has their membership been approved by an administrator?
         /// </summary>
         public bool IsApproved { get; set; }

@@ -100,7 +100,12 @@ namespace VenimusAPIs.UserControllers
             user.Pronoun = updateMyDetails.Pronoun;
             user.DisplayName = updateMyDetails.DisplayName;
             user.Fullname = updateMyDetails.Fullname;
-            user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
+            user.IsRegistered = updateMyDetails.IsRegistered;
+
+            if (!string.IsNullOrWhiteSpace(updateMyDetails.ProfilePictureAsBase64))
+            {
+                user.ProfilePicture = Convert.FromBase64String(updateMyDetails.ProfilePictureAsBase64);
+            }
 
             await _userStore.UpdateUser(user).ConfigureAwait(false);
 

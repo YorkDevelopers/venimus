@@ -25,10 +25,7 @@
                         <input type="hidden" id="groupSlug" name="groupSlug" value="@item.Slug" />
                         <button type="submit">Leave Group</button>
                     </form>
-                    @if (item.CanViewMembers)
-                    {
-                        <a href="/ViewGroupMembers?groupSlug=@item.Slug">View Members</a>
-                    }
+                    <a href="/ViewGroupDetails?groupSlug=@item.Slug">Find out more</a>
                 </td>
             </tr>
             <tr>

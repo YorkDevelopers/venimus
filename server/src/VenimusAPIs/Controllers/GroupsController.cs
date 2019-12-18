@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using MongoDB.Driver;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
 using VenimusAPIs.UserControllers;
@@ -225,11 +227,24 @@ namespace VenimusAPIs.Controllers
         /// <response code="200">Success</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder, [FromQuery] bool includeInActiveGroups = false)
+        public async Task<ActionResult<ListGroups[]>> Get([FromServices] URLBuilder groupLogoURLBuilder, [FromQuery] bool includeInActiveGroups = false, [FromQuery] bool groupsIBelongToOnly = false)
         {
-            var groups = await _groupStore.RetrieveAllGroups(includeInActiveGroups).ConfigureAwait(false);
+            var filters = Builders<Group>.Filter.Empty;
 
-            var server = $"{Request.Scheme}://{Request.Host}";
+            if (!includeInActiveGroups)
+            {
+                filters &= Builders<Group>.Filter.Eq(ent => ent.IsActive, true);
+            }
+
+            if (groupsIBelongToOnly)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+                var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, existingUser.Id);
+                filters &= Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch);
+            }
+
+            var groups = await _groupStore.RetrieveAllGroups(filters).ConfigureAwait(false);
 
             var viewModels = groups.Select(grp => new ListGroups
             {
@@ -239,7 +254,7 @@ namespace VenimusAPIs.Controllers
                 Name = grp.Name,
                 SlackChannelName = grp.SlackChannelName,
                 Slug = grp.Slug,
-                Logo = groupLogoURLBuilder.BuildGroupLogoURL(grp.Slug).ToString(),
+                Logo = groupLogoURLBuilder.BuildGroupLogoURL(grp.Slug),
             }).ToArray();
 
             return viewModels;
