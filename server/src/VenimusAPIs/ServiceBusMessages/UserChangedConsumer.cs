@@ -1,6 +1,9 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
+using VenimusAPIs.Services;
+using VenimusAPIs.Settings;
 
 namespace VenimusAPIs.ServiceBusMessages
 {
@@ -10,13 +13,26 @@ namespace VenimusAPIs.ServiceBusMessages
         private readonly Mongo.UserStore _userStore;
         private readonly Mongo.EventStore _eventStore;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
+        private readonly Slack _slack;
+        private readonly SlackMessages _slackMessages;
+        private readonly SlackSettings _slackSettings;
 
-        public UserChangedConsumer(Mongo.GroupStore groupStore, Mongo.UserStore userStore, Mongo.EventStore eventStore, IStringLocalizer<ResourceMessages> stringLocalizer)
+        public UserChangedConsumer(
+                                   Mongo.GroupStore groupStore, 
+                                   Mongo.UserStore userStore, 
+                                   Mongo.EventStore eventStore, 
+                                   IStringLocalizer<ResourceMessages> stringLocalizer,
+                                   Slack slack, 
+                                   SlackMessages slackMessages, 
+                                   IOptions<Settings.SlackSettings> slackSettings)
         {
             _groupStore = groupStore;
             _userStore = userStore;
             _eventStore = eventStore;
             _stringLocalizer = stringLocalizer;
+            _slack = slack;
+            _slackMessages = slackMessages;
+            _slackSettings = slackSettings.Value;
         }
 
         public async Task Consume(ConsumeContext<UserChangedMessage> context)
@@ -32,6 +48,13 @@ namespace VenimusAPIs.ServiceBusMessages
             await _groupStore.UpdateUserDetailsInGroups(user).ConfigureAwait(false);
 
             await _eventStore.UpdateUserDetailsInEvents(user).ConfigureAwait(false);
+
+            if (user.IsRegistered && !user.IsApproved && !user.IsRejected)
+            {
+                // TODO: Optional update existing message
+                var message = _slackMessages.BuildApprovalRequestMessage(user);
+                await _slack.SendAdvancedMessage(message, _slackSettings.ApproversWebhookUrl).ConfigureAwait(false);
+            }
         }
     }
 }
