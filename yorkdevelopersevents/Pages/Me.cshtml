@@ -1,0 +1,37 @@
+﻿@page
+@model YorkDeveloperEvents.MeModel
+@{
+    ViewData["Title"] = "NewUser";
+}
+
+<h1>About You</h1>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Pronoun"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.Pronoun" /></td>
+        </tr>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Fullname"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.Fullname" /></td>
+        </tr>
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.DisplayName"></label></td>
+            <td><input asp-for="@Model.UpdatedDetails.DisplayName" /></td>
+        </tr>
+        @*<tr>
+                <td><label asp-for="@Model.UpdatedDetails.EmailAddress"></label></td>
+                <td><input asp-for="@Model.UpdatedDetails.EmailAddress" /></td>
+            </tr>*@
+        <tr>
+            <td><label asp-for="@Model.UpdatedDetails.Bio"></label></td>
+            <td><textarea asp-for="@Model.UpdatedDetails.Bio"></textarea></td>
+        </tr>
+    </table>
+
+    <button type="submit">Save Settings</button>
+</form>
+

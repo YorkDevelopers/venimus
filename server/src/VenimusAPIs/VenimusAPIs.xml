@@ -672,7 +672,7 @@
                 The webhook to send the approve membership messaeg to.
             </summary>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post(VenimusAPIs.Services.Slack,VenimusAPIs.Services.SlackMessages,Microsoft.Extensions.Options.IOptions{VenimusAPIs.Settings.SlackSettings})">
+        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
              <summary>
                  Called once the user has connected to the frontend.  This ensures that they exist in the database.
              </summary>

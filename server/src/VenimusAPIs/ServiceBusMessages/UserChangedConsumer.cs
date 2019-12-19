@@ -49,7 +49,7 @@ namespace VenimusAPIs.ServiceBusMessages
 
             await _eventStore.UpdateUserDetailsInEvents(user).ConfigureAwait(false);
 
-            if (user.IsRegistered && !user.IsApproved && !user.IsRejected)
+            if (user.IsRegistered && (!user.IsApproved) && (!user.IsRejected))
             {
                 // TODO: Optional update existing message
                 var message = _slackMessages.BuildApprovalRequestMessage(user);
