@@ -1,43 +1,35 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Bson;
+using System;
 using VenimusAPIs.Models;
+using VenimusAPIs.Settings;
 
 namespace VenimusAPIs.Services
 {
     public class URLBuilder
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly SiteSettings _siteSettings;
 
-        public URLBuilder(IHttpContextAccessor httpContextAccessor)
+        public URLBuilder(IOptions<SiteSettings> siteSettings)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _siteSettings = siteSettings.Value;
         }
 
         public Uri BuildGroupLogoURL(string groupSlug)
         {
-            var request = _httpContextAccessor.HttpContext.Request;
-            var server = $"{request.Scheme}://{request.Host}";
-
-            return new Uri($"{server}/api/groups/{groupSlug}/logo");
+            return new Uri($"{_siteSettings.PublicURL}api/groups/{groupSlug}/logo");
         }
 
         public Uri BuildCurrentUserDetailsURL()
         {
-            var request = _httpContextAccessor.HttpContext.Request;
-            var server = $"{request.Scheme}://{request.Host}";
-
-            return new Uri($"{server}/api/user");
+            return new Uri($"{_siteSettings.PublicURL}api/user");
         }
 
         internal string BuildUserDetailsProfilePictureURL(User theUser) => BuildUserDetailsProfilePictureURL(theUser.Id);
 
         internal string BuildUserDetailsProfilePictureURL(ObjectId theUserID)
         {
-            var request = _httpContextAccessor.HttpContext.Request;
-            var server = $"{request.Scheme}://{request.Host}";
-
-            return $"{server}/api/users/{theUserID.ToString()}/profilepicture";
+            return $"{_siteSettings.PublicURL}api/users/{theUserID.ToString()}/profilepicture";
         }
     }
 }

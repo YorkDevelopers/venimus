@@ -26,8 +26,6 @@ namespace YorkDeveloperEvents
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
-            UpdatedDetails.IsRegistered = true;
-
             await api.UpdateUser(UpdatedDetails);
 
             return LocalRedirect("/");

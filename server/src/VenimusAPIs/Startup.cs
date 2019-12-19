@@ -13,7 +13,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using VenimusAPIs.Registration;
-using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
 
 namespace VenimusAPIs
@@ -80,6 +79,9 @@ namespace VenimusAPIs
             services.Configure<Settings.SlackSettings>(
                 options => Configuration.GetSection("Slack").Bind(options));
 
+            services.Configure<Settings.SiteSettings>(
+                options => Configuration.GetSection("SiteSettings").Bind(options));
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -129,18 +131,7 @@ namespace VenimusAPIs
 
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
-
-            if (_env.IsDevelopment() && !_env.IsEnvironment("Testing"))
-            {
-                services.AddSingleton<MockSlack>();
-
-                services.AddHttpClient("Slack")
-                        .AddHttpMessageHandler<MockSlack>();
-            }
-            else
-            {
-                services.AddHttpClient("Slack");
-            }
+            services.AddHttpClient("Slack");
 
             services.AddSingleton<Services.Slack>();
             services.AddSingleton<Services.SlackMessages>();

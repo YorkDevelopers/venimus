@@ -101,7 +101,7 @@ namespace VenimusAPIs.UserControllers
             user.Pronoun = updateMyDetails.Pronoun;
             user.DisplayName = updateMyDetails.DisplayName;
             user.Fullname = updateMyDetails.Fullname;
-            user.IsRegistered = updateMyDetails.IsRegistered;
+            user.IsRegistered = true;
 
             if (!string.IsNullOrWhiteSpace(updateMyDetails.ProfilePictureAsBase64))
             {

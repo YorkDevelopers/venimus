@@ -63,8 +63,6 @@ namespace VenimusAPIs.PublicControllers
 
             var sendTo = interaction.ResponseURL;
 
-            // TODO:
-            user.Bio = "The user's bio will go here.";
             var message = _slackMessages.BuildApprovedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 

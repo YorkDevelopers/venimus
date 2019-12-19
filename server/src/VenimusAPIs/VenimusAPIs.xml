@@ -1313,11 +1313,6 @@
                 The user's profile picture in base64
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.IsRegistered">
-            <summary>
-                Has the user completed the registration stage (ie. entered all their details)
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupSlug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo

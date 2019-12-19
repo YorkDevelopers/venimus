@@ -32,10 +32,5 @@ namespace VenimusAPIs.ViewModels
         ///     The user's profile picture in base64
         /// </summary>
         public string? ProfilePictureAsBase64 { get; set; } = default!;
-
-        /// <summary>
-        ///     Has the user completed the registration stage (ie. entered all their details)
-        /// </summary>
-        public bool IsRegistered { get; set; }
     }
 }

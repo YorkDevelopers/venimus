@@ -32,10 +32,5 @@ namespace YorkDeveloperEvents.ViewModels
         ///     The user's profile picture in base64
         /// </summary>
         public string ProfilePictureAsBase64 { get; set; }
-
-        /// <summary>
-        ///     Has the user completed the registration stage (ie. entered all their details)
-        /// </summary>
-        public bool IsRegistered { get; set; }
     }
 }
