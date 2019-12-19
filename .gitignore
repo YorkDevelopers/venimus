@@ -5,7 +5,7 @@
 
 # Avoid checking in passwords etc!
 appsettings.Development.json
-appsettings.Testing.json
+
 
 # User-specific files
 *.suo
