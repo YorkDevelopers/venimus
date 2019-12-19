@@ -130,7 +130,7 @@ namespace VenimusAPIs
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
 
-            if (_env.IsDevelopment())
+            if (_env.IsDevelopment() && !_env.IsEnvironment("Testing"))
             {
                 services.AddSingleton<MockSlack>();
 

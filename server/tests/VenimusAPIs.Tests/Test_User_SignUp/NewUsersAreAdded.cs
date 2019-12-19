@@ -81,14 +81,5 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
             var value = Response.Headers.GetValues("ProfilePictureURL").First();
             Assert.Equal($"http://localhost/api/users/{_actualUserID}/profilepicture", value);
         }
-
-        private async Task AndThenAMessageIsSentToSlackRequestingApproval()
-        {
-            var lastRequest = Fixture.MockSlack.LastRequest;
-            var content = await lastRequest.Content.ReadAsStringAsync();
-
-            Assert.Contains(Fixture.MockAuth0.UserProfile.Name, content);
-            Assert.Contains($"http://localhost/api/users/{_actualUserID}/profilepicture", content);
-        }
     }
 }
