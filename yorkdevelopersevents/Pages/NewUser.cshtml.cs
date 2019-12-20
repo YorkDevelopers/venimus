@@ -26,6 +26,8 @@ namespace YorkDeveloperEvents
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
+            if (!ModelState.IsValid) return Page();
+            
             await api.UpdateUser(UpdatedDetails);
 
             return LocalRedirect("/");

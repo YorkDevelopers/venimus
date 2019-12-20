@@ -13,27 +13,40 @@ You are now able to join our community and sign up for our events.  In order to 
 
     <table>
         <tr>
-            <td><label asp-for="@Model.UpdatedDetails.Pronoun"></label></td>
-            <td><input asp-for="@Model.UpdatedDetails.Pronoun" /></td>
+            <td><label for="UpdatedDetails_Fullname">Your fullname</label></td>
         </tr>
         <tr>
-            <td><label asp-for="@Model.UpdatedDetails.Fullname"></label></td>
-            <td><input asp-for="@Model.UpdatedDetails.Fullname" /></td>
+            <td><input asp-for="@Model.UpdatedDetails.Fullname" class="input100" /><span asp-validation-for="UpdatedDetails.Fullname"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdatedDetails_DisplayName">Your screen name which is displayed to other users in Slack and this website</label></td>
         </tr>
         <tr>
-            <td><label asp-for="@Model.UpdatedDetails.DisplayName"></label></td>
-            <td><input asp-for="@Model.UpdatedDetails.DisplayName" /></td>
+            <td><input asp-for="@Model.UpdatedDetails.DisplayName" class="input100" /><span asp-validation-for="UpdatedDetails.DisplayName"></span></td>
         </tr>
-        @*<tr>
-            <td><label asp-for="@Model.UpdatedDetails.EmailAddress"></label></td>
-            <td><input asp-for="@Model.UpdatedDetails.EmailAddress" /></td>
-        </tr>*@
+
         <tr>
-            <td><label asp-for="@Model.UpdatedDetails.Bio"></label></td>
-            <td><textarea asp-for="@Model.UpdatedDetails.Bio"></textarea></td>
+            <td><label for="UpdatedDetails_Pronoun">You can optionally enter your preferred pronoun.  For example Him/His</label></td>
+        </tr>
+
+        <tr>
+            <td><input asp-for="@Model.UpdatedDetails.Pronoun" class="input100" /><span asp-validation-for="UpdatedDetails.Pronoun"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdatedDetails_Bio"></label>A brief description about yourself.  For example I'm a PHP developer working in Leeds,  keen to learn more about MongoDB </td>
+        </tr>
+
+        <tr>
+            <td><textarea asp-for="@Model.UpdatedDetails.Bio" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdatedDetails.Bio"></span></td>
         </tr>
     </table>
 
     <button type="submit">Save Settings</button>
 </form>
+
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
 

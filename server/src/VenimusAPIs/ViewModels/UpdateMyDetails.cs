@@ -26,6 +26,7 @@ namespace VenimusAPIs.ViewModels
         ///     The user's biography.  This can include their place of work/student,  any interests etc.
         ///     Visible to all signed in members
         /// </summary>
+        [Required]
         public string Bio { get; set; } = default!;
 
         /// <summary>
