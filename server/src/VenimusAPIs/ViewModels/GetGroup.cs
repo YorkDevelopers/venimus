@@ -43,5 +43,10 @@ namespace VenimusAPIs.ViewModels
         ///     Can this user view the list of members in this group?
         /// </summary>
         public bool CanViewMembers { get; set; }
+
+        /// <summary>
+        ///     Can this user create new events for this group?
+        /// </summary>
+        public bool CanAddEvents { get; set; }
     }
 }

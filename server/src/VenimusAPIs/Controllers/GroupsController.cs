@@ -192,11 +192,18 @@ namespace VenimusAPIs.Controllers
             }
 
             var canViewMembers = false;
+            var canAddEvents = false;
             if (User.Identity.IsAuthenticated)
             {
                 var uniqueID = UniqueIDForCurrentUser;
                 var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
                 canViewMembers = existingUser.IsApproved;
+
+                var member = group.Members.SingleOrDefault(member => member.UserId == existingUser.Id);
+                if (member != null)
+                {
+                    canAddEvents = member.IsAdministrator;
+                }
             }
 
             var viewModel = new GetGroup
@@ -209,6 +216,7 @@ namespace VenimusAPIs.Controllers
                 SlackChannelName = group.SlackChannelName,
                 StrapLine = group.StrapLine,
                 CanViewMembers = canViewMembers,
+                CanAddEvents = canAddEvents,
             };
 
             return viewModel;

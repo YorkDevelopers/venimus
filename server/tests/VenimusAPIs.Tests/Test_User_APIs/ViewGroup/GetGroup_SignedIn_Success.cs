@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
@@ -12,6 +11,7 @@ namespace VenimusAPIs.Tests.GetGroup
     {
         private Models.Group _expectedGroup;
         private bool _userIsApproved;
+        private bool _userIsAdministrator;
 
         public GetGroup_SignedIn_Success(Fixture fixture) : base(fixture)
         {
@@ -21,19 +21,27 @@ namespace VenimusAPIs.Tests.GetGroup
         public void Execute()
         {
             _userIsApproved = false;
+            _userIsAdministrator = false;
 
-            this.WithExamples(new ExampleTable("_userIsApproved")
+            this.WithExamples(new ExampleTable("_userIsApproved", "_userIsAdministrator")
             {
-                { false },
-                { true },
+                { false, false },
+                { true, false },
+                { false, true },
+                { true, true },
             }).BDDfy();
         }
-        
+
         private Task GivenIAmUser() => IAmANormalUser(isApproved: _userIsApproved);
 
         private async Task GivenAGroupAlreadyExists()
         {
             _expectedGroup = Data.Create<Models.Group>();
+
+            if (_userIsAdministrator)
+            {
+                Data.AddGroupAdministrator(_expectedGroup, User);
+            }
 
             var groups = GroupsCollection();
 
@@ -62,6 +70,7 @@ namespace VenimusAPIs.Tests.GetGroup
             Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal(_userIsApproved, actualGroup.CanViewMembers);
+            Assert.Equal(_userIsAdministrator, actualGroup.CanAddEvents);
             Assert.Equal($"http://localhost/api/groups/{_expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }

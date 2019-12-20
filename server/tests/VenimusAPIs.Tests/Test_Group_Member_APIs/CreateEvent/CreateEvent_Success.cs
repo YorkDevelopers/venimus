@@ -73,6 +73,7 @@ namespace VenimusAPIs.Tests.CreateEvent
             Assert.Equal(_event.MaximumNumberOfAttendees, actualEvent.MaximumNumberOfAttendees);
             Assert.Equal(_event.Title, actualEvent.Title);
             Assert.Equal(_event.Description, actualEvent.Description);
+            Assert.Equal(_event.GuestsAllowed, actualEvent.GuestsAllowed);
             AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
             AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
             Assert.Equal(_event.Location, actualEvent.Location);

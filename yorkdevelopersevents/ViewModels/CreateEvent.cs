@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using VenimusAPIs.Validation;
 
-namespace VenimusAPIs.ViewModels
+namespace YorkDeveloperEvents.ViewModels
 {
     public class CreateEvent
     {
@@ -11,7 +10,6 @@ namespace VenimusAPIs.ViewModels
         /// </summary>
         [Required]
         [MaxLength(100)]
-        [Slug]
         public string Slug { get; set; } = default!;
 
         /// <summary>
@@ -47,10 +45,5 @@ namespace VenimusAPIs.ViewModels
         ///     How many people + guests are allowed to sign up.  This includes hosts and speakers
         /// </summary>
         public int MaximumNumberOfAttendees { get; set; }
-
-        /// <summary>
-        ///     Are members allowed to bring guests to this event?
-        /// </summary>
-        public bool GuestsAllowed { get; set; }
     }
 }

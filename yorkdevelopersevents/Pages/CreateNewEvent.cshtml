@@ -1,0 +1,75 @@
+﻿@page
+@model YorkDeveloperEvents.CreateNewEventModel
+@{
+    ViewData["Title"] = "Create New Event";
+}
+
+<h1>Create a new event</h1>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td><label for="CreateEvent_Slug">The unique ID for the event</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.Slug" class="input100" /><span asp-validation-for="CreateEvent.Slug"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_Title">Title of the event</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.Title" class="input100" /><span asp-validation-for="CreateEvent.Title"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_StartTimeUTC">When does the event start?</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.StartTimeUTC" class="input100" /><span asp-validation-for="CreateEvent.StartTimeUTC"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_EndTimeUTC">When does the event end?</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.EndTimeUTC" class="input100" /><span asp-validation-for="CreateEvent.EndTimeUTC"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_Location">When will the event be held?</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.Location" class="input100" /><span asp-validation-for="CreateEvent.Location"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_MaximumNumberOfAttendees">The maximum number of attendees for the event</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.MaximumNumberOfAttendees" class="input100" /><span asp-validation-for="CreateEvent.MaximumNumberOfAttendees"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_GuestsAllowed">Can a member bring guests to the event?</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.CreateEvent.GuestsAllowed" class="input100" /><span asp-validation-for="CreateEvent.GuestsAllowed"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="CreateEvent_Description">A description of the event (in markdown)</label></td>
+        </tr>
+        <tr>
+            <td><textarea asp-for="@Model.CreateEvent.Description" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="CreateEvent.Description"></span></td>
+        </tr>
+    </table>
+
+    <button type="submit">Save Settings</button>
+</form>
+
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

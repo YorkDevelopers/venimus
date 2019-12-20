@@ -881,6 +881,11 @@
                 How many people + guests are allowed to sign up.  This includes hosts and speakers
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.GuestsAllowed">
+            <summary>
+                Are members allowed to bring guests to this event?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Slug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo
@@ -1004,6 +1009,11 @@
         <member name="P:VenimusAPIs.ViewModels.GetGroup.CanViewMembers">
             <summary>
                 Can this user view the list of members in this group?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.CanAddEvents">
+            <summary>
+                Can this user create new events for this group?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.JoinGroup.GroupSlug">

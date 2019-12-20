@@ -21,6 +21,14 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<ViewMyDetails>($"/api/User");
         }
 
+        internal async Task CreateEvent(string groupSlug, CreateEvent createEvent)
+        {
+            var client = await Client();
+            var response = await client.PostAsJsonAsync($"/api/groups/{groupSlug}/events", createEvent);
+            var text = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+        }
+
         internal async Task UpdateUser(UpdateMyDetails updatedDetails)
         {
             var client = await Client();
