@@ -37,7 +37,7 @@ namespace VenimusAPIs.Mongo
             return existingUser;
         }
 
-        internal async Task<Models.User> GetUserById(ObjectId id)
+        internal async Task<Models.User?> GetUserById(ObjectId id)
         {
             var users = _mongoConnection.UsersCollection();
 

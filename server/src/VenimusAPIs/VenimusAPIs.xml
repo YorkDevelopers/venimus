@@ -836,6 +836,16 @@
             The caller doesn't need to be a member of the group if they have the System Administrator role.
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.AddGroupMember.Slug">
+            <summary>
+                The unique ID of the user to add
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.AddGroupMember.IsAdministrator">
+            <summary>
+                Is the user an administrator of the group?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.Answer.Code">
             <summary>
                 Unique ID for this question.

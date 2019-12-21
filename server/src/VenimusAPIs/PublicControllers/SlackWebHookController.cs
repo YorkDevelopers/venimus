@@ -55,6 +55,11 @@ namespace VenimusAPIs.PublicControllers
         {
             var userID = new ObjectId(action.Value);
             var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
+            if (user == null)
+            {
+                throw new System.Exception(Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_EXIST);
+            }
+
             user.IsApproved = true;
             user.IsRejected = false;
             user.ApprovedorRejectedBy = interaction.User.UserName;
@@ -74,6 +79,11 @@ namespace VenimusAPIs.PublicControllers
         {
             var userID = new ObjectId(action.Value);
             var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
+            if (user == null)
+            {
+                throw new System.Exception(Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_EXIST);
+            }
+
             user.IsApproved = false;
             user.IsRejected = true;
             user.ApprovedorRejectedBy = interaction.User.UserName;
