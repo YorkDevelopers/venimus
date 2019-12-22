@@ -95,6 +95,19 @@
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.Boolean)">
+             <summary>
+                 Allows you request the list of future events.  Maximum of 10 per group.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/Events?eventsIHaveSignedUpToOnly=false
+            
+             </remarks>
+             <returns>Array of ListEvent view models</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.GroupsController.Post(VenimusAPIs.ViewModels.CreateGroup)">
              <summary>
                  Allows you to create a new group
@@ -233,19 +246,6 @@
             
              </remarks>
              <returns>byte array for the image</returns>
-             <response code="200">Success</response>
-        </member>
-        <member name="M:VenimusAPIs.Controllers.FutureEventsController.Get">
-             <summary>
-                 Allows you request the list of future events.  Maximum of 10 per group.
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /public/FutureEvents
-            
-             </remarks>
-             <returns>Array of FutureEvent view models</returns>
              <response code="200">Success</response>
         </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
@@ -733,19 +733,6 @@
              <returns>NoContent</returns>
              <response code="204">Success</response>
         </member>
-        <member name="M:VenimusAPIs.UserControllers.UserEventsController.Get">
-             <summary>
-                 Allows the current user to retrieve all the future events they have signed up to.
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /api/user/events
-            
-             </remarks>
-             <returns>Array of the ViewAllMyEventRegistrations view model</returns>
-             <response code="200">Success</response>
-        </member>
         <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
              <summary>
                  Allows the current user to join a group
@@ -1138,42 +1125,42 @@
                 How many guests is this person bringing?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventSlug">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.EventSlug">
             <summary>
                 The unique external ID for the event.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupName">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.GroupName">
             <summary>
                 The name of the group hosting the event.  For example YorkCodeDojo
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventTitle">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.EventTitle">
             <summary>
                 The title of the event.  Monthly meeting - October
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventDescription">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.EventDescription">
             <summary>
                 A description of the event in markdown.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventStartsUTC">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.EventStartsUTC">
             <summary>
                 When does the event start,  in UTC time?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.EventFinishesUTC">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.EventFinishesUTC">
             <summary>
                 When does the event finish, in UTC time?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupSlug">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.GroupSlug">
             <summary>
                 The unique external code for the group.  For example YorkCodeDojo
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListFutureEvents.GroupLogo">
+        <member name="P:VenimusAPIs.ViewModels.ListEvents.GroupLogo">
             <summary>
                 The group's logo. (Either URL or Base64)
             </summary>
@@ -1381,41 +1368,6 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateMyDetails.ProfilePictureAsBase64">
             <summary>
                 The user's profile picture in base64
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupSlug">
-            <summary>
-                The unique external code for the group.  For example YorkCodeDojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventSlug">
-            <summary>
-                The unique external ID for the event.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.GroupName">
-            <summary>
-                The name of the group hosting the event.  For example YorkCodeDojo
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventTitle">
-            <summary>
-                The title of the event.  Monthly meeting - October
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventDescription">
-            <summary>
-                A description of the event in markdown.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventStartsUTC">
-            <summary>
-                When does the event start,  in UTC time?
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewAllMyEventRegistrations.EventFinishesUTC">
-            <summary>
-                When does the event finish, in UTC time?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ViewMyDetails.EmailAddress">

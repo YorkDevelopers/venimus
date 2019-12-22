@@ -102,10 +102,13 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}&groupsIBelongToOnly={groupsIBelongToOnly}");
         }
 
-        private async Task<HttpClient> Client()
+        private async Task<HttpClient> Client(bool tokenRequired = true)
         {
-            var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            if (tokenRequired)
+            {
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
 
             return _client;
         }
@@ -134,11 +137,18 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<ListGroupMembers[]>($"/api/Groups/{groupSlug}/Members");
         }
 
-        internal async Task<ViewAllMyEventRegistrations[]> ListMyEvents()
+        internal async Task<ListEvents[]> ListMyEvents()
         {
-            var client = await Client();
-            return await client.GetAsJson<ViewAllMyEventRegistrations[]>("api/user/events");
+            var client = await Client(tokenRequired: true);
+            return await client.GetAsJson<ListEvents[]>("api/events?EventsIHaveSignedUpToOnly=true");
         }
+
+        internal async Task<ListEvents[]> ListEvents()
+        {
+            var client = await Client(tokenRequired: false);
+            return await client.GetAsJson<ListEvents[]>("api/events");
+        }
+
 
         internal async Task<ViewMyEventRegistration> GetEventRegistrationDetails(string groupSlug, string eventSlug)
         {

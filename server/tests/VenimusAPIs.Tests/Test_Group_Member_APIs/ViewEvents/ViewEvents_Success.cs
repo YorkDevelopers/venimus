@@ -8,11 +8,18 @@ using VenimusAPIs.Tests.Infrastucture;
 using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests.PublicFutureEvents
+namespace VenimusAPIs.Tests.ViewEvents
 {
-    [Story(AsA = "An unauthenticated user", IWant = "To be able to view current events", SoThat = "I learn about local groups and events")]
-    public class ListEvents : BaseTest
+    [Story(AsA = "An user", IWant = "To be able to view event details", SoThat = "I learn about local groups and events")]
+    public class ViewEvents_Success : BaseTest
     {
+        /*
+         * Only members can view event locations
+         * FutureEventsOnly
+         * PastEventsOnly
+         * EventsIveSignedUpTo
+         */
+
         private Group _group1;
         private Group _group2;
         private Group _group3;
@@ -20,7 +27,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private GroupEvent _futureEvent2;
         private GroupEvent[] _futureEvents;
 
-        public ListEvents(Fixture fixture) : base(fixture)
+        public ViewEvents_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -64,7 +71,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private async Task WhenICallTheAPI()
         {
             Fixture.APIClient.ClearBearerToken();
-            Response = await Fixture.APIClient.GetAsync("public/FutureEvents");
+            Response = await Fixture.APIClient.GetAsync("api/Events");
 
             Response.EnsureSuccessStatusCode();
         }
@@ -72,7 +79,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
         private async Task ThenTheNext10FutureEventsForEachGroupAreReturned()
         {
             var json = await Response.Content.ReadAsStringAsync();
-            var events = JsonSerializer.Deserialize<ListFutureEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var events = JsonSerializer.Deserialize<ListEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(12, events.Length);
 
@@ -85,7 +92,7 @@ namespace VenimusAPIs.Tests.PublicFutureEvents
             }
         }
 
-        private void AssertEvent(ListFutureEvents[] actualEvents, GroupEvent expectedEvent, Group expectedGroup)
+        private void AssertEvent(ListEvents[] actualEvents, GroupEvent expectedEvent, Group expectedGroup)
         {
             var actualEvent = actualEvents.Single(e => e.EventSlug == expectedEvent.Slug);
 

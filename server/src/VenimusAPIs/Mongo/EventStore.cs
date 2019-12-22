@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using VenimusAPIs.Models;
+using VenimusAPIs.Services;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Mongo
@@ -12,10 +13,12 @@ namespace VenimusAPIs.Mongo
     public class EventStore
     {
         private readonly MongoConnection _mongoConnection;
+        private readonly URLBuilder _groupLogoURLBuilder;
 
-        public EventStore(MongoConnection mongoConnection)
+        public EventStore(MongoConnection mongoConnection, URLBuilder groupLogoURLBuilder)
         {
             _mongoConnection = mongoConnection;
+            _groupLogoURLBuilder = groupLogoURLBuilder;
         }
 
         internal async Task<GroupEvent?> GetEvent(string groupSlug, string eventSlug)
@@ -34,7 +37,7 @@ namespace VenimusAPIs.Mongo
             return theEvent;
         }
 
-        internal async Task<ViewAllMyEventRegistrations[]> GetMyEventRegistrations(ObjectId userID)
+        internal async Task<List<ListEvents>> GetMyEventRegistrations(ObjectId userID)
         {
             var currentTime = DateTime.UtcNow;
 
@@ -48,7 +51,7 @@ namespace VenimusAPIs.Mongo
 
             var matchingEvents = await events.Find(filter).ToListAsync().ConfigureAwait(false);
 
-            return matchingEvents.Select(e => new ViewAllMyEventRegistrations
+            return matchingEvents.Select(e => new ListEvents
             {
                 EventDescription = e.Description,
                 EventFinishesUTC = e.EndTimeUTC,
@@ -57,7 +60,8 @@ namespace VenimusAPIs.Mongo
                 EventTitle = e.Title,
                 GroupName = e.GroupName,
                 GroupSlug = e.GroupSlug,
-            }).ToArray();
+                GroupLogo = _groupLogoURLBuilder.BuildGroupLogoURL(e.GroupSlug).ToString(),
+            }).ToList();
         }
 
         internal async Task UpdateUserDetailsInEvents(User user)

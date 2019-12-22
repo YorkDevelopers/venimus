@@ -8,7 +8,7 @@ using VenimusAPIs.Tests.Infrastucture;
 using VenimusAPIs.ViewModels;
 using Xunit;
 
-namespace VenimusAPIs.Tests.ViewAllMyRegistrations
+namespace VenimusAPIs.Tests.ViewEvents
 {
     [Story(AsA = "User", IWant = "To be able to sign up to events", SoThat = "I can attend them")]
     public class ViewAllMyRegistrations_Success : BaseTest
@@ -90,7 +90,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
 
         private async Task WhenICallTheApi()
         {
-            Response = await Fixture.APIClient.GetAsync($"api/user/Events");
+            Response = await Fixture.APIClient.GetAsync($"api/Events?EventsIHaveSignedUpToOnly=true");
         }
 
         private void ThenASuccessResponseIsReturned()
@@ -101,7 +101,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
         private async Task ThenTheDetailsOfMyRegistrationAreReturned()
         {
             var json = await Response.Content.ReadAsStringAsync();
-            var actualEvents = JsonSerializer.Deserialize<ViewAllMyEventRegistrations[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var actualEvents = JsonSerializer.Deserialize<ListEvents[]>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Assert.Equal(2, actualEvents.Length);
 
@@ -109,7 +109,7 @@ namespace VenimusAPIs.Tests.ViewAllMyRegistrations
             AssertEvent(actualEvents, _event2);
         }
 
-        private void AssertEvent(ViewAllMyEventRegistrations[] actualEvents, GroupEvent theEvent)
+        private void AssertEvent(ListEvents[] actualEvents, GroupEvent theEvent)
         {
             var actualEvent = actualEvents.Single(a => a.EventSlug == theEvent.Slug && a.GroupSlug == theEvent.GroupSlug);
             Assert.Equal(theEvent.GroupName, actualEvent.GroupName);

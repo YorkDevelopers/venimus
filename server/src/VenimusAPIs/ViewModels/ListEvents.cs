@@ -1,32 +1,28 @@
 ﻿using System;
 
-namespace YorkDeveloperEvents.ViewModels
+namespace VenimusAPIs.ViewModels
 {
-    public class ListFutureEvents
+    public class ListEvents
     {
-        /*
-         * Important! - Do not add location to this public view model - only members of a group can see the location of event.
-         */
-
         /// <summary>
         ///     The unique external ID for the event.
         /// </summary>
-        public string EventSlug { get; set; }
+        public string EventSlug { get; set; } = default!;
 
         /// <summary>
         ///     The name of the group hosting the event.  For example YorkCodeDojo
         /// </summary>
-        public string GroupName { get; set; }
+        public string GroupName { get; set; } = default!;
 
         /// <summary>
         ///     The title of the event.  Monthly meeting - October
         /// </summary>
-        public string EventTitle { get; set; }
+        public string EventTitle { get; set; } = default!;
 
         /// <summary>
         ///     A description of the event in markdown.
         /// </summary>
-        public string EventDescription { get; set; }
+        public string EventDescription { get; set; } = default!;
 
         /// <summary>
         ///     When does the event start,  in UTC time?
@@ -41,11 +37,11 @@ namespace YorkDeveloperEvents.ViewModels
         /// <summary>
         ///     The unique external code for the group.  For example YorkCodeDojo
         /// </summary>
-        public string GroupSlug { get; set; }
+        public string GroupSlug { get; set; } = default!;
 
         /// <summary>
         ///     The group's logo. (Either URL or Base64)
         /// </summary>
-        public string GroupLogo { get; set; }
+        public string GroupLogo { get; set; } = default!;
     }
 }

@@ -20,7 +20,7 @@ namespace VenimusAPIs.Mongo
             _groupLogoURLBuilder = groupLogoURLBuilder;
         }
 
-        internal async Task<List<ViewModels.ListFutureEvents>> Evaluate()
+        internal async Task<List<ViewModels.ListEvents>> Evaluate()
         {
             var database = _mongoConnection.ConnectToDatabase();
 
@@ -32,7 +32,7 @@ namespace VenimusAPIs.Mongo
             var allGroups = await groups.FindAsync(Builders<Group>.Filter.Empty).ConfigureAwait(false);
             var groupsList = await allGroups.ToListAsync().ConfigureAwait(false);
 
-            var result = new List<ViewModels.ListFutureEvents>();
+            var result = new List<ViewModels.ListEvents>();
             foreach (var group in groupsList)
             {
                 var filter = Builders<GroupEvent>.Filter.Eq(ent => ent.GroupId, group.Id) &
@@ -46,7 +46,7 @@ namespace VenimusAPIs.Mongo
                     Sort = sort,
                 }).ConfigureAwait(false);
 
-                var viewModels = nextEvents.ToEnumerable().Select(e => new ListFutureEvents
+                var viewModels = nextEvents.ToEnumerable().Select(e => new ListEvents
                 {
                     EventDescription = e.Description,
                     EventFinishesUTC = e.EndTimeUTC,

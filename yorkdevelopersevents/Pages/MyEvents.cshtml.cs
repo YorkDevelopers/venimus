@@ -8,7 +8,7 @@ namespace YorkDeveloperEvents
 {
     public class MyEventsModel : PageModel
     {
-        public ViewAllMyEventRegistrations[] ViewModel { get; set; }
+        public ListEvents[] ViewModel { get; set; }
 
         public async Task OnGet([FromServices] API api)
         {

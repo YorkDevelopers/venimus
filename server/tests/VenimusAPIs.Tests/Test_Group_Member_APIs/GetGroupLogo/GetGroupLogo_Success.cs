@@ -4,7 +4,7 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using Xunit;
 
-namespace VenimusAPIs.Tests.GetGroupsLogo
+namespace VenimusAPIs.Tests.GetGroupLogo
 {
     [Story(AsA = "User", IWant = "To be able to retrieve the logo for a group", SoThat = "I can join a community")]
     public class GetGroupLogo_Success : BaseTest

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Mongo;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
@@ -15,18 +17,22 @@ namespace VenimusAPIs.Controllers
     [ApiController]
     public class EventsController : BaseUserController
     {
-        private readonly Mongo.EventStore _eventStore;
-        private readonly Mongo.GroupStore _groupStore;
+        private readonly UserStore _userStore;
+        private readonly EventStore _eventStore;
+        private readonly GroupStore _groupStore;
 
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
+        private readonly GetFutureEventsQuery _getFutureEventsQuery;
 
-        public EventsController(Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer)
+        public EventsController(Mongo.UserStore userStore, Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, GetFutureEventsQuery getFutureEventsQuery)
         {
+            _userStore = userStore;
             _eventStore = eventStore;
             _groupStore = groupStore;
             _mapper = mapper;
             _stringLocalizer = stringLocalizer;
+            _getFutureEventsQuery = getFutureEventsQuery;
         }
 
         private static ViewModels.Question MapQuestion(Models.Question model)
@@ -240,6 +246,36 @@ namespace VenimusAPIs.Controllers
                 EventLocation = model.Location,
                 Questions = AddNumberOfGuestsQuestionIfApplicable(model.GuestsAllowed, model.Questions.Select(q => MapQuestion(q)).ToArray()),
             };
+        }
+
+        /// <summary>
+        ///     Allows you request the list of future events.  Maximum of 10 per group.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/Events?eventsIHaveSignedUpToOnly=false
+        ///
+        /// </remarks>
+        /// <returns>Array of ListEvent view models</returns>
+        /// <response code="200">Success</response>
+        [Route("api/Events")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<ListEvents>>> Get([FromQuery]bool eventsIHaveSignedUpToOnly = false)
+        {
+            if (eventsIHaveSignedUpToOnly)
+            {
+                var uniqueID = UniqueIDForCurrentUser;
+
+                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+
+                return await _eventStore.GetMyEventRegistrations(existingUser.Id).ConfigureAwait(false);
+            }
+            else
+            {
+                return await _getFutureEventsQuery.Evaluate().ConfigureAwait(false);
+            }
         }
 
         private ViewModels.Question CreateNumberOfGuestsQuestion()
