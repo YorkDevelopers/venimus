@@ -1,0 +1,27 @@
+﻿@page
+@model YorkDeveloperEvents.AddGroupAdministratorModel
+@{
+    ViewData["Title"] = "AddGroupAdministrator";
+}
+
+<h1>Add Group Administrator</h1>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <input name="GroupSlug" type="hidden" value="@Model.GroupSlug" />
+
+    <table>
+        <tr>
+            <td><label for="CreateEvent_Slug">Their screenname</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.DisplayName" class="input100" /><span asp-validation-for="DisplayName"></span></td>
+        </tr>
+    </table>
+
+    <button type="submit">Save Settings</button>
+</form>
+
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

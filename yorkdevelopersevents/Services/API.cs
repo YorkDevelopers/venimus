@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading.Tasks;
 using YorkDeveloperEvents.Extensions;
 using YorkDeveloperEvents.ViewModels;
@@ -14,6 +15,22 @@ namespace YorkDeveloperEvents.Services
         private readonly HttpClient _client;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        internal async Task AddGroupMember(string groupSlug, AddGroupMember addGroupMember)
+        {
+            var client = await Client();
+            await client.PostAsJsonAsync($"api/Groups/{groupSlug}/Members", addGroupMember);
+        }
+
+        internal async Task<GetUser> GetUsersDetails(string displayName)
+        {
+            var client = await Client();
+            var response = await client.GetAsync($"/api/Users?DisplayName={displayName}");
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+            var dataAsString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<GetUser>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
 
         internal async Task<ViewMyDetails> GetCurrentUser()
         {
