@@ -46,6 +46,14 @@ namespace YorkDeveloperEvents.Services
             response.EnsureSuccessStatusCode();
         }
 
+        internal async Task UpdateEvent(string groupSlug, string eventSlug, UpdateEvent updateEvent)
+        {
+            var client = await Client();
+            var response = await client.PutAsJsonAsync($"/api/groups/{groupSlug}/events/{eventSlug}", updateEvent);
+            var text = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+        }
+
         internal async Task UpdateUser(UpdateMyDetails updatedDetails)
         {
             var client = await Client();

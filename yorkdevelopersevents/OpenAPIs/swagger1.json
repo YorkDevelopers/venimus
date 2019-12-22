@@ -1,0 +1,2303 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Venimus",
+    "license": {
+      "name": "(c) York Developers - All Rights Reserved"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/groups/{groupSlug}/events": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Allows you to create a new event for your group.",
+        "description": "Sample request:\r\n            \r\n    POST /api/groups/YorkCodeDojo/events\r\n    {\r\n        \"slug\" : \"Oct2019\"\r\n        \"title\" : \"Game of Life - Oct 2019\",\r\n        \"description\" : \"Tonight we will work in pairs implementing the **classic Game Of Life**\"\r\n        \"location\" : \"Room 12\"\r\n        \"startTime\" : \"2019-12-12 18:30\"\r\n        \"endTime\" : \"2019-12-12 21:00\"\r\n    }",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "The group does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized."
+          }
+        }
+      }
+    },
+    "/api/groups/{groupSlug}/events/{eventSlug}": {
+      "put": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Allows you to amend the details of an existing event",
+        "description": "Sample request:\r\n            \r\n    PUT /api/groups/YorkCodeDojo/events/12345\r\n    {\r\n        \"slug\" : \"Oct2019\"\r\n        \"title\" : \"Game of Life - Oct 2019\",\r\n        \"description\" : \"Tonight we will work in pairs implementing the **classic Game Of Life**\"\r\n        \"location\" : \"Room 12\"\r\n        \"startTime\" : \"2019-12-12 18:30\"\r\n        \"endTime\" : \"2019-12-12 21:00\"\r\n        \"host\" : \"E Betteridge\"\r\n        \"speaker\" : \"J Betteridge\"\r\n    }",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEvent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEvent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "The group or event does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Allows an administrator to delete an event",
+        "description": "Sample request:\r\n            \r\n    DELETE /api/groups/YorkCodeDojo/events/1234",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Allows you to retrieve the details of an event",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups/YorkCodeDojo/events/1234",
+        "operationId": "Events",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvent"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvent"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group or Event does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Groups/{groupSlug}/Events/{eventSlug}/Members": {
+      "get": {
+        "tags": [
+          "EventsAttendees"
+        ],
+        "summary": "Allows you to retrieve the members of an event",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups/YorkCodeDojo/Events/Nov2019/Members",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListEventAttendees"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListEventAttendees"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListEventAttendees"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No Access.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No Permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/FutureEvents": {
+      "get": {
+        "tags": [
+          "FutureEvents"
+        ],
+        "summary": "Allows you request the list of future events.  Maximum of 10 per group.",
+        "description": "Sample request:\r\n            \r\n    GET /public/FutureEvents",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListFutureEvents"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListFutureEvents"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListFutureEvents"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Groups": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to create a new group",
+        "description": "Sample request:\r\n            \r\n    POST /api/groups\r\n    {\r\n        \"slug\" : \"YorkCodeDojo\",\r\n        \"name\" : \"York Cod eDojo\",\r\n        \"isActive\" : true,\r\n        \"slackChannelName\" : \"YorkCodeDojo\",\r\n        \"logoInBase64\" : \"1111\",\r\n        \"description\" : \"Improve your code by practice.\"\r\n    }",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to retrieve the list of all groups",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups",
+        "parameters": [
+          {
+            "name": "includeInActiveGroups",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "groupsIBelongToOnly",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroups"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroups"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroups"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Groups/{groupSlug}": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to update an existing group",
+        "description": "Sample request:\r\n            \r\n    PUT /api/groups/YorkCodeDojo\r\n    {\r\n        \"slug\" : \"YorkCodeDojo\",\r\n        \"name\" : \"York Cod eDojo\",\r\n        \"isActive\" : true,\r\n        \"slackChannelName\" : \"YorkCodeDojo\",\r\n        \"logoInBase64\" : \"1111\",\r\n        \"description\" : \"Improve your code by practice.\"\r\n    }",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "201": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to retrieve the details of a group",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups/YorkCodeDojo",
+        "operationId": "Groups",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroup"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroup"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroup"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to delete an existing group",
+        "description": "Sample request:\r\n            \r\n    DELETE /api/groups/YorkCodeDojo",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NoContent"
+          },
+          "401": {
+            "description": "User is not authorized."
+          }
+        }
+      }
+    },
+    "/api/groups/{groupSlug}/logo": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Allows you to get the logo for a group",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups/YORKCODEDOJO/logo",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Groups/{groupSlug}/Members": {
+      "get": {
+        "tags": [
+          "GroupsMembers"
+        ],
+        "summary": "Allows you to retrieve the members of a group",
+        "description": "Sample request:\r\n            \r\n    GET /api/groups/YorkCodeDojo/Members",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroupMembers"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroupMembers"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListGroupMembers"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No Access.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No Permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "GroupsMembers"
+        ],
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGroupMember"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGroupMember"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGroupMember"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/SlackWebHook": {
+      "post": {
+        "tags": [
+          "SlackWebHook"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/connected": {
+      "post": {
+        "tags": [
+          "UserConnected"
+        ],
+        "summary": "Called once the user has connected to the frontend.  This ensures that they exist in the database.",
+        "description": "Sample request:\r\n            \r\n    POST /api/users/connected\r\n    {\r\n    }",
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "UserDetails"
+        ],
+        "summary": "Allows the current user to retrieve their personal profile",
+        "description": "Sample request:\r\n            \r\n    GET /api/user",
+        "operationId": "CurrentUserDetails",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "UserDetails"
+        ],
+        "summary": "Allows the current user to update their personal profile",
+        "description": "Sample request:\r\n            \r\n    PUT /api/user\r\n    {\r\n        \"pronoun\" : \"Him\"\r\n        \"Fullname\" : \"David Betteridge\",\r\n        \"DisplayName\" : \"David B\",\r\n        \"Bio\" : \"I am me\",\r\n        \"profilePictureAsBase64\" : \"123123123\",\r\n    }",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyDetails"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyDetails"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMyDetails"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/user/events": {
+      "get": {
+        "tags": [
+          "UserEvents"
+        ],
+        "summary": "Allows the current user to retrieve all the future events they have signed up to.",
+        "description": "Sample request:\r\n            \r\n    GET /api/user/events",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ViewAllMyEventRegistrations"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ViewAllMyEventRegistrations"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ViewAllMyEventRegistrations"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/Groups": {
+      "post": {
+        "tags": [
+          "UserGroups"
+        ],
+        "summary": "Allows the current user to join a group",
+        "description": "Sample request:\r\n            \r\n    POST /api/user/groups\r\n    {\r\n        \"groupSlug\" : \"YorkCodeDojo\",\r\n    }",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/Groups/{groupSlug}": {
+      "delete": {
+        "tags": [
+          "UserGroups"
+        ],
+        "summary": "Allows the current user to leave a group",
+        "description": "Sample request:\r\n            \r\n    DELETE /api/user/groups/YorkCodeDojo",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/Groups/{groupSlug}/Events/{eventSlug}": {
+      "put": {
+        "tags": [
+          "UserGroupsEvents"
+        ],
+        "summary": "Allows the current user to update their registration for an event",
+        "description": "Sample request:\r\n            \r\n    PUT /api/user/groups/YorkCodeDojo/Events/Nov2019\r\n    {\r\n        \"numberOfGuest\" : 1,\r\n        \"dietaryRequirements\" : \"Milk free\",\r\n        \"messageToOrganiser\" : \"I might be 10 minutes late\"\r\n    }",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterForEvent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterForEvent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterForEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "User is not authorized.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group does not exist",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/groups/{groupSlug}/events/{eventSlug}": {
+      "delete": {
+        "tags": [
+          "UserGroupsEvents"
+        ],
+        "summary": "Allows the current user to decline attending an event",
+        "description": "Sample request:\r\n            \r\n    DELETE /api/user/groups/YorkCodeDojo/Events/Nov2019",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Event has already happened",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group or Event does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "UserGroupsEvents"
+        ],
+        "summary": "Allows the current user to retrieve their registration details for an event",
+        "description": "Sample request:\r\n            \r\n    GET /api/user/groups/YorkCodeDojo/Events/Nov2019",
+        "operationId": "EventRegistration",
+        "parameters": [
+          {
+            "name": "groupSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyEventRegistration"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyEventRegistration"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViewMyEventRegistration"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group or Event does not exist.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Allows you to get the details for a user",
+        "description": "Sample request:\r\n            \r\n    GET /api/users?displayName=davidb",
+        "parameters": [
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUser"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUser"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{userSlug}/profilepicture": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Allows you to get the profile picture for a user",
+        "description": "Sample request:\r\n            \r\n    GET /api/users/YORKCODEDOJO/profilepicture",
+        "parameters": [
+          {
+            "name": "userSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateEvent": {
+        "required": [
+          "description",
+          "location",
+          "slug",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique external id for the event.  For example May2019",
+            "nullable": true
+          },
+          "title": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The title of the event,  for example March 2019 Meetup. Must be unique for the group.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the event,  in markdown format.",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the event, for example York Minster,  Room 201 York St John University",
+            "nullable": true
+          },
+          "startTimeUTC": {
+            "type": "string",
+            "description": "Date and time the event starts",
+            "format": "date-time"
+          },
+          "endTimeUTC": {
+            "type": "string",
+            "description": "Date and time the event ends.  Must be after the StartTime",
+            "format": "date-time"
+          },
+          "maximumNumberOfAttendees": {
+            "type": "integer",
+            "description": "How many people + guests are allowed to sign up.  This includes hosts and speakers",
+            "format": "int32"
+          },
+          "guestsAllowed": {
+            "type": "boolean",
+            "description": "Are members allowed to bring guests to this event?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateEvent": {
+        "required": [
+          "description",
+          "location",
+          "slug",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique external id for the event.  For example May2019",
+            "nullable": true
+          },
+          "title": {
+            "maxLength": 200,
+            "type": "string",
+            "description": "The title of the event,  for example March 2019 Meetup. Must be unique for the group.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the event,  in markdown format.",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "description": "The location of the event, for example York Minster,  Room 201 York St John University",
+            "nullable": true
+          },
+          "startTimeUTC": {
+            "type": "string",
+            "description": "Date and time the event starts",
+            "format": "date-time"
+          },
+          "endTimeUTC": {
+            "type": "string",
+            "description": "Date and time the event ends.  Must be after the StartTime",
+            "format": "date-time"
+          },
+          "maximumNumberOfAttendees": {
+            "type": "integer",
+            "description": "How many people + guests are allowed to sign up.  This includes hosts and speakers",
+            "format": "int32"
+          },
+          "guestsAllowed": {
+            "type": "boolean",
+            "description": "Are members allowed to bring guests to this event?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Unique ID for this question.",
+            "nullable": true
+          },
+          "caption": {
+            "type": "string",
+            "description": "Question shown to the user",
+            "nullable": true
+          },
+          "questionType": {
+            "type": "string",
+            "description": "Type of question,  text, date, boolean etc",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetEvent": {
+        "type": "object",
+        "properties": {
+          "eventSlug": {
+            "type": "string",
+            "description": "The unique external ID for the event.",
+            "nullable": true
+          },
+          "groupName": {
+            "type": "string",
+            "description": "The name of the group hosting the event.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "eventTitle": {
+            "type": "string",
+            "description": "The title of the event.  Monthly meeting - October",
+            "nullable": true
+          },
+          "eventDescription": {
+            "type": "string",
+            "description": "A description of the event in markdown.",
+            "nullable": true
+          },
+          "eventStartsUTC": {
+            "type": "string",
+            "description": "When does the event start,  in UTC time?",
+            "format": "date-time"
+          },
+          "eventFinishesUTC": {
+            "type": "string",
+            "description": "When does the event finish, in UTC time?",
+            "format": "date-time"
+          },
+          "eventLocation": {
+            "type": "string",
+            "description": "Where is the event being held?",
+            "nullable": true
+          },
+          "maximumNumberOfAttendees": {
+            "type": "integer",
+            "description": "How many people + guests are allowed to sign up.  This includes hosts and speakers",
+            "format": "int32"
+          },
+          "guestsAllowed": {
+            "type": "boolean",
+            "description": "Are members allowed to bring guests to this event?"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "description": "Questions to ask the user when they are registering",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListEventAttendees": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The external ID for the user.",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "The email address which also links all the social media accounts together.",
+            "nullable": true
+          },
+          "pronoun": {
+            "type": "string",
+            "description": "The users preferred personal pronon.  e.g. Him",
+            "nullable": true
+          },
+          "fullname": {
+            "type": "string",
+            "description": "The user's fullname.  e.g David Betteridge",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB\r\n(Has to be unique)",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "description": "The user's biography.  This can include their place of work/student,  any interests etc.\r\nVisible to all signed in members",
+            "nullable": true
+          },
+          "profilePictureInBase64": {
+            "type": "string",
+            "description": "The user's profile picture",
+            "nullable": true
+          },
+          "isHost": {
+            "type": "boolean",
+            "description": "Is the event's host"
+          },
+          "isSpeaker": {
+            "type": "boolean",
+            "description": "Is a speaker at the event"
+          },
+          "isAttending": {
+            "type": "boolean",
+            "description": "Is the user attending the event?"
+          },
+          "numberOfGuests": {
+            "type": "integer",
+            "description": "How many guests is this person bringing?",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListFutureEvents": {
+        "type": "object",
+        "properties": {
+          "eventSlug": {
+            "type": "string",
+            "description": "The unique external ID for the event.",
+            "nullable": true
+          },
+          "groupName": {
+            "type": "string",
+            "description": "The name of the group hosting the event.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "eventTitle": {
+            "type": "string",
+            "description": "The title of the event.  Monthly meeting - October",
+            "nullable": true
+          },
+          "eventDescription": {
+            "type": "string",
+            "description": "A description of the event in markdown.",
+            "nullable": true
+          },
+          "eventStartsUTC": {
+            "type": "string",
+            "description": "When does the event start,  in UTC time?",
+            "format": "date-time"
+          },
+          "eventFinishesUTC": {
+            "type": "string",
+            "description": "When does the event finish, in UTC time?",
+            "format": "date-time"
+          },
+          "groupSlug": {
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "groupLogo": {
+            "type": "string",
+            "description": "The group's logo. (Either URL or Base64)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateGroup": {
+        "required": [
+          "description",
+          "name",
+          "slug"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is this group still actively running events?"
+          },
+          "name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique name for the group / community.  For example York Code Dojo",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the group in markdown",
+            "nullable": true
+          },
+          "strapLine": {
+            "type": "string",
+            "description": "A very short one-line description of the group",
+            "nullable": true
+          },
+          "slackChannelName": {
+            "type": "string",
+            "description": "The name of this groups slack channel",
+            "nullable": true
+          },
+          "logoInBase64": {
+            "type": "string",
+            "description": "The group's logo.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListGroups": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is this group still actively running events?"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique name for the group / community.  For example York Code Dojo",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the group in markdown",
+            "nullable": true
+          },
+          "strapLine": {
+            "type": "string",
+            "description": "A very short one-line description of the group",
+            "nullable": true
+          },
+          "slackChannelName": {
+            "type": "string",
+            "description": "The name of this groups slack channel",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "description": "The URL of the groups logo",
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateGroup": {
+        "required": [
+          "description",
+          "name",
+          "slug"
+        ],
+        "type": "object",
+        "properties": {
+          "slug": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is this group still actively running events?"
+          },
+          "name": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The unique name for the group / community.  For example York Code Dojo",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the group in markdown",
+            "nullable": true
+          },
+          "strapLine": {
+            "type": "string",
+            "description": "A very short one-line description of the group",
+            "nullable": true
+          },
+          "slackChannelName": {
+            "type": "string",
+            "description": "The name of this groups slack channel",
+            "nullable": true
+          },
+          "logoInBase64": {
+            "type": "string",
+            "description": "The group's logo.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetGroup": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is this group still actively running events?"
+          },
+          "name": {
+            "type": "string",
+            "description": "The unique name for the group / community.  For example York Code Dojo",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the group in markdown",
+            "nullable": true
+          },
+          "strapLine": {
+            "type": "string",
+            "description": "A very short one-line description of the group",
+            "nullable": true
+          },
+          "slackChannelName": {
+            "type": "string",
+            "description": "The name of this groups slack channel",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "description": "The group's logo. (Either URL or Base64)",
+            "format": "uri",
+            "nullable": true
+          },
+          "canViewMembers": {
+            "type": "boolean",
+            "description": "Can this user view the list of members in this group?"
+          },
+          "canAddEvents": {
+            "type": "boolean",
+            "description": "Can this user create new events for this group?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListGroupMembers": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The external ID for the user.",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "The email address which also links all the social media accounts together.",
+            "nullable": true
+          },
+          "pronoun": {
+            "type": "string",
+            "description": "The users preferred personal pronon.  e.g. Him",
+            "nullable": true
+          },
+          "fullname": {
+            "type": "string",
+            "description": "The user's fullname.  e.g David Betteridge",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB\r\n(Has to be unique)",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "description": "The user's biography.  This can include their place of work/student,  any interests etc.\r\nVisible to all signed in members",
+            "nullable": true
+          },
+          "profilePicture": {
+            "type": "string",
+            "description": "The URL of the user's profile picture",
+            "format": "uri",
+            "nullable": true
+          },
+          "isAdministrator": {
+            "type": "boolean",
+            "description": "Is the user a group administrator?"
+          },
+          "isApproved": {
+            "type": "boolean",
+            "description": "Has this user's membership to the group been approved?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddGroupMember": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The unique ID of the user to add",
+            "nullable": true
+          },
+          "isAdministrator": {
+            "type": "boolean",
+            "description": "Is the user an administrator of the group?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ViewMyDetails": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "description": "The email address which also links all the social media accounts together.",
+            "nullable": true
+          },
+          "pronoun": {
+            "type": "string",
+            "description": "The users preferred personal pronon.  e.g. Him",
+            "nullable": true
+          },
+          "fullname": {
+            "type": "string",
+            "description": "The user's fullname.  e.g David Betteridge",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB\r\n(Has to be unique)",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "description": "The user's biography.  This can include their place of work/student,  any interests etc.\r\nVisible to all signed in members",
+            "nullable": true
+          },
+          "profilePictureAsBase64": {
+            "type": "string",
+            "description": "The user's profile picture in base64",
+            "nullable": true
+          },
+          "isRegistered": {
+            "type": "boolean",
+            "description": "Has the user completed the registration stage (ie. entered all their details)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateMyDetails": {
+        "required": [
+          "bio",
+          "displayName",
+          "fullname"
+        ],
+        "type": "object",
+        "properties": {
+          "pronoun": {
+            "type": "string",
+            "description": "The users preferred personal pronon.  e.g. Him",
+            "nullable": true
+          },
+          "fullname": {
+            "type": "string",
+            "description": "The user's fullname.  e.g David Betteridge",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB\r\n(Has to be unique)",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "description": "The user's biography.  This can include their place of work/student,  any interests etc.\r\nVisible to all signed in members",
+            "nullable": true
+          },
+          "profilePictureAsBase64": {
+            "type": "string",
+            "description": "The user's profile picture in base64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ViewAllMyEventRegistrations": {
+        "type": "object",
+        "properties": {
+          "groupSlug": {
+            "type": "string",
+            "description": "The unique external code for the group.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "eventSlug": {
+            "type": "string",
+            "description": "The unique external ID for the event.",
+            "nullable": true
+          },
+          "groupName": {
+            "type": "string",
+            "description": "The name of the group hosting the event.  For example YorkCodeDojo",
+            "nullable": true
+          },
+          "eventTitle": {
+            "type": "string",
+            "description": "The title of the event.  Monthly meeting - October",
+            "nullable": true
+          },
+          "eventDescription": {
+            "type": "string",
+            "description": "A description of the event in markdown.",
+            "nullable": true
+          },
+          "eventStartsUTC": {
+            "type": "string",
+            "description": "When does the event start,  in UTC time?",
+            "format": "date-time"
+          },
+          "eventFinishesUTC": {
+            "type": "string",
+            "description": "When does the event finish, in UTC time?",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JoinGroup": {
+        "type": "object",
+        "properties": {
+          "groupSlug": {
+            "type": "string",
+            "description": "The slug of the group that the user is joining.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Answer": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Unique ID for this question.",
+            "nullable": true
+          },
+          "usersAnswer": {
+            "type": "string",
+            "description": "Answer from the user",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterForEvent": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Answer"
+            },
+            "description": "The user's answers",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ViewMyEventRegistration": {
+        "type": "object",
+        "properties": {
+          "numberOfGuests": {
+            "type": "integer",
+            "description": "The number of unregistered guests joining the user",
+            "format": "int32"
+          },
+          "dietaryRequirements": {
+            "type": "string",
+            "description": "Any Dietary Requirements.",
+            "nullable": true
+          },
+          "messageToOrganiser": {
+            "type": "string",
+            "description": "Free format message to the event host.",
+            "nullable": true
+          },
+          "attending": {
+            "type": "boolean",
+            "description": "Has the user said they are attending the event?"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetUser": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The external ID for the user.",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "description": "The email address which also links all the social media accounts together.",
+            "nullable": true
+          },
+          "pronoun": {
+            "type": "string",
+            "description": "The users preferred personal pronon.  e.g. Him",
+            "nullable": true
+          },
+          "fullname": {
+            "type": "string",
+            "description": "The user's fullname.  e.g David Betteridge",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB\r\n(Has to be unique)",
+            "nullable": true
+          },
+          "bio": {
+            "type": "string",
+            "description": "The user's biography.  This can include their place of work/student,  any interests etc.\r\nVisible to all signed in members",
+            "nullable": true
+          },
+          "profileURL": {
+            "type": "string",
+            "description": "The URL to the user's profile picture",
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Please enter the token obtained by calling the /token endpoint.",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

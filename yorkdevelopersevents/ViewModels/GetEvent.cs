@@ -48,5 +48,10 @@ namespace YorkDeveloperEvents.ViewModels
         ///     Questions to ask the user when they are registering
         /// </summary>
         public Question[] Questions { get; set; } = Array.Empty<Question>();
+
+        /// <summary>
+        ///     Are members allowed to bring guests to this event?
+        /// </summary>
+        public bool GuestsAllowed { get; set; }
     }
 }
