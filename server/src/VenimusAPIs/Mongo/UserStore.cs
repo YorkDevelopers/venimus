@@ -46,7 +46,7 @@ namespace VenimusAPIs.Mongo
             return existingUser;
         }
 
-        internal async Task<Models.User> GetUserByDisplayName(string displayName)
+        internal async Task<Models.User?> GetUserByDisplayName(string displayName)
         {
             var users = _mongoConnection.UsersCollection();
 

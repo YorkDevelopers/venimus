@@ -27,6 +27,7 @@ namespace VenimusAPIs.Validation
             var mustBeAGroupAdministrator = HasAttribute<CallerMustBeGroupAdministratorAttribute>(context.ActionDescriptor, out var callerMustBeGroupAdministratorAttribute);
             var mustBeAGroupMember = HasAttribute<CallerMustBeGroupMemberAttribute>(context.ActionDescriptor, out var callerMustBeGroupMemberAttribute);
             var mustBeAnApprovedGroupMember = HasAttribute<CallerMustBeApprovedGroupMemberAttribute>(context.ActionDescriptor, out var callerMustBeApprovedGroupMemberAttribute);
+            var mustBeAnApprovedMember = HasAttribute<CallerMustBeApprovedUserAttribute>(context.ActionDescriptor, out var callerMustBeApprovedUserAttribute);
 
             var canBeSystemAdministratorInstead = true;
             var useNotFoundRatherThanForbidden = false;
@@ -40,6 +41,18 @@ namespace VenimusAPIs.Validation
             else if (mustBeAnApprovedGroupMember && callerMustBeApprovedGroupMemberAttribute != null)
             {
                 canBeSystemAdministratorInstead = callerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead;
+            }
+
+            if (mustBeAnApprovedMember)
+            {
+                var uniqueID = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+                if (existingUser == null || !existingUser.IsApproved)
+                {
+                    context.Result = new ForbidResult();
+                    return;
+                }
             }
 
             if (mustBeAGroupAdministrator || mustBeAGroupMember || mustBeAnApprovedGroupMember)

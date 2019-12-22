@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace VenimusAPIs.ViewModels
 {
-    public class ListGroupMembers
+    public class GetUser
     {
         /// <summary>
         ///     The external ID for the user.
@@ -37,18 +40,8 @@ namespace VenimusAPIs.ViewModels
         public string Bio { get; set; } = default!;
 
         /// <summary>
-        ///     The URL of the user's profile picture
+        ///     The URL to the user's profile picture
         /// </summary>
-        public Uri ProfilePicture { get; set; } = default!;
-
-        /// <summary>
-        ///     Is the user a group administrator?
-        /// </summary>
-        public bool IsAdministrator { get; set; }
-
-        /// <summary>
-        ///     Has this user's membership to the group been approved?
-        /// </summary>
-        public bool IsApproved { get; set; }
+        public Uri ProfileURL { get; set; } = default!;
     }
 }

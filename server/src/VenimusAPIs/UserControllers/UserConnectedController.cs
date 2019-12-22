@@ -61,7 +61,7 @@ namespace VenimusAPIs.UserControllers
                 (theUser, newUser) = await CreateOrMergeUser(uniqueID).ConfigureAwait(false);
             }
 
-            Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser)));
+            Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser).ToString()));
 
             if (newUser)
             {

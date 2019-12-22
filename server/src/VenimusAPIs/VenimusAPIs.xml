@@ -209,6 +209,19 @@
              <response code="403">No Permission.</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.UsersController.GetUserDetails(System.String)">
+             <summary>
+                 Allows you to get the details for a user
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/users?displayName=davidb
+            
+             </remarks>
+             <returns>GetUser object</returns>
+             <response code="200">Success</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.UsersController.GetLogo(System.String)">
              <summary>
                  Allows you to get the profile picture for a user
@@ -1024,6 +1037,43 @@
         <member name="P:VenimusAPIs.ViewModels.GetGroup.CanAddEvents">
             <summary>
                 Can this user create new events for this group?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.Slug">
+            <summary>
+                The external ID for the user.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.EmailAddress">
+            <summary>
+                The email address which also links all the social media accounts together.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.Pronoun">
+            <summary>
+                The users preferred personal pronon.  e.g. Him
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.Fullname">
+            <summary>
+                The user's fullname.  e.g David Betteridge
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.DisplayName">
+            <summary>
+                The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
+                (Has to be unique)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.Bio">
+            <summary>
+                The user's biography.  This can include their place of work/student,  any interests etc.
+                Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.GetUser.ProfileURL">
+            <summary>
+                The URL to the user's profile picture
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.JoinGroup.GroupSlug">

@@ -84,23 +84,30 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            var existingUser = await _userStore.GetUserById(new MongoDB.Bson.ObjectId(addGroupMember.Slug)).ConfigureAwait(false);
-            if (existingUser == null)
+            var userToAdd = await _userStore.GetUserById(new MongoDB.Bson.ObjectId(addGroupMember.Slug)).ConfigureAwait(false);
+            if (userToAdd == null)
             {
                 return NotFound();
             }
 
-            model.Members.Add(new GroupMember
+            var member = model.Members.SingleOrDefault(mem => mem.UserId == userToAdd.Id);
+            if (member == null)
             {
-                UserId = existingUser.Id,
-                Bio = existingUser.Bio,
-                DisplayName = existingUser.DisplayName,
-                EmailAddress = existingUser.EmailAddress,
-                Fullname = existingUser.Fullname,
-                IsAdministrator = addGroupMember.IsAdministrator,
-                IsUserApproved = existingUser.IsApproved,
-                Pronoun = existingUser.Pronoun,
-            });
+                member = new GroupMember
+                {
+                    UserId = userToAdd.Id,
+                    Bio = userToAdd.Bio,
+                    DisplayName = userToAdd.DisplayName,
+                    EmailAddress = userToAdd.EmailAddress,
+                    Fullname = userToAdd.Fullname,
+                    IsUserApproved = userToAdd.IsApproved,
+                    Pronoun = userToAdd.Pronoun,
+                };
+
+                model.Members.Add(member);
+            }
+            
+            member.IsAdministrator = addGroupMember.IsAdministrator;
 
             await _groupStore.UpdateGroup(model).ConfigureAwait(false);
 

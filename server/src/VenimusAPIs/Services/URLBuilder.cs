@@ -25,11 +25,11 @@ namespace VenimusAPIs.Services
             return new Uri($"{_siteSettings.PublicURL}api/user");
         }
 
-        internal string BuildUserDetailsProfilePictureURL(User theUser) => BuildUserDetailsProfilePictureURL(theUser.Id);
+        internal Uri BuildUserDetailsProfilePictureURL(User theUser) => BuildUserDetailsProfilePictureURL(theUser.Id);
 
-        internal string BuildUserDetailsProfilePictureURL(ObjectId theUserID)
+        internal Uri BuildUserDetailsProfilePictureURL(ObjectId theUserID)
         {
-            return $"{_siteSettings.PublicURL}api/users/{theUserID.ToString()}/profilepicture";
+            return new Uri($"{_siteSettings.PublicURL}api/users/{theUserID.ToString()}/profilepicture");
         }
     }
 }

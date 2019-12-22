@@ -42,7 +42,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
+                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
                              AltText = "Profile Picture",
                          },
                     },
@@ -110,7 +110,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
+                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
                              AltText = "Profile Picture",
                          },
                     },
@@ -145,7 +145,7 @@ namespace VenimusAPIs.Services
                          Accessory = new Accessory
                          {
                              Type = "image",
-                             ImageURL = new Uri(_urlBuilder.BuildUserDetailsProfilePictureURL(user)),
+                             ImageURL = _urlBuilder.BuildUserDetailsProfilePictureURL(user),
                              AltText = "Profile Picture",
                          },
                     },

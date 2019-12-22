@@ -12,22 +12,22 @@ namespace VenimusAPIs.Tests.AddGroupMember
     */
 
     [Story(AsA = "Administrator", IWant = "to be able to add members to a group", SoThat = "They can belong to the community")]
-    public class AddGroupMember_Success : BaseTest
+    public class AddGroupMember_AlreadyAMember : BaseTest
     {
         private Group _existingGroup;
         private User _userToAdd;
-        private bool _userIsAdministrator;
+        private bool _userIsGroupAdministrator;
 
-        public AddGroupMember_Success(Fixture fixture) : base(fixture)
+        public AddGroupMember_AlreadyAMember(Fixture fixture) : base(fixture)
         {
         }
 
         [Fact]
         public void Execute()
         {
-            _userIsAdministrator = false;
+            _userIsGroupAdministrator = false;
 
-            this.WithExamples(new ExampleTable("_userIsAdministrator")
+            this.WithExamples(new ExampleTable("_userIsGroupAdministrator")
             {
                 { false },
                 { true },
@@ -49,6 +49,15 @@ namespace VenimusAPIs.Tests.AddGroupMember
         {
             _existingGroup = Data.Create<Models.Group>();
 
+            if (!_userIsGroupAdministrator)
+            {
+                Data.AddGroupMember(_existingGroup, _userToAdd);
+            }
+            else
+            {
+                Data.AddGroupAdministrator(_existingGroup, _userToAdd);
+            }
+
             var groups = GroupsCollection();
 
             await groups.InsertOneAsync(_existingGroup);
@@ -59,7 +68,7 @@ namespace VenimusAPIs.Tests.AddGroupMember
             var data = new ViewModels.AddGroupMember
             {
                 Slug = _userToAdd.Id.ToString(),
-                IsAdministrator = _userIsAdministrator,
+                IsAdministrator = _userIsGroupAdministrator,
             };
 
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_existingGroup.Slug}/Members", data);
@@ -83,8 +92,7 @@ namespace VenimusAPIs.Tests.AddGroupMember
             Assert.Equal(_userToAdd.EmailAddress, newMember.EmailAddress);
             Assert.Equal(_userToAdd.Fullname, newMember.Fullname);
             Assert.Equal(_userToAdd.Pronoun, newMember.Pronoun);
-            Assert.Equal(_userIsAdministrator, newMember.IsAdministrator);
-            Assert.Equal(_userToAdd.IsApproved, newMember.IsUserApproved);
+            Assert.Equal(_userIsGroupAdministrator, newMember.IsAdministrator);
         }
     }
 }
