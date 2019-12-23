@@ -9,62 +9,65 @@
 
 <form method="post">
     @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
 
     <table>
         <tr>
             <td><label for="UpdateEvent_Slug">The unique ID for the event</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.Slug" class="input100" /><span asp-validation-for="UpdateEvent.Slug"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.Slug" class="input100" /><span asp-validation-for="UpdateEvent.Slug" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_Title">Title of the event</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.Title" class="input100" /><span asp-validation-for="UpdateEvent.Title"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.Title" class="input100" /><span asp-validation-for="UpdateEvent.Title" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_StartTimeUTC">When does the event start?</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.StartTimeUTC" class="input100" /><span asp-validation-for="UpdateEvent.StartTimeUTC"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.StartTimeUTC" class="input100" /><span asp-validation-for="UpdateEvent.StartTimeUTC" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_EndTimeUTC">When does the event end?</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.EndTimeUTC" class="input100" /><span asp-validation-for="UpdateEvent.EndTimeUTC"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.EndTimeUTC" class="input100" /><span asp-validation-for="UpdateEvent.EndTimeUTC" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_Location">When will the event be held?</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.Location" class="input100" /><span asp-validation-for="UpdateEvent.Location"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.Location" class="input100" /><span asp-validation-for="UpdateEvent.Location" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_MaximumNumberOfAttendees">The maximum number of attendees for the event</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.MaximumNumberOfAttendees" class="input100" /><span asp-validation-for="UpdateEvent.MaximumNumberOfAttendees"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.MaximumNumberOfAttendees" class="input100" /><span asp-validation-for="UpdateEvent.MaximumNumberOfAttendees" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_GuestsAllowed">Can a member bring guests to the event?</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdateEvent.GuestsAllowed" class="input100" /><span asp-validation-for="UpdateEvent.GuestsAllowed"></span></td>
+            <td><input asp-for="@Model.UpdateEvent.GuestsAllowed" class="input100" /><span asp-validation-for="UpdateEvent.GuestsAllowed" class="error"></span></td>
         </tr>
 
         <tr>
             <td><label for="UpdateEvent_Description">A description of the event (in markdown)</label></td>
         </tr>
         <tr>
-            <td><textarea asp-for="@Model.UpdateEvent.Description" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdateEvent.Description"></span></td>
+            <td>
+                <textarea asp-for="@Model.UpdateEvent.Description" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdateEvent.Description" class="error"></span>
+            </td>
         </tr>
     </table>
 

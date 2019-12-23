@@ -6,7 +6,7 @@ using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class CreateNewEventModel : PageModel
+    public class CreateNewEventModel : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }
@@ -18,9 +18,11 @@ namespace YorkDeveloperEvents
         {
             if (!ModelState.IsValid) return Page();
 
-            await api.CreateEvent(GroupSlug, CreateEvent);
+            var result = await api.CreateEvent(GroupSlug, CreateEvent);
 
-            return LocalRedirect("/");
+            return result.Evalulate(
+                        onSuccess: () => LocalRedirect("/"),
+                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, nameof(CreateEvent)));
         }
     }
 }

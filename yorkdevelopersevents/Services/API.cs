@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -22,36 +23,18 @@ namespace YorkDeveloperEvents.Services
             await client.PostAsJsonAsync($"api/Groups/{groupSlug}/Members", addGroupMember);
         }
 
-        internal async Task<GetUser> GetUsersDetails(string displayName)
-        {
-            var client = await Client();
-            var response = await client.GetAsync($"/api/Users?DisplayName={displayName}");
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
-
-            var dataAsString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<GetUser>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        }
-
-        internal async Task<ViewMyDetails> GetCurrentUser()
-        {
-            var client = await Client();
-            return await client.GetAsJson<ViewMyDetails>($"/api/User");
-        }
-
-        internal async Task CreateEvent(string groupSlug, CreateEvent createEvent)
+        internal async Task<APIResult> CreateEvent(string groupSlug, CreateEvent createEvent)
         {
             var client = await Client();
             var response = await client.PostAsJsonAsync($"/api/groups/{groupSlug}/events", createEvent);
-            var text = await response.Content.ReadAsStringAsync();
-            response.EnsureSuccessStatusCode();
+            return await APIResult.Create(response);
         }
 
-        internal async Task UpdateEvent(string groupSlug, string eventSlug, UpdateEvent updateEvent)
+        internal async Task<APIResult> UpdateEvent(string groupSlug, string eventSlug, UpdateEvent updateEvent)
         {
             var client = await Client();
             var response = await client.PutAsJsonAsync($"/api/groups/{groupSlug}/events/{eventSlug}", updateEvent);
-            var text = await response.Content.ReadAsStringAsync();
-            response.EnsureSuccessStatusCode();
+            return await APIResult.Create(response);
         }
 
         internal async Task UpdateUser(UpdateMyDetails updatedDetails)
@@ -60,24 +43,6 @@ namespace YorkDeveloperEvents.Services
             var response = await client.PutAsJsonAsync($"/api/User", updatedDetails);
             var text = await response.Content.ReadAsStringAsync();
             response.EnsureSuccessStatusCode();
-        }
-
-        internal async Task<GetEvent> GetEvent(string groupSlug, string eventSlug)
-        {
-            var client = await Client();
-            return await client.GetAsJson<GetEvent>($"/api/Groups/{groupSlug}/Events/{eventSlug}");
-        }
-
-        internal async Task<GetGroup> GetGroup(string groupSlug)
-        {
-            var client = await Client();
-            return await client.GetAsJson<GetGroup>($"/api/Groups/{groupSlug}");
-        }
-
-        public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
-        {
-            _client = client;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         internal async Task RegisterForEvent(string groupSlug, string eventSlug, RegisterForEvent registerForEvent)
@@ -94,23 +59,6 @@ namespace YorkDeveloperEvents.Services
 
             var response = await client.DeleteAsync($"api/user/groups/{groupSlug}/Events/{eventSlug}");
             response.EnsureSuccessStatusCode();
-        }
-
-        public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups, bool groupsIBelongToOnly)
-        {
-            var client = await Client();
-            return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}&groupsIBelongToOnly={groupsIBelongToOnly}");
-        }
-
-        private async Task<HttpClient> Client(bool tokenRequired = true)
-        {
-            if (tokenRequired)
-            {
-                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            }
-
-            return _client;
         }
 
         public async Task JoinGroup(string groupSlug)
@@ -131,6 +79,57 @@ namespace YorkDeveloperEvents.Services
             response.EnsureSuccessStatusCode();
         }
 
+        internal async Task<GetUser> GetUsersDetails(string displayName)
+        {
+            var client = await Client();
+            var response = await client.GetAsync($"/api/Users?DisplayName={displayName}");
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+
+            var dataAsString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<GetUser>(dataAsString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        internal async Task<ViewMyDetails> GetCurrentUser()
+        {
+            var client = await Client();
+            return await client.GetAsJson<ViewMyDetails>($"/api/User");
+        }
+
+        internal async Task<GetEvent> GetEvent(string groupSlug, string eventSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<GetEvent>($"/api/Groups/{groupSlug}/Events/{eventSlug}");
+        }
+
+        internal async Task<GetGroup> GetGroup(string groupSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<GetGroup>($"/api/Groups/{groupSlug}");
+        }
+
+        public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
+        {
+            _client = client;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups, bool groupsIBelongToOnly)
+        {
+            var client = await Client();
+            return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}&groupsIBelongToOnly={groupsIBelongToOnly}");
+        }
+
+        private async Task<HttpClient> Client(bool tokenRequired = true)
+        {
+            if (tokenRequired)
+            {
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+
+            return _client;
+        }
+
         public async Task<ListGroupMembers[]> ListGroupMembers(string groupSlug)
         {
             var client = await Client();
@@ -148,7 +147,6 @@ namespace YorkDeveloperEvents.Services
             var client = await Client(tokenRequired: false);
             return await client.GetAsJson<ListEvents[]>("api/events");
         }
-
 
         internal async Task<ViewMyEventRegistration> GetEventRegistrationDetails(string groupSlug, string eventSlug)
         {

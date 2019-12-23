@@ -55,6 +55,12 @@ button.accept-policy {
 
 /* Sticky footer styles
 -------------------------------------------------- */
+
+.error {
+    color : red;
+}
+
+
 html {
     position: relative;
     min-height: 100%;

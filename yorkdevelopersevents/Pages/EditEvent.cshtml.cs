@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class EditEventModel : PageModel
+    public class EditEventModel : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }
@@ -41,9 +40,11 @@ namespace YorkDeveloperEvents
         {
             if (!ModelState.IsValid) return Page();
 
-            await api.UpdateEvent(GroupSlug, EventSlug, UpdateEvent);
+            var result = await api.UpdateEvent(GroupSlug, EventSlug, UpdateEvent);
 
-            return LocalRedirect("/");
+            return result.Evalulate(
+                        onSuccess: () => LocalRedirect("/"),
+                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, nameof(UpdateEvent)));
         }
     }
 }
