@@ -20,11 +20,7 @@
             <tr>
                 <td>&nbsp;</td>
                 <td>
-                    <form action="/LeaveGroup" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" id="groupSlug" name="groupSlug" value="@item.Slug" />
-                        <button type="submit">Leave Group</button>
-                    </form>
+
                     <a href="/ViewGroupDetails?groupSlug=@item.Slug">Find out more</a>
                 </td>
             </tr>

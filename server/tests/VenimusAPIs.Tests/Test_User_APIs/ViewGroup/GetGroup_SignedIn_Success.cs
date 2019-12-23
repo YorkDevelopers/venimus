@@ -71,6 +71,9 @@ namespace VenimusAPIs.Tests.GetGroup
             Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal(_userIsApproved, actualGroup.CanViewMembers);
             Assert.Equal(_userIsAdministrator, actualGroup.CanAddEvents);
+            Assert.Equal(_userIsAdministrator, actualGroup.CanAddMembers);
+            Assert.Equal(!_userIsAdministrator, actualGroup.CanJoinGroup);
+            Assert.Equal(_userIsAdministrator, actualGroup.CanLeaveGroup);
             Assert.Equal($"http://localhost/api/groups/{_expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }

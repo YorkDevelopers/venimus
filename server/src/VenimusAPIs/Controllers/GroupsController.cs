@@ -193,6 +193,9 @@ namespace VenimusAPIs.Controllers
 
             var canViewMembers = false;
             var canAddEvents = false;
+            var canAddMembers = false;
+            var canJoinGroup = true;
+            var canLeaveGroup = false;
             if (User.Identity.IsAuthenticated)
             {
                 var uniqueID = UniqueIDForCurrentUser;
@@ -203,6 +206,14 @@ namespace VenimusAPIs.Controllers
                 if (member != null)
                 {
                     canAddEvents = member.IsAdministrator;
+                    canAddMembers = member.IsAdministrator;
+                    canJoinGroup = false;
+                    canLeaveGroup = true;
+                }
+
+                if (!canAddMembers)
+                {
+                    canAddMembers = UserIsASystemAdministrator;
                 }
             }
 
@@ -217,6 +228,9 @@ namespace VenimusAPIs.Controllers
                 StrapLine = group.StrapLine,
                 CanViewMembers = canViewMembers,
                 CanAddEvents = canAddEvents,
+                CanAddMembers = canAddMembers,
+                CanJoinGroup = canJoinGroup,
+                CanLeaveGroup = canLeaveGroup,
             };
 
             return viewModel;

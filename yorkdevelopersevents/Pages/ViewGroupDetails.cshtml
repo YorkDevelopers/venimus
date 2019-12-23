@@ -22,12 +22,25 @@
     <a href="/CreateNewEvent?groupSlug=@Model.ViewModel.Slug">Add New Event</a>
 }
 
-@*TODO Optionally hide button*@
-<a href="/JoinGroup?groupSlug=@Model.ViewModel.Slug">Join Group</a>
+@if (@Model.ViewModel.CanJoinGroup)
+{
+    <a href="/JoinGroup?groupSlug=@Model.ViewModel.Slug">Join Group</a>
+}
 
-@*TODO Optionally hide button*@
-<a href="/AddGroupAdministrator?groupSlug=@Model.ViewModel.Slug">Add Group Administrator</a>
+@if (@Model.ViewModel.CanAddMembers)
+{
+    <a href="/AddGroupAdministrator?groupSlug=@Model.ViewModel.Slug">Add Group Administrator</a>
+}
 
-<h2>Future Events</h2>
+@if (@Model.ViewModel.CanLeaveGroup)
+{
+    <form action="/LeaveGroup" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="groupSlug" name="groupSlug" value="@Model.ViewModel.Slug" />
+        <button type="submit">Leave Group</button>
+    </form>
+}
 
-<h2>Past Events</h2>
+    <h2>Future Events</h2>
+
+    <h2>Past Events</h2>
