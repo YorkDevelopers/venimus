@@ -1,0 +1,19 @@
+﻿@page
+@model YorkDeveloperEvents.ViewEventDetailsModel
+@{
+    ViewData["Title"] = "View Event Details";
+}
+
+<h1>View Event Details</h1>
+
+<markdown>@Model.ViewModel.EventDescription</markdown>
+
+
+<br />
+<a href="/RegisterForEvent?groupSlug=@(Model.GroupSlug)&eventSlug=@(Model.EventSlug)">Register</a>
+
+<br />
+<a href="/EditEvent?groupSlug=@(Model.GroupSlug)&eventSlug=@(Model.EventSlug)">Edit Event Details</a>
+
+<br />
+<a href="/ViewEventAttendees?groupSlug=@(Model.GroupSlug)&eventSlug=@(Model.EventSlug)">View Attendees</a>

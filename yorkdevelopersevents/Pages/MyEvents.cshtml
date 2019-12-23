@@ -17,11 +17,12 @@
                 <td>@item.GroupName</td>
             </tr>
             <tr>
-                <td><markdown>@item.EventDescription</markdown></td>
+                <td>&nbsp;</td>
+                <td><a href="/RegisterForEvent?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">Change Registration</a></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td><a href="/RegisterForEvent?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">Change Registration</a></td>
+                <td><a href="/ViewEventDetails?groupSlug=@(item.GroupSlug)&eventSlug=@(item.EventSlug)">View Details</a></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
