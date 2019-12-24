@@ -12,25 +12,32 @@
 <br />
 <br />
 
-@if (@Model.ViewModel.CanViewMembers)
-{
-    <a href="/ViewGroupMembers?groupSlug=@Model.ViewModel.Slug">View Members</a>
-}
+<ul>
+    @if (@Model.ViewModel.CanEditGroup)
+    {
+        <li><a href="/EditGroup?groupSlug=@Model.ViewModel.Slug">Edit Group Details</a></li>
+    }
 
-@if (@Model.ViewModel.CanAddEvents)
-{
-    <a href="/CreateEvent?groupSlug=@Model.ViewModel.Slug">Add New Event</a>
-}
+    @if (@Model.ViewModel.CanViewMembers)
+    {
+        <li><a href="/ViewGroupMembers?groupSlug=@Model.ViewModel.Slug">View Members</a></li>
+    }
 
-@if (@Model.ViewModel.CanJoinGroup)
-{
-    <a href="/JoinGroup?groupSlug=@Model.ViewModel.Slug">Join Group</a>
-}
+    @if (@Model.ViewModel.CanAddEvents)
+    {
+        <li><a href="/CreateEvent?groupSlug=@Model.ViewModel.Slug">Add New Event</a></li>
+    }
 
-@if (@Model.ViewModel.CanAddMembers)
-{
-    <a href="/AddGroupAdministrator?groupSlug=@Model.ViewModel.Slug">Add Group Administrator</a>
-}
+    @if (@Model.ViewModel.CanJoinGroup)
+    {
+        <li><a href="/JoinGroup?groupSlug=@Model.ViewModel.Slug">Join Group</a></li>
+    }
+
+    @if (@Model.ViewModel.CanAddMembers)
+    {
+        <li><a href="/AddGroupAdministrator?groupSlug=@Model.ViewModel.Slug">Add Group Administrator</a></li>
+    }
+</ul>
 
 @if (@Model.ViewModel.CanLeaveGroup)
 {
@@ -41,6 +48,6 @@
     </form>
 }
 
-    <h2>Future Events</h2>
+<h2>Future Events</h2>
 
-    <h2>Past Events</h2>
+<h2>Past Events</h2>

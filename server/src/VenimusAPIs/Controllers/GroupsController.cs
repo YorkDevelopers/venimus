@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
@@ -153,7 +154,17 @@ namespace VenimusAPIs.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            _mapper.Map(newDetails, group);
+            group.Description = newDetails.Description;
+            group.IsActive = newDetails.IsActive;
+            group.Name = newDetails.Name;
+            group.SlackChannelName = newDetails.SlackChannelName;
+            group.Slug = newDetails.Slug;
+            group.StrapLine = newDetails.StrapLine;
+
+            if (!string.IsNullOrWhiteSpace(newDetails.LogoInBase64))
+            {
+                group.Logo = Convert.FromBase64String(newDetails.LogoInBase64);
+            }
 
             await _groupStore.UpdateGroup(group).ConfigureAwait(false);
 
@@ -196,6 +207,8 @@ namespace VenimusAPIs.Controllers
             var canAddMembers = false;
             var canJoinGroup = true;
             var canLeaveGroup = false;
+            var canEditGroup = false;
+
             if (User.Identity.IsAuthenticated)
             {
                 var uniqueID = UniqueIDForCurrentUser;
@@ -207,6 +220,7 @@ namespace VenimusAPIs.Controllers
                 {
                     canAddEvents = member.IsAdministrator;
                     canAddMembers = member.IsAdministrator;
+                    canEditGroup = member.IsAdministrator;
                     canJoinGroup = false;
                     canLeaveGroup = true;
                 }
@@ -231,6 +245,7 @@ namespace VenimusAPIs.Controllers
                 CanAddMembers = canAddMembers,
                 CanJoinGroup = canJoinGroup,
                 CanLeaveGroup = canLeaveGroup,
+                CanEditGroup = canEditGroup,
             };
 
             return viewModel;

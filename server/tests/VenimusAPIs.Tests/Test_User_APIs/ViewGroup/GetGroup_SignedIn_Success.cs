@@ -11,7 +11,7 @@ namespace VenimusAPIs.Tests.GetGroup
     {
         private Models.Group _expectedGroup;
         private bool _userIsApproved;
-        private bool _userIsAdministrator;
+        private bool _userIsGroupAdministrator;
 
         public GetGroup_SignedIn_Success(Fixture fixture) : base(fixture)
         {
@@ -21,9 +21,9 @@ namespace VenimusAPIs.Tests.GetGroup
         public void Execute()
         {
             _userIsApproved = false;
-            _userIsAdministrator = false;
+            _userIsGroupAdministrator = false;
 
-            this.WithExamples(new ExampleTable("_userIsApproved", "_userIsAdministrator")
+            this.WithExamples(new ExampleTable("_userIsApproved", "_userIsGroupAdministrator")
             {
                 { false, false },
                 { true, false },
@@ -38,7 +38,7 @@ namespace VenimusAPIs.Tests.GetGroup
         {
             _expectedGroup = Data.Create<Models.Group>();
 
-            if (_userIsAdministrator)
+            if (_userIsGroupAdministrator)
             {
                 Data.AddGroupAdministrator(_expectedGroup, User);
             }
@@ -70,10 +70,11 @@ namespace VenimusAPIs.Tests.GetGroup
             Assert.Equal(_expectedGroup.SlackChannelName, actualGroup.SlackChannelName);
             Assert.Equal(_expectedGroup.IsActive, actualGroup.IsActive);
             Assert.Equal(_userIsApproved, actualGroup.CanViewMembers);
-            Assert.Equal(_userIsAdministrator, actualGroup.CanAddEvents);
-            Assert.Equal(_userIsAdministrator, actualGroup.CanAddMembers);
-            Assert.Equal(!_userIsAdministrator, actualGroup.CanJoinGroup);
-            Assert.Equal(_userIsAdministrator, actualGroup.CanLeaveGroup);
+            Assert.Equal(_userIsGroupAdministrator, actualGroup.CanAddEvents);
+            Assert.Equal(_userIsGroupAdministrator, actualGroup.CanAddMembers);
+            Assert.Equal(!_userIsGroupAdministrator, actualGroup.CanJoinGroup);
+            Assert.Equal(_userIsGroupAdministrator, actualGroup.CanLeaveGroup);
+            Assert.Equal(_userIsGroupAdministrator, actualGroup.CanEditGroup);
             Assert.Equal($"http://localhost/api/groups/{_expectedGroup.Slug}/logo", actualGroup.Logo.ToString());
         }
     }

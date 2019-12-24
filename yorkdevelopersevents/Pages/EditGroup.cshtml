@@ -1,0 +1,71 @@
+﻿@page
+@model YorkDeveloperEvents.EditGroupModel
+@{
+    ViewData["Title"] = "Edit Group";
+}
+
+<form method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <table>
+        <tr>
+            <td><label for="UpdateGroup_Slug">The unique ID for the group</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateGroup.Slug" class="input100" /><span asp-validation-for="UpdateGroup.Slug" class="error"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdateGroup_Name">Name of the group</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateGroup.Name" class="input100" /><span asp-validation-for="UpdateGroup.Name" class="error"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdateGroup_StrapLine">A strap line for the group</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateGroup.StrapLine" class="input100" /><span asp-validation-for="UpdateGroup.StrapLine" class="error"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdateGroup_StartTimeUTC">Name of the channel in slack</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateGroup.SlackChannelName" class="input100" /><span asp-validation-for="UpdateGroup.SlackChannelName" class="error"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="UpdateGroup_EndTimeUTC">Is the group currently active?</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateGroup.IsActive" class="input100" /><span asp-validation-for="UpdateGroup.IsActive" class="error"></span></td>
+        </tr>
+        <tr>
+            <td><label for="UpdateGroup_Description">A description of the group (in markdown)</label></td>
+        </tr>
+        <tr>
+            <td><textarea asp-for="@Model.UpdateGroup.Description" rows="10" cols="50"></textarea><span asp-validation-for="UpdateGroup.Description" class="error"></span></td>
+        </tr>
+
+
+        <tr>
+            <td><label for="Upload">Change the logo for the group</label></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" asp-for="Upload" />
+            </td>
+        </tr>
+
+    </table>
+
+    <button type="submit">Save Settings</button>
+</form>
+
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

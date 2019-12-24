@@ -44,6 +44,6 @@ namespace VenimusAPIs.ViewModels
         /// <summary>
         ///     The group's logo.
         /// </summary>
-        public string LogoInBase64 { get; set; } = default!;
+        public string? LogoInBase64 { get; set; }
     }
 }

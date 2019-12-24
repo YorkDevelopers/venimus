@@ -63,5 +63,10 @@ namespace VenimusAPIs.ViewModels
         ///     Can the user leave the group?
         /// </summary>
         public bool CanLeaveGroup { get; set; }
+
+        /// <summary>
+        ///     Can the user edit the details of group?
+        /// </summary>
+        public bool CanEditGroup { get; set; }
     }
 }

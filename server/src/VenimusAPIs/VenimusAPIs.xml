@@ -1041,6 +1041,11 @@
                 Can the user leave the group?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.GetGroup.CanEditGroup">
+            <summary>
+                Can the user edit the details of group?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.GetUser.Slug">
             <summary>
                 The external ID for the user.
