@@ -23,6 +23,20 @@ namespace YorkDeveloperEvents.Services
             await client.PostAsJsonAsync($"api/Groups/{groupSlug}/Members", addGroupMember);
         }
 
+        internal async Task<APIResult> CreateGroup(CreateGroup createGroup)
+        {
+            var client = await Client();
+            var response = await client.PostAsJsonAsync($"/api/groups", createGroup);
+            return await APIResult.Create(response);
+        }
+
+        internal async Task<APIResult> UpdateGroup(string groupSlug, UpdateGroup updateGroup)
+        {
+            var client = await Client();
+            var response = await client.PutAsJsonAsync($"/api/groups/{groupSlug}", updateGroup);
+            return await APIResult.Create(response);
+        }
+
         internal async Task<APIResult> CreateEvent(string groupSlug, CreateEvent createEvent)
         {
             var client = await Client();

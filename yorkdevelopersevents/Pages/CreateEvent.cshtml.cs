@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class CreateNewEventModel : BasePageModel
+    public class CreateEventModel : BasePageModel
     {
         [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }

@@ -30,6 +30,11 @@ namespace YorkDeveloperEvents.ViewModels
         public string Description { get; set; }
 
         /// <summary>
+        /// A very short one-line description of the group
+        /// </summary>
+        public string StrapLine { get; set; }
+
+        /// <summary>
         ///     The name of this groups slack channel
         /// </summary>
         public string SlackChannelName { get; set; }

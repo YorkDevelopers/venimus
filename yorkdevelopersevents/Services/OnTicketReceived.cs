@@ -32,6 +32,7 @@ namespace YorkDeveloperEvents.Services
             {
                 new Claim("UserProfileURL", response.Headers.Location.ToString()),
                 new Claim("ProfilePictureURL", response.Headers.GetValues("profilepictureurl").First()),
+                new Claim("CanCreateGroups", response.Headers.GetValues("IsSystemAdministrator").First()),
                 new Claim("NewUser", (response.StatusCode == System.Net.HttpStatusCode.Created).ToString()),
             };
 

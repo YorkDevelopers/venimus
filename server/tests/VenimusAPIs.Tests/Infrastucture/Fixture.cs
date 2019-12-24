@@ -84,6 +84,11 @@ namespace VenimusAPIs.Tests
             return CreateMockToken(uniqueID, string.Empty);
         }
 
+        public string GetTokenForSysadminUser(string uniqueID)
+        {
+            return CreateMockToken(uniqueID, "SystemAdministrator");
+        }
+
         public async Task<string> GetTokenForNormalUser(string uniqueID = "")
         {
             IdentityModelEventSource.ShowPII = true;

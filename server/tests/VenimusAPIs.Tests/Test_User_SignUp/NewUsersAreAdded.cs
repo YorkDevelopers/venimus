@@ -30,7 +30,7 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
         private void GivenIHaveLoggedInViaAuth0()
         {
             _uniqueID = Guid.NewGuid().ToString();
-            _token = Fixture.GetTokenForNewUser(_uniqueID);
+            _token = Fixture.GetTokenForSysadminUser(_uniqueID);
         }
 
         private void GivenIExistInAuth0()
@@ -68,6 +68,12 @@ namespace VenimusAPIs.Tests.Test_User_SignUp
         private void ThenTheHeaderIsSetToShowTheUserWasCreated()
         {
             var value = bool.Parse(Response.Headers.GetValues("NewUser").First());
+            Assert.True(value);
+        }
+
+        private void ThenTheHeaderIsSystemAdministratorIsSet()
+        {
+            var value = bool.Parse(Response.Headers.GetValues("IsSystemAdministrator").First());
             Assert.True(value);
         }
 

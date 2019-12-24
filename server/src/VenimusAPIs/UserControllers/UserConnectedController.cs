@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VenimusAPIs.Services;
@@ -62,6 +63,7 @@ namespace VenimusAPIs.UserControllers
             }
 
             Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser).ToString()));
+            Response.Headers.Add("IsSystemAdministrator", new Microsoft.Extensions.Primitives.StringValues(UserIsASystemAdministrator.ToString(CultureInfo.InvariantCulture)));
 
             if (newUser)
             {
