@@ -1120,9 +1120,9 @@
                 Visible to all signed in members
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.ProfilePictureInBase64">
+        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.ProfilePicture">
             <summary>
-                The user's profile picture
+                The URL of the user's profile picture
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.IsHost">

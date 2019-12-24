@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Services;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
@@ -14,11 +15,13 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
+        private readonly URLBuilder _urlBuilder;
 
-        public EventsAttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore)
+        public EventsAttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore, URLBuilder urlBuilder)
         {
             _eventStore = eventStore;
             _userStore = userStore;
+            _urlBuilder = urlBuilder;
         }
 
         /// <summary>
@@ -63,6 +66,7 @@ namespace VenimusAPIs.Controllers
                 IsSpeaker = attendee.Speaker,
                 IsAttending = attendee.SignedUp,
                 NumberOfGuests = attendee.NumberOfGuests,
+                ProfilePicture = _urlBuilder.BuildUserDetailsProfilePictureURL(attendee.UserId),
             }).ToArray();
         }
     }

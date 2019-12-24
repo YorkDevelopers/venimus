@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -16,6 +14,12 @@ namespace YorkDeveloperEvents.Services
         private readonly HttpClient _client;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
+        {
+            _client = client;
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         internal async Task AddGroupMember(string groupSlug, AddGroupMember addGroupMember)
         {
@@ -51,12 +55,11 @@ namespace YorkDeveloperEvents.Services
             return await APIResult.Create(response);
         }
 
-        internal async Task UpdateUser(UpdateMyDetails updatedDetails)
+        internal async Task<APIResult> UpdateUser(UpdateMyDetails updatedDetails)
         {
             var client = await Client();
             var response = await client.PutAsJsonAsync($"/api/User", updatedDetails);
-            var text = await response.Content.ReadAsStringAsync();
-            response.EnsureSuccessStatusCode();
+            return await APIResult.Create(response);
         }
 
         internal async Task RegisterForEvent(string groupSlug, string eventSlug, RegisterForEvent registerForEvent)
@@ -121,27 +124,10 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<GetGroup>($"/api/Groups/{groupSlug}");
         }
 
-        public API(HttpClient client, IHttpContextAccessor httpContextAccessor)
-        {
-            _client = client;
-            _httpContextAccessor = httpContextAccessor;
-        }
-
         public async Task<ListGroups[]> ListGroups(bool includeInActiveGroups, bool groupsIBelongToOnly)
         {
             var client = await Client();
             return await client.GetAsJson<ListGroups[]>($"/api/groups?includeInActiveGroups={includeInActiveGroups}&groupsIBelongToOnly={groupsIBelongToOnly}");
-        }
-
-        private async Task<HttpClient> Client(bool tokenRequired = true)
-        {
-            if (tokenRequired)
-            {
-                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            }
-
-            return _client;
         }
 
         public async Task<ListGroupMembers[]> ListGroupMembers(string groupSlug)
@@ -166,6 +152,22 @@ namespace YorkDeveloperEvents.Services
         {
             var client = await Client();
             return await client.GetAsJson<ViewMyEventRegistration>($"api/user/groups/{groupSlug}/events/{eventSlug}");
+        }
+
+        public async Task<ListEventAttendees[]> ListEventAttendees(string groupSlug, string eventSlug)
+        {
+            var client = await Client();
+            return await client.GetAsJson<ListEventAttendees[]>($"/api/Groups/{groupSlug}/Events/{eventSlug}/Members");
+        }
+        private async Task<HttpClient> Client(bool tokenRequired = true)
+        {
+            if (tokenRequired)
+            {
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("Auth0", "access_token");
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+
+            return _client;
         }
     }
 }

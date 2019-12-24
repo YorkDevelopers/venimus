@@ -6,7 +6,7 @@ using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class MeModel : PageModel
+    public class MeModel : BasePageModel
     {
         [BindProperty]
         public UpdateMyDetails UpdatedDetails { get; set; }
@@ -27,9 +27,11 @@ namespace YorkDeveloperEvents
         {
             if (!ModelState.IsValid) return Page();
 
-            await api.UpdateUser(UpdatedDetails);
+            var result = await api.UpdateUser(UpdatedDetails);
 
-            return LocalRedirect("/");
+            return result.Evalulate(
+                        onSuccess: () => LocalRedirect("/"),
+                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, nameof(UpdateMyDetails)));
         }
     }
 }

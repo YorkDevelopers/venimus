@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class NewUserModel : PageModel
+    public class NewUserModel : BasePageModel
     {
         [BindProperty]
         public UpdateMyDetails UpdatedDetails { get; set; }
@@ -27,10 +25,12 @@ namespace YorkDeveloperEvents
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
             if (!ModelState.IsValid) return Page();
-            
-            await api.UpdateUser(UpdatedDetails);
 
-            return LocalRedirect("/");
+            var result = await api.UpdateUser(UpdatedDetails);
+
+            return result.Evalulate(
+                        onSuccess: () => LocalRedirect("/"),
+                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, nameof(UpdateMyDetails)));
         }
     }
 }

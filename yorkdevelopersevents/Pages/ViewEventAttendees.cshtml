@@ -1,0 +1,18 @@
+﻿@page
+@model YorkDeveloperEvents.ViewEventAttendeesModel
+@{
+    ViewData["Title"] = "ViewEventAttendees";
+}
+
+<h1>People registered for this event</h1>
+
+<table>
+    @foreach (var item in Model.ViewModel)
+    {
+    <tr>
+        <td><img class="groupLogo" src="@item.ProfilePicture" /></td>
+        <td>@item.DisplayName</td>
+        <td>IsAttending : @item.IsAttending</td>
+    </tr>
+    }
+</table>
