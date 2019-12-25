@@ -8,7 +8,7 @@
 
 You are now able to join our community and sign up for our events.  In order to complete the registration process could you please ensure that the details below are correct.
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
     <table>
@@ -40,6 +40,15 @@ You are now able to join our community and sign up for our events.  In order to 
 
         <tr>
             <td><textarea asp-for="@Model.UpdatedDetails.Bio" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdatedDetails.Bio"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="Upload">Change your profile picture</label></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" asp-for="Upload" />
+            </td>
         </tr>
     </table>
 

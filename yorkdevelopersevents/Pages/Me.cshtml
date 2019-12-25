@@ -6,7 +6,7 @@
 
 <h1>About You</h1>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
     <table>
@@ -21,7 +21,7 @@
             <td><label for="UpdatedDetails_DisplayName">Your screen name which is displayed to other users in Slack and this website</label></td>
         </tr>
         <tr>
-            <td><input asp-for="@Model.UpdatedDetails.DisplayName" class="input100"/><span asp-validation-for="UpdatedDetails.DisplayName"></span></td>
+            <td><input asp-for="@Model.UpdatedDetails.DisplayName" class="input100" /><span asp-validation-for="UpdatedDetails.DisplayName"></span></td>
         </tr>
 
         <tr>
@@ -29,7 +29,7 @@
         </tr>
 
         <tr>
-            <td><input asp-for="@Model.UpdatedDetails.Pronoun" class="input100"/><span asp-validation-for="UpdatedDetails.Pronoun"></span></td>
+            <td><input asp-for="@Model.UpdatedDetails.Pronoun" class="input100" /><span asp-validation-for="UpdatedDetails.Pronoun"></span></td>
         </tr>
 
         <tr>
@@ -38,6 +38,15 @@
 
         <tr>
             <td><textarea asp-for="@Model.UpdatedDetails.Bio" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdatedDetails.Bio"></span></td>
+        </tr>
+
+        <tr>
+            <td><label for="Upload">Change your profile picture</label></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" asp-for="Upload" />
+            </td>
         </tr>
     </table>
 
