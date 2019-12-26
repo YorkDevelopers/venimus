@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -48,6 +48,11 @@ namespace VenimusAPIs.Tests.CreateEvent
             {
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+                e.Questions = new List<Question>
+                {
+                    new Question { Code = "Question1", Caption = "Caption1", QuestionType = QuestionType.Text },
+                    new Question { Code = "Question2", Caption = "Caption2", QuestionType = QuestionType.Text },
+                };
             });
 
             Response = await Fixture.APIClient.PostAsJsonAsync($"api/Groups/{_group.Slug}/events", _event);
@@ -74,12 +79,24 @@ namespace VenimusAPIs.Tests.CreateEvent
             Assert.Equal(_event.Title, actualEvent.Title);
             Assert.Equal(_event.Description, actualEvent.Description);
             Assert.Equal(_event.GuestsAllowed, actualEvent.GuestsAllowed);
+            Assert.Equal(_event.FoodProvided, actualEvent.FoodProvided);
             AssertDateTime(_event.StartTimeUTC, actualEvent.StartTimeUTC);
             AssertDateTime(_event.EndTimeUTC, actualEvent.EndTimeUTC);
             Assert.Equal(_event.Location, actualEvent.Location);
             Assert.Equal(_group.Id, actualEvent.GroupId);
             Assert.Equal(_group.Slug, actualEvent.GroupSlug);
             Assert.Equal(_group.Name, actualEvent.GroupName);
+
+            Assert.Equal(2, actualEvent.Questions.Count);
+            AssertQuestion("Question1", "Caption1", actualEvent.Questions);
+            AssertQuestion("Question2", "Caption2", actualEvent.Questions);
+        }
+
+        private void AssertQuestion(string expectedCode, string expectedCaption, List<Question> questions)
+        {
+            var actualQuestion = questions.Single(q => q.Code == expectedCode);
+            Assert.Equal(expectedCaption, actualQuestion.Caption);
+            Assert.Equal(QuestionType.Text, actualQuestion.QuestionType);
         }
     }
 }

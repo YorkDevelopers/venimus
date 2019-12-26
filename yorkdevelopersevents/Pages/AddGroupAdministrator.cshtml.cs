@@ -7,7 +7,7 @@ using YorkDeveloperEvents.ViewModels;
 
 namespace YorkDeveloperEvents
 {
-    public class AddGroupAdministratorModel : PageModel
+    public class AddGroupAdministratorModel : BasePageModel
     {
         [Required]
         [BindProperty]
@@ -16,10 +16,6 @@ namespace YorkDeveloperEvents
         [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }
 
-        public void OnGet()
-        {
-
-        }
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
@@ -38,9 +34,11 @@ namespace YorkDeveloperEvents
                 IsAdministrator = true,
             };
 
-            await api.AddGroupMember(GroupSlug, addGroupMember);
+            var result = await api.AddGroupMember(GroupSlug, addGroupMember);
 
-            return LocalRedirect("/");
+            return result.Evalulate(
+                        onSuccess: () => LocalRedirect("/"),
+                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, ""));
         }
     }
 }

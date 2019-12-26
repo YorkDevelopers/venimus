@@ -93,6 +93,13 @@ namespace VenimusAPIs.Controllers
                 ModelState.AddModelError(nameof(newEvent.Slug), message);
             }
 
+            var duplicateQuestion = newEvent.Questions.GroupBy(q => q.Code).Any(grp => grp.Count() > 1);
+            if (duplicateQuestion)
+            {
+                var message = _stringLocalizer.GetString(Resources.ResourceMessages.EVENT_DUPLICATE_QUESTION).Value;
+                ModelState.AddModelError(nameof(Question.Code), message);
+            }
+
             if (!ModelState.IsValid)
             {
                 return ValidationProblem(ModelState);

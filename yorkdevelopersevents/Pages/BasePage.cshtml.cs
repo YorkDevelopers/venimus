@@ -11,7 +11,10 @@ namespace YorkDeveloperEvents
             {
                 foreach (var msg in item.Value)
                 {
-                    ModelState.AddModelError($"{modelName}.{item.Key}", msg);
+                    if (string.IsNullOrWhiteSpace(modelName))
+                        ModelState.AddModelError($"{item.Key}", msg);
+                    else
+                        ModelState.AddModelError($"{modelName}.{item.Key}", msg);
                 }
             }
 

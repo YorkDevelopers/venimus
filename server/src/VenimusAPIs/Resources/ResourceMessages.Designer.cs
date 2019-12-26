@@ -70,6 +70,15 @@ namespace VenimusAPIs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Two questions cannot be created with the same code..
+        /// </summary>
+        public static string EVENT_DUPLICATE_QUESTION {
+            get {
+                return ResourceManager.GetString("EVENT_DUPLICATE_QUESTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot create an event which ends before it starts..
         /// </summary>
         public static string EVENT_END_BEFORE_START {

@@ -363,6 +363,11 @@
                 Questions to ask the user when they are registering
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.GroupEvent.FoodProvided">
+            <summary>
+                Will food be provided at this event?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.GroupEventAttendees.SignedUp">
             <summary>
                 Are they still signed up
@@ -568,6 +573,11 @@
         <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_ALREADY_EXISTS">
             <summary>
               Looks up a localized string similar to An event with this slug already exists for this group..
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_DUPLICATE_QUESTION">
+            <summary>
+              Looks up a localized string similar to Two questions cannot be created with the same code..
             </summary>
         </member>
         <member name="P:VenimusAPIs.Resources.ResourceMessages.EVENT_END_BEFORE_START">
@@ -894,6 +904,16 @@
         <member name="P:VenimusAPIs.ViewModels.CreateEvent.GuestsAllowed">
             <summary>
                 Are members allowed to bring guests to this event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.Questions">
+            <summary>
+                Any additional information we need to obtain from the user.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.CreateEvent.FoodProvided">
+            <summary>
+                Will food be provided at this event?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.CreateGroup.Slug">
@@ -1326,6 +1346,16 @@
         <member name="P:VenimusAPIs.ViewModels.UpdateEvent.GuestsAllowed">
             <summary>
                 Are members allowed to bring guests to this event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.Questions">
+            <summary>
+                Any additional information we need to obtain from the user.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.UpdateEvent.FoodProvided">
+            <summary>
+                Will food be provided at this event?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.UpdateGroup.Slug">

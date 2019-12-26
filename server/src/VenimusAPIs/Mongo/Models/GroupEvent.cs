@@ -75,5 +75,10 @@ namespace VenimusAPIs.Models
         ///     Questions to ask the user when they are registering
         /// </summary>
         public List<Question> Questions { get; set; } = new List<Question>();
+
+        /// <summary>
+        ///     Will food be provided at this event?
+        /// </summary>
+        public bool FoodProvided { get; set; }
     }
 }

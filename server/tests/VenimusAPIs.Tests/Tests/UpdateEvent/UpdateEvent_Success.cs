@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using TestStack.BDDfy;
@@ -38,7 +40,14 @@ namespace VenimusAPIs.Tests.UpdateEvent
 
         private async Task GivenAnEventExistsForTheGroup()
         {
-            _event = Data.CreateEvent(_group);
+            _event = Data.CreateEvent(_group, e =>
+            {
+                e.Questions = new List<Question>
+                {
+                    new Question { Code = "Question1", Caption = "Caption1a", QuestionType = QuestionType.Text },
+                    new Question { Code = "Question3", Caption = "Caption3a", QuestionType = QuestionType.Text },
+                };
+            });
 
             var events = EventsCollection();
 
@@ -51,6 +60,12 @@ namespace VenimusAPIs.Tests.UpdateEvent
             {
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
+
+                e.Questions = new List<Question>
+                {
+                    new Question { Code = "Question1", Caption = "Caption1", QuestionType = QuestionType.Text },
+                    new Question { Code = "Question2", Caption = "Caption2", QuestionType = QuestionType.Text },
+                };
             });
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);
@@ -69,6 +84,7 @@ namespace VenimusAPIs.Tests.UpdateEvent
             Assert.Equal(_amendedEvent.Slug, actualEvent.Slug);
             Assert.Equal(_amendedEvent.MaximumNumberOfAttendees, actualEvent.MaximumNumberOfAttendees);
             Assert.Equal(_amendedEvent.GuestsAllowed, actualEvent.GuestsAllowed);
+            Assert.Equal(_amendedEvent.FoodProvided, actualEvent.FoodProvided);
             Assert.Equal(_amendedEvent.Title, actualEvent.Title);
             Assert.Equal(_amendedEvent.Description, actualEvent.Description);
             AssertDateTime(_amendedEvent.StartTimeUTC, actualEvent.StartTimeUTC);
@@ -77,6 +93,17 @@ namespace VenimusAPIs.Tests.UpdateEvent
             Assert.Equal(_group.Id, actualEvent.GroupId);
             Assert.Equal(_group.Name, actualEvent.GroupName);
             Assert.Equal(_group.Slug, actualEvent.GroupSlug);
+
+            Assert.Equal(2, actualEvent.Questions.Count);
+            AssertQuestion("Question1", "Caption1", actualEvent.Questions);
+            AssertQuestion("Question2", "Caption2", actualEvent.Questions);
+        }
+
+        private void AssertQuestion(string expectedCode, string expectedCaption, List<Question> questions)
+        {
+            var actualQuestion = questions.Single(q => q.Code == expectedCode);
+            Assert.Equal(expectedCaption, actualQuestion.Caption);
+            Assert.Equal(QuestionType.Text, actualQuestion.QuestionType);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using VenimusAPIs.Validation;
 
@@ -52,5 +53,15 @@ namespace VenimusAPIs.ViewModels
         ///     Are members allowed to bring guests to this event?
         /// </summary>
         public bool GuestsAllowed { get; set; }
+
+        /// <summary>
+        ///     Any additional information we need to obtain from the user.
+        /// </summary>
+        public List<Models.Question> Questions { get; set; } = new List<Models.Question>();
+        
+        /// <summary>
+        ///     Will food be provided at this event?
+        /// </summary>
+        public bool FoodProvided { get; set; }
     }
 }

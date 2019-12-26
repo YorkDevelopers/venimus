@@ -21,10 +21,11 @@ namespace YorkDeveloperEvents.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        internal async Task AddGroupMember(string groupSlug, AddGroupMember addGroupMember)
+        internal async Task<APIResult> AddGroupMember(string groupSlug, AddGroupMember addGroupMember)
         {
             var client = await Client();
-            await client.PostAsJsonAsync($"api/Groups/{groupSlug}/Members", addGroupMember);
+            var response = await client.PostAsJsonAsync($"api/Groups/{groupSlug}/Members", addGroupMember);
+            return await APIResult.Create(response);
         }
 
         internal async Task<APIResult> CreateGroup(CreateGroup createGroup)
