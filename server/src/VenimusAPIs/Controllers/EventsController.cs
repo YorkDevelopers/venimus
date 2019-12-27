@@ -45,6 +45,16 @@ namespace VenimusAPIs.Controllers
             };
         }
 
+        private static Models.Question MapQuestion(ViewModels.Question viewModel)
+        {
+            return new Models.Question
+            {
+                Caption = viewModel.Caption,
+                Code = viewModel.Code,
+                QuestionType = (Models.QuestionType)Enum.Parse(typeof(Models.QuestionType), viewModel.QuestionType, true),
+            };
+        }
+
         /// <summary>
         ///     Allows you to create a new event for your group.
         /// </summary>
@@ -107,10 +117,22 @@ namespace VenimusAPIs.Controllers
 
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
-            var model = _mapper.Map<Models.GroupEvent>(newEvent);
-            model.GroupSlug = groupSlug;
-            model.GroupId = group!.Id;
-            model.GroupName = group.Name;
+            var model = new Models.GroupEvent
+            {
+                GroupSlug = groupSlug,
+                GroupId = group!.Id,
+                GroupName = group.Name,
+                Description = newEvent.Description,
+                EndTimeUTC = newEvent.EndTimeUTC,
+                FoodProvided = newEvent.FoodProvided,
+                GuestsAllowed = newEvent.GuestsAllowed,
+                Location = newEvent.Location,
+                MaximumNumberOfAttendees = newEvent.MaximumNumberOfAttendees,
+                Slug = newEvent.Slug,
+                StartTimeUTC = newEvent.StartTimeUTC,
+                Title = newEvent.Title,
+                Questions = newEvent.Questions.Select(q => MapQuestion(q)).ToList(),
+            };
 
             await _eventStore.StoreEvent(model).ConfigureAwait(false);
             return CreatedAtRoute("Events", new { groupSlug = groupSlug, eventSlug = model.Slug }, newEvent);
@@ -174,7 +196,16 @@ namespace VenimusAPIs.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            _mapper.Map(amendedEvent, model);
+            model.Description = amendedEvent.Description;
+            model.EndTimeUTC = amendedEvent.EndTimeUTC;
+            model.FoodProvided = amendedEvent.FoodProvided;
+            model.GuestsAllowed = amendedEvent.GuestsAllowed;
+            model.Location = amendedEvent.Location;
+            model.MaximumNumberOfAttendees = amendedEvent.MaximumNumberOfAttendees;
+            model.Slug = amendedEvent.Slug;
+            model.StartTimeUTC = amendedEvent.StartTimeUTC;
+            model.Title = amendedEvent.Title;
+            model.Questions = amendedEvent.Questions.Select(q => MapQuestion(q)).ToList();
 
             await _eventStore.UpdateEvent(model).ConfigureAwait(false);
             return NoContent();
@@ -251,7 +282,7 @@ namespace VenimusAPIs.Controllers
                 GuestsAllowed = model.GuestsAllowed,
                 GroupName = model.GroupName,
                 EventLocation = model.Location,
-                Questions = AddNumberOfGuestsQuestionIfApplicable(model.GuestsAllowed, model.Questions.Select(q => MapQuestion(q)).ToArray()),
+                Questions = model.Questions.Select(q => MapQuestion(q)).ToArray(),
             };
         }
 
@@ -283,27 +314,6 @@ namespace VenimusAPIs.Controllers
             {
                 return await _getFutureEventsQuery.Evaluate().ConfigureAwait(false);
             }
-        }
-
-        private ViewModels.Question CreateNumberOfGuestsQuestion()
-        {
-            return new Question
-            {
-                Caption = _stringLocalizer.GetString(Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS).Value,
-                Code = "NumberOfGuests",
-                QuestionType = Models.QuestionType.NumberOfGuests.ToString(),
-            };
-        }
-
-        private Question[] AddNumberOfGuestsQuestionIfApplicable(bool guestsAllowed, Question[] questions)
-        {
-            if (guestsAllowed)
-            {
-                var extraQuestion = new Question[] { CreateNumberOfGuestsQuestion() };
-                questions = extraQuestion.Union(questions).ToArray();
-            }
-
-            return questions;
         }
     }
 }

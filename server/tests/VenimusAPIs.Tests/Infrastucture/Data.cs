@@ -42,11 +42,12 @@ namespace VenimusAPIs.Tests.Infrastucture
                 evt.EndTimeUTC = DateTime.UtcNow.AddDays(2);
                 evt.MaximumNumberOfAttendees = 100;
                 evt.GuestsAllowed = true;
+                evt.FoodProvided = true;
                 evt.Members = new List<GroupEventAttendees>();
                 evt.Questions = new List<Question>
                 {
-                    new Question { Caption = "Dietary Requirements", Code = "Q1", QuestionType = QuestionType.Text },
-                    new Question { Caption = "Message to Organiser", Code = "Q2", QuestionType = QuestionType.Text },
+                    new Question { Caption = "Caption1", Code = "Q1", QuestionType = QuestionType.Text },
+                    new Question { Caption = "Caption2", Code = "Q2", QuestionType = QuestionType.Text },
                 };
             });
 

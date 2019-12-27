@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace YorkDeveloperEvents.ViewModels
@@ -50,5 +51,15 @@ namespace YorkDeveloperEvents.ViewModels
         ///     Are members allowed to bring guests to this event?
         /// </summary>
         public bool GuestsAllowed { get; set; }
+
+        /// <summary>
+        ///     Any additional information we need to obtain from the user.
+        /// </summary>
+        public List<Question> Questions { get; set; } = new List<Question>();
+
+        /// <summary>
+        ///     Will food be provided at this event?
+        /// </summary>
+        public bool FoodProvided { get; set; }
     }
 }

@@ -61,11 +61,11 @@ namespace VenimusAPIs.Tests.UpdateEvent
                 e.StartTimeUTC = DateTime.UtcNow.AddDays(1);
                 e.EndTimeUTC = DateTime.UtcNow.AddDays(2);
 
-                e.Questions = new List<Question>
+                e.Questions = new List<ViewModels.Question>
                 {
-                    new Question { Code = "Question1", Caption = "Caption1", QuestionType = QuestionType.Text },
-                    new Question { Code = "Question2", Caption = "Caption2", QuestionType = QuestionType.Text },
-                };
+                    new ViewModels.Question { Code = "Question1", Caption = "Caption1", QuestionType = "Text" },
+                    new ViewModels.Question { Code = "Question2", Caption = "Caption2", QuestionType = "Text" },
+                };                                                                                          
             });
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/Groups/{_group.Slug}/Events/{_event.Slug}", _amendedEvent);

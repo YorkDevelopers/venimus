@@ -253,5 +253,26 @@ namespace VenimusAPIs.UserControllers
                 Attending = member.SignedUp,
             };
         }
+
+        private ViewModels.Question CreateNumberOfGuestsQuestion()
+        {
+            return new Question
+            {
+                Caption = _stringLocalizer.GetString(Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS).Value,
+                Code = "NumberOfGuests",
+                QuestionType = Models.QuestionType.NumberOfGuests.ToString(),
+            };
+        }
+
+        private Question[] AddNumberOfGuestsQuestionIfApplicable(bool guestsAllowed, Question[] questions)
+        {
+            if (guestsAllowed)
+            {
+                var extraQuestion = new Question[] { CreateNumberOfGuestsQuestion() };
+                questions = extraQuestion.Union(questions).ToArray();
+            }
+
+            return questions;
+        }
     }
 }

@@ -62,6 +62,13 @@
         </tr>
 
         <tr>
+            <td><label for="UpdateEvent_FoodProvided">Will you be providing food at the event?  Ticking this box means that attendee's will be given the optional of providing any dietary requirements when they register.</label></td>
+        </tr>
+        <tr>
+            <td><input asp-for="@Model.UpdateEvent.FoodProvided" class="input100" /><span asp-validation-for="UpdateEvent.FoodProvided" class="error"></span></td>
+        </tr>
+
+        <tr>
             <td><label for="UpdateEvent_Description">A description of the event (in markdown)</label></td>
         </tr>
         <tr>
@@ -69,6 +76,16 @@
                 <textarea asp-for="@Model.UpdateEvent.Description" class="input100" rows="10" cols="50"></textarea><span asp-validation-for="UpdateEvent.Description" class="error"></span>
             </td>
         </tr>
+    </table>
+
+    <hr />
+
+    Any additional questions you wish to ask the attendees?
+    <table>
+        @for (int i = 0; i < Model.UpdateEvent.Questions.Count; i++)
+        {
+            <partial name="_Question" for="UpdateEvent.Questions[i]" />
+        }
     </table>
 
     <button type="submit">Save Settings</button>

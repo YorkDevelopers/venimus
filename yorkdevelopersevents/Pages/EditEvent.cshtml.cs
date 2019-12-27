@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using YorkDeveloperEvents.Services;
 using YorkDeveloperEvents.ViewModels;
@@ -30,21 +33,38 @@ namespace YorkDeveloperEvents
                 Slug = EventSlug,
                 StartTimeUTC = existingDetails.EventStartsUTC,
                 Title = existingDetails.EventTitle,
+                Questions = AddDummyQuestions(existingDetails.Questions.ToList()),
             };
 
             return Page();
         }
 
+        private List<Question> AddDummyQuestions(List<Question> list)
+        {
+            for (int i = 0; i < 5; i++)
+                list.Add(new Question { QuestionType = "Text", Code = Guid.NewGuid().ToString() });
+
+            return list;
+        }
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
             if (!ModelState.IsValid) return Page();
 
+            UpdateEvent.Questions = UpdateEvent.Questions
+                                               .Where(q => !string.IsNullOrWhiteSpace(q.Caption))
+                                               .Select(q => new Question { Caption = q.Caption, Code = q.Code, QuestionType = "Text" })
+                                               .ToList();
+
             var result = await api.UpdateEvent(GroupSlug, EventSlug, UpdateEvent);
 
             return result.Evalulate(
                         onSuccess: () => LocalRedirect("/"),
-                        onFailure: validationProblemDetails => AddProblemsToModelState(validationProblemDetails, nameof(UpdateEvent)));
+                        onFailure: validationProblemDetails =>
+                        {
+                            UpdateEvent.Questions = AddDummyQuestions(UpdateEvent.Questions);
+                            return AddProblemsToModelState(validationProblemDetails, nameof(UpdateEvent));
+                        });
         }
     }
 }

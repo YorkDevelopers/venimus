@@ -57,7 +57,7 @@ namespace VenimusAPIs.ViewModels
         /// <summary>
         ///     Any additional information we need to obtain from the user.
         /// </summary>
-        public List<Models.Question> Questions { get; set; } = new List<Models.Question>();
+        public List<ViewModels.Question> Questions { get; set; } = new List<ViewModels.Question>();
         
         /// <summary>
         ///     Will food be provided at this event?
