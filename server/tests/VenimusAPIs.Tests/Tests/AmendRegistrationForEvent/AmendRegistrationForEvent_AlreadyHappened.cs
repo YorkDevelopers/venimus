@@ -83,7 +83,6 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             var member = actualEvent.Members[0];
             Assert.Equal(User.Id.ToString(), member.UserId.ToString());
             Assert.Equal(_currentRegistration.DietaryRequirements, member.DietaryRequirements);
-            Assert.Equal(_currentRegistration.MessageToOrganiser, member.MessageToOrganiser);
             Assert.Equal(_currentRegistration.NumberOfGuests, member.NumberOfGuests);
             Assert.True(member.SignedUp);
         }

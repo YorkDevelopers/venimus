@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Extensions;
@@ -77,7 +74,6 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             var member = actualEvent.Members[0];
             Assert.Equal(User.Id.ToString(), member.UserId.ToString());
             Assert.Equal("ExampleDietaryRequirements", member.DietaryRequirements);
-            Assert.Equal("ExampleMessageToOrganiser", member.MessageToOrganiser);
             Assert.Equal(6, member.NumberOfGuests);
             Assert.True(member.SignedUp);
         }

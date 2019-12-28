@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -77,7 +76,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             AssertAnswer("DietaryRequirements", "Any dietary requirements?", "DietaryRequirements", actualRegistration.Answers);
         }
 
-        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedQuestionType,  Answer[] allAnswers)
+        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedQuestionType, ViewModels.Answer[] allAnswers)
         {
             var actualAnswer = allAnswers.Single(a => a.Code == expectedCode);
             Assert.Equal(expectedCaption, actualAnswer.Caption);

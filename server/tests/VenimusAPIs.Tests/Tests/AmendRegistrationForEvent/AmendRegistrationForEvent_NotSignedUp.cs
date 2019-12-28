@@ -4,7 +4,6 @@ using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
-using VenimusAPIs.ViewModels;
 using Xunit;
 
 namespace VenimusAPIs.Tests.AmendRegistrationForEvent
@@ -77,7 +76,6 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
             var member = actualEvent.Members[0];
             Assert.Equal(User.Id.ToString(), member.UserId.ToString());
             Assert.Equal("ExampleDietaryRequirements", member.DietaryRequirements);
-            Assert.Equal("ExampleMessageToOrganiser", member.MessageToOrganiser);
             Assert.Equal(5, member.NumberOfGuests);
             Assert.True(member.SignedUp);
         }

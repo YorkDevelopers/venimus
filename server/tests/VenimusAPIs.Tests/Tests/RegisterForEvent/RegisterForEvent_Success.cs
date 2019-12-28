@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Extensions;
@@ -51,7 +51,8 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             _signUpToEvent = Data.Create<ViewModels.RegisterForEvent>();
             _signUpToEvent.AddAnswer("NumberOfGuests", "5");
             _signUpToEvent.AddAnswer("DietaryRequirements", "ExampleDietaryRequirements");
-            _signUpToEvent.AddAnswer("MessageToOrganiser", "ExampleMessageToOrganiser");
+            _signUpToEvent.AddAnswer("Q1", "Answer1");
+            _signUpToEvent.AddAnswer("Q2", "Answer2");
 
             Response = await Fixture.APIClient.PutAsJsonAsync($"api/user/groups/{_existingGroup.Slug}/Events/{_existingEvent.Slug}", _signUpToEvent);
         }
@@ -76,7 +77,6 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             var member = actualEvent.Members[0];
             Assert.Equal(User.Id.ToString(), member.UserId.ToString());
             Assert.Equal("ExampleDietaryRequirements", member.DietaryRequirements);
-            Assert.Equal("ExampleMessageToOrganiser", member.MessageToOrganiser);
             Assert.Equal(5, member.NumberOfGuests);
 
             Assert.Equal(User.Bio, member.Bio);
@@ -86,6 +86,17 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             Assert.Equal(User.Pronoun, member.Pronoun);
 
             Assert.True(member.SignedUp);
+
+            Assert.Equal(2, member.Answers.Count());
+            AssertAnswer("Q1", "Caption1", "Answer1", member.Answers);
+            AssertAnswer("Q2", "Caption2", "Answer2", member.Answers);
+        }
+
+        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedAnswer, List<Answer> answers)
+        {
+            var actualAnswer = answers.Single(a => a.Code == expectedCode);
+            Assert.Equal(expectedCaption, actualAnswer.Caption);
+            Assert.Equal(expectedAnswer, actualAnswer.UsersAnswer);
         }
     }
 }

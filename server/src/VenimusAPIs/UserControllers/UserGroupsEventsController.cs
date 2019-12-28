@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -69,8 +69,7 @@ namespace VenimusAPIs.UserControllers
             var dietaryRequirementsAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "DietaryRequirements");
             var dietaryRequirements = dietaryRequirementsAnswer?.UsersAnswer ?? string.Empty;
 
-            var messageToOrganiserAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "MessageToOrganiser");
-            var messageToOrganiser = messageToOrganiserAnswer?.UsersAnswer ?? string.Empty;
+            newDetails.Answers = newDetails.Answers.Where(a => a.Code != "NumberOfGuests" && a.Code != "DietaryRequirements").ToList();
 
             var uniqueID = UniqueIDForCurrentUser;
 
@@ -129,7 +128,7 @@ namespace VenimusAPIs.UserControllers
             member.SignedUp = true;
             member.DietaryRequirements = dietaryRequirements;
             member.NumberOfGuests = numberOfGuests;
-            member.MessageToOrganiser = messageToOrganiser;
+            member.Answers = newDetails.Answers.Select(q => MapAnswer(q, theEvent.Questions)).ToList();
 
             await _eventStore.UpdateEvent(theEvent).ConfigureAwait(false);
 
@@ -141,6 +140,22 @@ namespace VenimusAPIs.UserControllers
             {
                 return NoContent();
             }
+        }
+
+        private static Models.Answer MapAnswer(ViewModels.Answer answer, List<Models.Question> questions)
+        {
+            var question = questions.SingleOrDefault(q => q.Code == answer.Code);
+            if (question != null)
+            {
+                answer.Caption = question.Caption;
+            }
+
+            return new Models.Answer
+            {
+                Caption = answer.Caption ?? string.Empty,
+                Code = answer.Code,
+                UsersAnswer = answer.UsersAnswer,
+            };
         }
 
         /// <summary>

@@ -248,6 +248,21 @@
              <returns>byte array for the image</returns>
              <response code="200">Success</response>
         </member>
+        <member name="P:VenimusAPIs.Models.Answer.Code">
+            <summary>
+                Unique ID for this question.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Answer.Caption">
+            <summary>
+                Question shown to the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.Answer.UsersAnswer">
+            <summary>
+                The user's answer to the question
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.Group.Id">
             <summary>
                 The unique internal ID of this group
@@ -393,11 +408,6 @@
                 Any Dietary Requirements the user has
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.MessageToOrganiser">
-            <summary>
-                Free format message to the organiser
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.Models.GroupEventAttendees.NumberOfGuests">
             <summary>
                 The number of unregistered guest the person is bringing
@@ -428,6 +438,11 @@
             <summary>
                 The user's biography.  This can include their place of work/student,  any interests etc.
                 Visible to all signed in members
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Answers">
+            <summary>
+                Answers to any custom questions.  Does not include number of guests or dietary requirements
             </summary>
         </member>
         <member name="P:VenimusAPIs.Models.GroupMember.UserId">

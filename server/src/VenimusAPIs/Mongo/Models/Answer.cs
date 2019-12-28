@@ -1,4 +1,4 @@
-﻿namespace VenimusAPIs.ViewModels
+﻿namespace VenimusAPIs.Models
 {
     public class Answer
     {
@@ -10,15 +10,10 @@
         /// <summary>
         ///     Question shown to the user
         /// </summary>
-        public string? Caption { get; set; }
+        public string Caption { get; set; } = default!;
 
         /// <summary>
-        ///     Type of question,  text, date, boolean etc
-        /// </summary>
-        public string? QuestionType { get; set; }
-
-        /// <summary>
-        ///     Answer from the user
+        ///     The user's answer to the question
         /// </summary>
         public string UsersAnswer { get; set; } = default!;
     }

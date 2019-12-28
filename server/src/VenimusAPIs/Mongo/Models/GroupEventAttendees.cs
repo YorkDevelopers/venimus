@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using System.Collections.Generic;
 
 namespace VenimusAPIs.Models
 {
@@ -32,11 +33,6 @@ namespace VenimusAPIs.Models
         public string DietaryRequirements { get; set; } = default!;
 
         /// <summary>
-        ///     Free format message to the organiser
-        /// </summary>
-        public string MessageToOrganiser { get; set; } = default!;
-
-        /// <summary>
         ///     The number of unregistered guest the person is bringing
         /// </summary>
         public int NumberOfGuests { get; set; }
@@ -67,5 +63,10 @@ namespace VenimusAPIs.Models
         ///     Visible to all signed in members
         /// </summary>
         public string Bio { get; set; } = default!;
+
+        /// <summary>
+        ///     Answers to any custom questions.  Does not include number of guests or dietary requirements
+        /// </summary>
+        public List<Answer> Answers { get; set; } = new List<Answer>();
     }
 }
