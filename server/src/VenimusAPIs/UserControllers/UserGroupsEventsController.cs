@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -64,7 +65,7 @@ namespace VenimusAPIs.UserControllers
                 ModelState.AddModelError("NumberOfGuests", message);
                 return ValidationProblem(ModelState);
             }
-           
+
             var dietaryRequirementsAnswer = newDetails.Answers.SingleOrDefault(a => a.Code == "DietaryRequirements");
             var dietaryRequirements = dietaryRequirementsAnswer?.UsersAnswer ?? string.Empty;
 
@@ -233,46 +234,67 @@ namespace VenimusAPIs.UserControllers
                 return NotFound();
             }
 
+            var allQuestions = theEvent.Questions;
+
+            if (theEvent.GuestsAllowed)
+            {
+                allQuestions.Add(CreateNumberOfGuestsQuestion());
+            }
+
+            if (theEvent.FoodProvided)
+            {
+                allQuestions.Add(CreateDietaryRequirementsQuestion());
+            }
+
+            var result = new ViewMyEventRegistration
+            {
+                Attending = false,
+                EventTitle = theEvent.Title,
+                GroupName = theEvent.GroupName,
+                Answers = allQuestions.Select(MapQuestionToAnswer).ToArray(),
+            };
+
             var uniqueID = UniqueIDForCurrentUser;
             var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
-            if (member == null)
+            if (member != null)
             {
-                return new ViewMyEventRegistration
-                {
-                    Attending = false,
-                };
+                result.Attending = member.SignedUp;
             }
 
-            return new ViewMyEventRegistration
+            return result;
+        }
+
+        private Answer MapQuestionToAnswer(Models.Question question)
+        {
+            return new Answer
             {
-                DietaryRequirements = member.DietaryRequirements,
-                NumberOfGuests = member.NumberOfGuests,
-                MessageToOrganiser = member.MessageToOrganiser,
-                Attending = member.SignedUp,
+                Caption = question.Caption,
+                Code = question.Code,
+                QuestionType = question.QuestionType.ToString(),
+                UsersAnswer = string.Empty,
             };
         }
 
-        private ViewModels.Question CreateNumberOfGuestsQuestion()
+        private Models.Question CreateNumberOfGuestsQuestion()
         {
-            return new Question
+            return new Models.Question
             {
                 Caption = _stringLocalizer.GetString(Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS).Value,
                 Code = "NumberOfGuests",
-                QuestionType = Models.QuestionType.NumberOfGuests.ToString(),
+                QuestionType = Models.QuestionType.NumberOfGuests,
             };
         }
 
-        private Question[] AddNumberOfGuestsQuestionIfApplicable(bool guestsAllowed, Question[] questions)
+        private Models.Question CreateDietaryRequirementsQuestion()
         {
-            if (guestsAllowed)
+            return new Models.Question
             {
-                var extraQuestion = new Question[] { CreateNumberOfGuestsQuestion() };
-                questions = extraQuestion.Union(questions).ToArray();
-            }
-
-            return questions;
+                Caption = _stringLocalizer.GetString(Resources.ResourceMessages.QUESTION_DIETARYREQUIREMENTS).Value,
+                Code = "DietaryRequirements",
+                QuestionType = Models.QuestionType.DietaryRequirements,
+            };
         }
     }
 }

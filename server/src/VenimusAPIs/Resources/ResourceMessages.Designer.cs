@@ -205,6 +205,15 @@ namespace VenimusAPIs.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Any dietary requirements?.
+        /// </summary>
+        public static string QUESTION_DIETARYREQUIREMENTS {
+            get {
+                return ResourceManager.GetString("QUESTION_DIETARYREQUIREMENTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of Guests.
         /// </summary>
         public static string QUESTION_NUMBEROFGUESTS {

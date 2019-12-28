@@ -650,6 +650,11 @@
               Looks up a localized string similar to The NumberOfGuests cannot be less than zero..
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Resources.ResourceMessages.QUESTION_DIETARYREQUIREMENTS">
+            <summary>
+              Looks up a localized string similar to Any dietary requirements?.
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Resources.ResourceMessages.QUESTION_NUMBEROFGUESTS">
             <summary>
               Looks up a localized string similar to Number of Guests.
@@ -859,6 +864,16 @@
         <member name="P:VenimusAPIs.ViewModels.Answer.Code">
             <summary>
                 Unique ID for this question.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.Answer.Caption">
+            <summary>
+                Question shown to the user
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.Answer.QuestionType">
+            <summary>
+                Type of question,  text, date, boolean etc
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.Answer.UsersAnswer">
@@ -1457,24 +1472,24 @@
                 Has the user completed the registration stage (ie. entered all their details)
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.NumberOfGuests">
-            <summary>
-                The number of unregistered guests joining the user
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.DietaryRequirements">
-            <summary>
-                Any Dietary Requirements.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.MessageToOrganiser">
-            <summary>
-                Free format message to the event host.
-            </summary>
-        </member>
         <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.Attending">
             <summary>
                 Has the user said they are attending the event?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.GroupName">
+            <summary>
+                The group hosting the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.EventTitle">
+            <summary>
+                The title of the event
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ViewMyEventRegistration.Answers">
+            <summary>
+                Any information we need to gather from the user
             </summary>
         </member>
     </members>

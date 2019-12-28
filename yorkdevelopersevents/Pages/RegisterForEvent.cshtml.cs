@@ -22,27 +22,23 @@ namespace YorkDeveloperEvents
         [BindProperty]
         public bool CurrentlyRegistered { get; set; }
 
-        public GetEvent Event;
+        public ViewMyEventRegistration CurrentRegistration;
 
         public async Task OnGet([FromServices] API api)
         {
             await api.JoinGroup(GroupSlug);
 
-            Event = await api.GetEvent(GroupSlug, EventSlug);
+            CurrentRegistration = await api.GetEventRegistrationDetails(GroupSlug, EventSlug);
 
-            var currentRegistration = await api.GetEventRegistrationDetails(GroupSlug, EventSlug);
-
-            if (currentRegistration != null)
+            RegisterForEvent = new RegisterForEvent
             {
-                RegisterForEvent = new RegisterForEvent
-                {
-                    DietaryRequirements = currentRegistration.DietaryRequirements,
-                    MessageToOrganiser = currentRegistration.MessageToOrganiser,
-                    NumberOfGuests = currentRegistration.NumberOfGuests,
-                };
+                DietaryRequirements = string.Empty,
+                MessageToOrganiser = string.Empty,
+                NumberOfGuests = 0,
+            };
 
-                CurrentlyRegistered = currentRegistration.Attending;
-            }
+            CurrentlyRegistered = CurrentRegistration.Attending;
+
         }
 
         public async Task<ActionResult> OnPost([FromServices] API api)

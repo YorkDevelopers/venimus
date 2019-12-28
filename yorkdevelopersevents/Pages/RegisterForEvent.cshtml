@@ -4,12 +4,12 @@
     ViewData["Title"] = "RegisterForEvent";
 }
 
-<h1>Register For  @Model.Event.GroupName -  @Model.Event.EventTitle</h1>
+<h1>Register For  @Model.CurrentRegistration.GroupName -  @Model.CurrentRegistration.EventTitle</h1>
 
 <form action="/RegisterForEvent" method="post">
     @Html.AntiForgeryToken()
 
-    @foreach (var question in @Model.Event.Questions)
+    @foreach (var question in @Model.CurrentRegistration.Answers)
     {
         <label for="@question.Code">@question.Caption</label>
         <input type="text" id="@question.Code" name="@question.Code" /><br />

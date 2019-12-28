@@ -1,4 +1,4 @@
-﻿namespace VenimusAPIs.ViewModels
+﻿namespace YorkDeveloperEvents.ViewModels
 {
     public class Answer
     {

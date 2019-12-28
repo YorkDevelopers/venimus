@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
@@ -66,10 +66,22 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             var json = await Response.Content.ReadAsStringAsync();
             var actualRegistration = JsonSerializer.Deserialize<ViewMyEventRegistration>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            Assert.Equal(_registrationDetails.MessageToOrganiser, actualRegistration.MessageToOrganiser);
-            Assert.Equal(10, actualRegistration.NumberOfGuests);
-            Assert.Equal(_registrationDetails.DietaryRequirements, actualRegistration.DietaryRequirements);
             Assert.True(actualRegistration.Attending);
+            Assert.Equal(_existingGroup.Name, actualRegistration.GroupName);
+            Assert.Equal(_existingEvent.Title, actualRegistration.EventTitle);
+
+            Assert.Equal(4, actualRegistration.Answers.Length);
+            AssertAnswer("Q1", "Caption1", "Text", actualRegistration.Answers);
+            AssertAnswer("Q2", "Caption2", "Text", actualRegistration.Answers);
+            AssertAnswer("NumberOfGuests", "Number of Guests", "NumberOfGuests", actualRegistration.Answers);
+            AssertAnswer("DietaryRequirements", "Any dietary requirements?", "DietaryRequirements", actualRegistration.Answers);
+        }
+
+        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedQuestionType,  Answer[] allAnswers)
+        {
+            var actualAnswer = allAnswers.Single(a => a.Code == expectedCode);
+            Assert.Equal(expectedCaption, actualAnswer.Caption);
+            Assert.Equal(expectedQuestionType, actualAnswer.QuestionType);
         }
     }
 }
