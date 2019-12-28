@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Validation;
@@ -79,7 +80,7 @@ namespace VenimusAPIs.UserControllers
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
             {
-                member = new Models.GroupEventAttendees
+                member = new Models.GroupEventAttendee
                 {
                     UserId = existingUser.Id,
                     Bio = existingUser.Bio,
@@ -203,7 +204,7 @@ namespace VenimusAPIs.UserControllers
             return NoContent();
         }
 
-        private async Task<Models.GroupEventAttendees> GetUsersRegistrationForThisEvent(Models.GroupEvent theEvent)
+        private async Task<Models.GroupEventAttendee> GetUsersRegistrationForThisEvent(Models.GroupEvent theEvent)
         {
             var uniqueID = UniqueIDForCurrentUser;
 
@@ -212,7 +213,7 @@ namespace VenimusAPIs.UserControllers
             var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member == null)
             {
-                member = new Models.GroupEventAttendees
+                member = new Models.GroupEventAttendee
                 {
                     UserId = existingUser.Id,
                 };
@@ -261,18 +262,19 @@ namespace VenimusAPIs.UserControllers
                 allQuestions.Add(CreateDietaryRequirementsQuestion());
             }
 
+            var uniqueID = UniqueIDForCurrentUser;
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+
             var result = new ViewMyEventRegistration
             {
                 Attending = false,
                 EventTitle = theEvent.Title,
                 GroupName = theEvent.GroupName,
-                Answers = allQuestions.Select(MapQuestionToAnswer).ToArray(),
+                Answers = allQuestions.Select(q => MapQuestionToAnswer(q, member)).ToArray(),
             };
 
-            var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
             if (member != null)
             {
                 result.Attending = member.SignedUp;
@@ -281,14 +283,22 @@ namespace VenimusAPIs.UserControllers
             return result;
         }
 
-        private Answer MapQuestionToAnswer(Models.Question question)
+        private static Answer MapQuestionToAnswer(Models.Question question, Models.GroupEventAttendee? member)
         {
+            var usersAnswer = question.Code switch
+            {
+                _ when member == null => string.Empty,
+                "NumberOfGuests" => member.NumberOfGuests.ToString(CultureInfo.InvariantCulture),
+                "DietaryRequirements" => member.DietaryRequirements,
+                _ => member.Answers.SingleOrDefault(a => a.Code == question.Code)?.UsersAnswer ?? string.Empty
+            };
+
             return new Answer
             {
                 Caption = question.Caption,
                 Code = question.Code,
                 QuestionType = question.QuestionType.ToString(),
-                UsersAnswer = string.Empty,
+                UsersAnswer = usersAnswer,
             };
         }
 

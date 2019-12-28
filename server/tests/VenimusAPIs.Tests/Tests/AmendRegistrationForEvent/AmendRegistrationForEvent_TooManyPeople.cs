@@ -16,7 +16,7 @@ namespace VenimusAPIs.Tests.AmendRegistrationForEvent
         private Group _existingGroup;
         private GroupEvent _existingEvent;
         private ViewModels.RegisterForEvent _amendedDetails;
-        private GroupEventAttendees _currentRegistration;
+        private GroupEventAttendee _currentRegistration;
 
         public AmendRegistrationForEvent_TooManyPeople(Fixture fixture) : base(fixture)
         {

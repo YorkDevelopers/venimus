@@ -5,6 +5,7 @@ using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
 using VenimusAPIs.ViewModels;
+using VenimusAPIs.Tests.Extensions;
 using Xunit;
 
 namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
@@ -14,7 +15,7 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
     {
         private Group _existingGroup;
         private GroupEvent _existingEvent;
-        private GroupEventAttendees _registrationDetails;
+        private GroupEventAttendee _registrationDetails;
 
         public ViewMyRegistrationForEvent_Success(Fixture fixture) : base(fixture)
         {
@@ -45,6 +46,10 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
                 _registrationDetails = Data.AddEventAttendee(evt, User, numberOfGuests: 10);
             });
 
+            _registrationDetails.AddAnswer("Q1", "Answer1");
+            _registrationDetails.AddAnswer("Q2", "Answer2");
+            _registrationDetails.AddAnswer("Q3", "Answer3");
+
             var events = EventsCollection();
 
             await events.InsertOneAsync(_existingEvent);
@@ -70,17 +75,18 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
             Assert.Equal(_existingEvent.Title, actualRegistration.EventTitle);
 
             Assert.Equal(4, actualRegistration.Answers.Length);
-            AssertAnswer("Q1", "Caption1", "Text", actualRegistration.Answers);
-            AssertAnswer("Q2", "Caption2", "Text", actualRegistration.Answers);
-            AssertAnswer("NumberOfGuests", "Number of Guests", "NumberOfGuests", actualRegistration.Answers);
-            AssertAnswer("DietaryRequirements", "Any dietary requirements?", "DietaryRequirements", actualRegistration.Answers);
+            AssertAnswer("NumberOfGuests", "Number of Guests", "NumberOfGuests", "10", actualRegistration.Answers);
+            AssertAnswer("DietaryRequirements", "Any dietary requirements?", "DietaryRequirements", "No milk", actualRegistration.Answers);
+            AssertAnswer("Q1", "Caption1", "Text", "Answer1", actualRegistration.Answers);
+            AssertAnswer("Q2", "Caption2", "Text", "Answer2", actualRegistration.Answers);
         }
 
-        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedQuestionType, ViewModels.Answer[] allAnswers)
+        private void AssertAnswer(string expectedCode, string expectedCaption, string expectedQuestionType, string expectedUsersAnswer, ViewModels.Answer[] allAnswers)
         {
             var actualAnswer = allAnswers.Single(a => a.Code == expectedCode);
             Assert.Equal(expectedCaption, actualAnswer.Caption);
             Assert.Equal(expectedQuestionType, actualAnswer.QuestionType);
+            Assert.Equal(expectedUsersAnswer, actualAnswer.UsersAnswer);
         }
     }
 }

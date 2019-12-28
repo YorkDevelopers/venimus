@@ -18,5 +18,16 @@ namespace VenimusAPIs.Tests.Extensions
 
             amendedDetails.Answers.Add(answer);
         }
+
+        public static void AddAnswer(this Models.GroupEventAttendee groupEventAttendee, string code, string userAnswer)
+        {
+            var answer = new Models.Answer()
+            {
+                Code = code,
+                UsersAnswer = userAnswer,
+            };
+
+            groupEventAttendee.Answers.Add(answer);
+        }
     }
 }

@@ -383,64 +383,64 @@
                 Will food be provided at this event?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.SignedUp">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.SignedUp">
             <summary>
                 Are they still signed up
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Attended">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Attended">
             <summary>
                 Did they attend the event?
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Host">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Host">
             <summary>
                 Are they organising the event
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Speaker">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Speaker">
             <summary>
                 Are they presenting at the event
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.DietaryRequirements">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.DietaryRequirements">
             <summary>
                 Any Dietary Requirements the user has
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.NumberOfGuests">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.NumberOfGuests">
             <summary>
                 The number of unregistered guest the person is bringing
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.EmailAddress">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.EmailAddress">
             <summary>
                 The email address which also links all the social media accounts together.
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Pronoun">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Pronoun">
             <summary>
                 The users preferred personal pronon.  e.g. Him
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Fullname">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Fullname">
             <summary>
                 The user's fullname.  e.g David Betteridge
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.DisplayName">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.DisplayName">
             <summary>
                 The user's name within the system.  Ideally the same as their slack name.  e.g. DavidB
                 (Has to be unique)
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Bio">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Bio">
             <summary>
                 The user's biography.  This can include their place of work/student,  any interests etc.
                 Visible to all signed in members
             </summary>
         </member>
-        <member name="P:VenimusAPIs.Models.GroupEventAttendees.Answers">
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.Answers">
             <summary>
                 Answers to any custom questions.  Does not include number of guests or dietary requirements
             </summary>

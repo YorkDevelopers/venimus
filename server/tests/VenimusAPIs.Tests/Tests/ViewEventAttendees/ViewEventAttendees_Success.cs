@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,9 +19,9 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
-        private GroupEventAttendees _userRegistration;
-        private GroupEventAttendees _otherUser1Registration;
-        private GroupEventAttendees _otherUser2Registration;
+        private GroupEventAttendee _userRegistration;
+        private GroupEventAttendee _otherUser1Registration;
+        private GroupEventAttendee _otherUser2Registration;
 
         public ViewEventAttendees_Success(Fixture fixture) : base(fixture)
         {
@@ -100,7 +99,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             AssertMember(_otherUserInGroup2, actualAttendees, false, false, _otherUser2Registration);
         }
 
-        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker, GroupEventAttendees attendee)
+        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker, GroupEventAttendee attendee)
         {
             var actualAttendee = actualAttendees.Single(m => m.Slug == user.Id.ToString());
 

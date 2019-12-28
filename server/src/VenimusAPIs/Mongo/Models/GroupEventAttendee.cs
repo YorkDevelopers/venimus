@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VenimusAPIs.Models
 {
-    public class GroupEventAttendees
+    public class GroupEventAttendee
     {
         public ObjectId UserId { get; set; }
 

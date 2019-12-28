@@ -15,9 +15,9 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
-        private GroupEventAttendees _userRegistration;
-        private GroupEventAttendees _otherUser1Registration;
-        private GroupEventAttendees _otherUser2Registration;
+        private GroupEventAttendee _userRegistration;
+        private GroupEventAttendee _otherUser1Registration;
+        private GroupEventAttendee _otherUser2Registration;
 
         public ViewEventAttendees_UnapprovedMember(Fixture fixture) : base(fixture)
         {

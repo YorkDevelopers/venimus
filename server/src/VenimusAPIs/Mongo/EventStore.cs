@@ -30,7 +30,7 @@ namespace VenimusAPIs.Mongo
             {
                 if (theEvent.Members == null)
                 {
-                    theEvent.Members = new List<Models.GroupEventAttendees>();
+                    theEvent.Members = new List<Models.GroupEventAttendee>();
                 }
             }
 
@@ -41,8 +41,8 @@ namespace VenimusAPIs.Mongo
         {
             var currentTime = DateTime.UtcNow;
 
-            var memberMatch = Builders<GroupEventAttendees>.Filter.Eq(a => a.UserId, userID) &
-                              Builders<GroupEventAttendees>.Filter.Eq(a => a.SignedUp, true);
+            var memberMatch = Builders<GroupEventAttendee>.Filter.Eq(a => a.UserId, userID) &
+                              Builders<GroupEventAttendee>.Filter.Eq(a => a.SignedUp, true);
 
             var filter = Builders<GroupEvent>.Filter.ElemMatch(x => x.Members, memberMatch) &
                          Builders<GroupEvent>.Filter.Gt(ent => ent.EndTimeUTC, currentTime);
@@ -68,7 +68,7 @@ namespace VenimusAPIs.Mongo
         {
             var events = _mongoConnection.EventsCollection();
 
-            var memberMatch = Builders<GroupEventAttendees>.Filter.Eq(a => a.UserId, user.Id);
+            var memberMatch = Builders<GroupEventAttendee>.Filter.Eq(a => a.UserId, user.Id);
             var filter = Builders<GroupEvent>.Filter.ElemMatch(x => x.Members, memberMatch);
             var eventsTheUserBelongsTo = await events.Find(filter).ToListAsync().ConfigureAwait(false);
 
