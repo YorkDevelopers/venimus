@@ -11,7 +11,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.ViewEvents
 {
     [Story(AsA = "An user", IWant = "To be able to view event details", SoThat = "I learn about local groups and events")]
-    public class ViewEvents_Success : BaseTest
+    public class ViewFutureEvents_Success : BaseTest
     {
         /*
          * Only members can view event locations
@@ -27,7 +27,7 @@ namespace VenimusAPIs.Tests.ViewEvents
         private GroupEvent _futureEvent2;
         private GroupEvent[] _futureEvents;
 
-        public ViewEvents_Success(Fixture fixture) : base(fixture)
+        public ViewFutureEvents_Success(Fixture fixture) : base(fixture)
         {
         }
 

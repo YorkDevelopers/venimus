@@ -64,6 +64,32 @@ namespace VenimusAPIs.Mongo
             }).ToList();
         }
 
+        internal async Task<ListEventsForGroup[]> GetEvents(string groupSlug, bool includePastEvents, bool includeFutureEvents)
+        {
+            var currentTime = DateTime.UtcNow;
+
+            var events = _mongoConnection.EventsCollection();
+
+            var filter = Builders<GroupEvent>.Filter.Eq(x => x.GroupSlug, groupSlug);
+
+            if (!includePastEvents)
+                filter &= Builders<GroupEvent>.Filter.Gt(ent => ent.StartTimeUTC, currentTime);
+
+            if (!includeFutureEvents)
+                filter &= Builders<GroupEvent>.Filter.Lte(ent => ent.StartTimeUTC, currentTime);
+
+            var matchingEvents = await events.Find(filter).ToListAsync().ConfigureAwait(false);
+
+            return matchingEvents.Select(e => new ListEventsForGroup
+            {
+                EventDescription = e.Description,
+                EventFinishesUTC = e.EndTimeUTC,
+                EventSlug = e.Slug,
+                EventStartsUTC = e.StartTimeUTC,
+                EventTitle = e.Title,
+            }).ToArray();
+        }
+
         internal async Task UpdateUserDetailsInEvents(User user)
         {
             var events = _mongoConnection.EventsCollection();

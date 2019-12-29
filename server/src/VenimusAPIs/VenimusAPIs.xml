@@ -95,9 +95,23 @@
              <response code="200">Success</response>
              <response code="404">Group or Event does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.String,System.Boolean,System.Boolean)">
+             <summary>
+                 Allows you to retrieve the list of all events for this group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/groups/YorkCodeDojo/events
+            
+             </remarks>
+             <returns>The array of ListEventsForGroup view models</returns>
+             <response code="200">Success</response>
+             <response code="404">Group does not exist.</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.Boolean)">
              <summary>
-                 Allows you request the list of future events.  Maximum of 10 per group.
+                 Allows you request the list of events.
              </summary>
              <remarks>
              Sample request:
@@ -1233,6 +1247,31 @@
         <member name="P:VenimusAPIs.ViewModels.ListEvents.GroupLogo">
             <summary>
                 The group's logo. (Either URL or Base64)
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventsForGroup.EventSlug">
+            <summary>
+                The unique external ID for the event.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventsForGroup.EventTitle">
+            <summary>
+                The title of the event.  Monthly meeting - October
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventsForGroup.EventDescription">
+            <summary>
+                A description of the event in markdown.
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventsForGroup.EventStartsUTC">
+            <summary>
+                When does the event start,  in UTC time?
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventsForGroup.EventFinishesUTC">
+            <summary>
+                When does the event finish, in UTC time?
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.ListGroupMembers.Slug">

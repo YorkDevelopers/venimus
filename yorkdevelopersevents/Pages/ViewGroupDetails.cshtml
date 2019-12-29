@@ -49,5 +49,17 @@
 }
 
 <h2>Future Events</h2>
+<ul>
+    @foreach (var item in Model.FutureEvents)
+    {
+        <li>@item.EventStartsUTC - <a href="/ViewEventDetails?groupSlug=@Model.ViewModel.Slug&eventSlug=@item.EventSlug">@item.EventTitle</a></li>
+    }
+</ul>
 
 <h2>Past Events</h2>
+<ul>
+    @foreach (var item in Model.PastEvents)
+    {
+        <li>@item.EventStartsUTC - <a href="/ViewEventDetails?groupSlug=@Model.ViewModel.Slug&eventSlug=@item.EventSlug">@item.EventTitle</a></li>
+    }
+</ul>

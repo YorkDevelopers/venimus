@@ -137,6 +137,12 @@ namespace YorkDeveloperEvents.Services
             return await client.GetAsJson<ListGroupMembers[]>($"/api/Groups/{groupSlug}/Members");
         }
 
+        public async Task<ListEventsForGroup[]> ListEventsForGroup(string groupSlug, bool includePastEvents, bool includeFutureEvents)
+        {
+            var client = await Client();
+            return await client.GetAsJson<ListEventsForGroup[]>($"/api/Groups/{groupSlug}/Events?includePastEvents={includePastEvents}&includeFutureEvents={includeFutureEvents}");
+        }
+
         internal async Task<ListEvents[]> ListMyEvents()
         {
             var client = await Client(tokenRequired: true);

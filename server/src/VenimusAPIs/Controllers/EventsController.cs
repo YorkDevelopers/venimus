@@ -287,7 +287,28 @@ namespace VenimusAPIs.Controllers
         }
 
         /// <summary>
-        ///     Allows you request the list of future events.  Maximum of 10 per group.
+        ///     Allows you to retrieve the list of all events for this group
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/groups/YorkCodeDojo/events
+        ///
+        /// </remarks>
+        /// <returns>The array of ListEventsForGroup view models</returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">Group does not exist.</response>
+        [Route("api/groups/{groupSlug}/events")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ViewModels.ListEventsForGroup[]>> Get([FromRoute, Slug] string groupSlug, [FromQuery] bool includePastEvents = false, [FromQuery] bool includeFutureEvents = true)
+        {
+            return await _eventStore.GetEvents(groupSlug, includePastEvents, includeFutureEvents).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Allows you request the list of events.
         /// </summary>
         /// <remarks>
         /// Sample request:
