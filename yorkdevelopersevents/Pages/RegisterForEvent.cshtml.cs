@@ -10,9 +10,6 @@ namespace YorkDeveloperEvents
     [Authorize]
     public class RegisterForEventModel : PageModel
     {
-        [BindProperty]
-        public RegisterForEvent RegisterForEvent { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public string GroupSlug { get; set; }
 
@@ -22,7 +19,8 @@ namespace YorkDeveloperEvents
         [BindProperty]
         public bool CurrentlyRegistered { get; set; }
 
-        public ViewMyEventRegistration CurrentRegistration;
+        [BindProperty] 
+        public ViewMyEventRegistration CurrentRegistration { get; set; }
 
         public async Task OnGet([FromServices] API api)
         {
@@ -30,20 +28,18 @@ namespace YorkDeveloperEvents
 
             CurrentRegistration = await api.GetEventRegistrationDetails(GroupSlug, EventSlug);
 
-            RegisterForEvent = new RegisterForEvent
-            {
-                DietaryRequirements = string.Empty,
-                MessageToOrganiser = string.Empty,
-                NumberOfGuests = 0,
-            };
-
             CurrentlyRegistered = CurrentRegistration.Attending;
 
         }
 
         public async Task<ActionResult> OnPost([FromServices] API api)
         {
-            await api.RegisterForEvent(GroupSlug, EventSlug, RegisterForEvent);
+            var registerForEvent = new RegisterForEvent
+            {
+                Answers = CurrentRegistration.Answers,
+            };
+
+            await api.RegisterForEvent(GroupSlug, EventSlug, registerForEvent);
 
             return LocalRedirect("/MyEvents");
         }

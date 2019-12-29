@@ -1,24 +1,13 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace YorkDeveloperEvents.ViewModels
 {
     public class RegisterForEvent
     {
         /// <summary>
-        ///     The number of unregistered guests joining the user
+        ///     The user's answers
         /// </summary>
-        [Range(0, int.MaxValue)]
-        public int NumberOfGuests { get; set; }
-
-        /// <summary>
-        ///     Any Dietary Requirements.
-        /// </summary>
-        public string DietaryRequirements { get; set; }
-
-        /// <summary>
-        ///     Free format message to the event host.
-        /// </summary>
-        public string MessageToOrganiser { get; set; }
+        /// <returns></returns>
+        public Answer[] Answers { get; set; } = Array.Empty<Answer>();
     }
 }
