@@ -51,7 +51,6 @@ namespace VenimusAPIs.ServiceBusMessages
 
             if (user.IsRegistered && (!user.IsApproved) && (!user.IsRejected))
             {
-                // TODO: Optional update existing message
                 var message = _slackMessages.BuildApprovalRequestMessage(user);
                 await _slack.SendAdvancedMessage(message, _slackSettings.ApproversWebhookUrl).ConfigureAwait(false);
             }

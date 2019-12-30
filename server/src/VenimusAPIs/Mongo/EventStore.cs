@@ -106,6 +106,7 @@ namespace VenimusAPIs.Mongo
                 member.EmailAddress = user.EmailAddress;
                 member.Fullname = user.Fullname;
                 member.Pronoun = user.Pronoun;
+                member.IsUserApproved = user.IsApproved;
                 await events.ReplaceOneAsync(u => u.Id == evt.Id, evt).ConfigureAwait(false);
             }
         }

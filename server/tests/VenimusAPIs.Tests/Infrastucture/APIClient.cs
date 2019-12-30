@@ -40,6 +40,11 @@ namespace VenimusAPIs.Tests.Infrastucture
             return await _client.PostAsync(requestUri, null);
         }
 
+        public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent httpContent)
+        {
+            return await _client.PostAsync(requestUri, httpContent);
+        }
+
         public async Task<HttpResponseMessage> PatchAsync(string requestUri)
         {
             return await _client.PatchAsync(requestUri, null);

@@ -88,6 +88,7 @@ namespace VenimusAPIs.UserControllers
                     EmailAddress = existingUser.EmailAddress,
                     Fullname = existingUser.Fullname,
                     Pronoun = existingUser.Pronoun,
+                    IsUserApproved = existingUser.IsApproved,
                 };
 
                 theEvent.Members.Add(member);

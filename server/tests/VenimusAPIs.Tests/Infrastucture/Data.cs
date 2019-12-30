@@ -234,6 +234,7 @@ namespace VenimusAPIs.Tests.Infrastucture
                 EmailAddress = user.EmailAddress,
                 Fullname = user.Fullname,
                 Pronoun = user.Pronoun,
+                IsUserApproved = user.IsApproved,
             };
 
             theEvent.Members.Add(newAttendee);

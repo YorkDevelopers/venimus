@@ -459,6 +459,11 @@
                 Answers to any custom questions.  Does not include number of guests or dietary requirements
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.GroupEventAttendee.IsUserApproved">
+            <summary>
+                Has their membership to YorkDevelopers been approved by an administrator?
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.Models.GroupMember.UserId">
             <summary>
                 Unique ID of the user

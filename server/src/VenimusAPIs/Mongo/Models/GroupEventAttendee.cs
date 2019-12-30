@@ -68,5 +68,10 @@ namespace VenimusAPIs.Models
         ///     Answers to any custom questions.  Does not include number of guests or dietary requirements
         /// </summary>
         public List<Answer> Answers { get; set; } = new List<Answer>();
+
+        /// <summary>
+        ///     Has their membership to YorkDevelopers been approved by an administrator?
+        /// </summary>
+        public bool IsUserApproved { get; set; }
     }
 }

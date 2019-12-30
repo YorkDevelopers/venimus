@@ -84,6 +84,7 @@ namespace VenimusAPIs.Tests.RegisterForEvent
             Assert.Equal(User.EmailAddress, member.EmailAddress);
             Assert.Equal(User.Fullname, member.Fullname);
             Assert.Equal(User.Pronoun, member.Pronoun);
+            Assert.Equal(User.IsApproved, member.IsUserApproved);
 
             Assert.True(member.SignedUp);
 
