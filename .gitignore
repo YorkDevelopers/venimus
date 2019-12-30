@@ -5,7 +5,7 @@
 
 # Avoid checking in passwords etc!
 appsettings.Development.json
-
+coverage.cobertura.xml
 
 # User-specific files
 *.suo

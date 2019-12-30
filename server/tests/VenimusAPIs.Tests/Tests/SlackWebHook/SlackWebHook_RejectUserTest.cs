@@ -13,14 +13,14 @@ using Xunit;
 namespace VenimusAPIs.Tests.Tests.SlackWebHook
 {
     [Story(AsA = "Administrator", IWant = "To be able to approve user requests", SoThat = "They can join our community")]
-    public class SlackWebHook_ApproveUserTest : BaseTest
+    public class SlackWebHook_RejectUserTest : BaseTest
     {
         private User _userToAdd;
         private Interaction _interaction;
         private Group _existingGroup;
         private GroupEvent _existingEvent;
 
-        public SlackWebHook_ApproveUserTest(Fixture fixture) : base(fixture)
+        public SlackWebHook_RejectUserTest(Fixture fixture) : base(fixture)
         {
         }
 
@@ -33,7 +33,7 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
 
         private async Task GivenAnUnApprovedUserExists()
         {
-            _userToAdd = Data.Create<Models.User>(u => u.IsApproved = false);
+            _userToAdd = Data.Create<Models.User>(u => u.IsRejected = false);
             var collection = UsersCollection();
             await collection.InsertOneAsync(_userToAdd);
         }
@@ -68,7 +68,7 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
                 {
                     new Action
                     {
-                         ActionID = SlackActionTypes.Approve,
+                         ActionID = SlackActionTypes.Reject,
                          Value = _userToAdd.Id.ToString(),
                     },
                 },
@@ -89,13 +89,13 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
             Response.EnsureSuccessStatusCode();
         }
 
-        private async Task ThenTheUserIsApproved()
+        private async Task ThenTheUserIsRejected()
         {
             var users = UsersCollection();
             var actualUser = await users.Find(u => u.Id == _userToAdd.Id).SingleAsync();
 
-            Assert.True(actualUser.IsApproved);
-            Assert.False(actualUser.IsRejected);
+            Assert.False(actualUser.IsApproved);
+            Assert.True(actualUser.IsRejected);
             Assert.Equal("username_in_slack", actualUser.ApprovedorRejectedBy);
 
             Assert.True(actualUser.ApprovedorRejectedOnUtc < System.DateTime.UtcNow);
@@ -113,10 +113,10 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
             Assert.Contains("username_in_slack", json);
             Assert.Contains(_userToAdd.EmailAddress, json);
             Assert.Contains(_userToAdd.Bio, json);
-            Assert.Contains("approved", json);
+            Assert.Contains("rejected", json);
         }
 
-        private async Task ThenTheUsersGroupMembershipIsUpdated()
+        private async Task ThenTheUsersGroupMembershipIsNotUpdated()
         {
             await WaitForServiceBus();
 
@@ -125,10 +125,10 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
 
             Assert.Single(actualGroup.Members);
             var actualMember = actualGroup.Members[0];
-            Assert.True(actualMember.IsUserApproved);
+            Assert.False(actualMember.IsUserApproved);
         }
 
-        private async Task ThenTheUsersEventRegistrationIsUpdated()
+        private async Task ThenTheUsersEventRegistrationIsNotUpdated()
         {
             await WaitForServiceBus();
 
@@ -137,7 +137,7 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
 
             Assert.Single(actualEvent.Members);
             var actualMember = actualEvent.Members[0];
-            Assert.True(actualMember.IsUserApproved);
+            Assert.False(actualMember.IsUserApproved);
         }
     }
 }
