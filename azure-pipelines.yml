@@ -29,13 +29,30 @@ steps:
 - script: docker run -d -p 27017:27017 mongo
   displayName: 'Setup MongoDB'
 
-- script: dotnet test ./server/tests/VenimusAPIs.Tests/VenimusAPIs.Tests.csproj --logger:trx
+- script: dotnet test ./server/tests/VenimusAPIs.Tests/VenimusAPIs.Tests.csproj --logger:trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
   displayName: 'Running tests'
   env: 
     MongoDB__connectionString: "mongodb://localhost"
     MongoDB__databaseName: "TestDatabase"
     Auth0__Domain: "venimus-mockauth.azurewebsites.net"
     Auth0__Audience: "https://Venimus.YorkDevelopers.org"
+
+# Generate the report using ReportGenerator (https://github.com/danielpalme/ReportGenerator)
+# First install the tool on the machine, then run it
+- script: |
+    dotnet tool install -g dotnet-reportgenerator-globaltool
+    reportgenerator -reports:$(Build.SourcesDirectory)/tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura
+  displayName: Create Code coverage report
+
+# Publish the code coverage result (summary and web site)
+# The summary allows to view the coverage percentage in the summary tab
+# The web site allows to view which lines are covered directly in Azure Pipeline
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
 
 - script: dotnet publish "./server/src/VenimusAPIs/VenimusAPIs.csproj" --configuration $(buildConfiguration) --output '$(Build.ArtifactStagingDirectory)/api'
   displayName: 'dotnet publish $(buildConfiguration)'
