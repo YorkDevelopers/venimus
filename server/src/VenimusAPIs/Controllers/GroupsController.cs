@@ -114,7 +114,7 @@ namespace VenimusAPIs.Controllers
         [HttpPut]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute]string groupSlug, [FromBody] UpdateGroup newDetails)
+        public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute, Slug]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 

@@ -28,6 +28,16 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
 
         private Task GivenIAmUser() => IAmANormalUser();
 
+        private async Task GivenIHaveRegisteredButNotBeenApproved()
+        {
+            var users = UsersCollection();
+            var actualUser = await users.Find(u => u.Id == User.Id).SingleAsync();
+            actualUser.IsRegistered = true;
+            actualUser.IsApproved = false;
+            actualUser.IsRejected = false;
+            await users.ReplaceOneAsync(u => u.Id == actualUser.Id, actualUser).ConfigureAwait(false);
+        }
+
         private async Task GivenAGroupAlreadyExistsAndIAmAMember()
         {
             _group = Data.Create<Models.Group>();
@@ -101,6 +111,21 @@ namespace VenimusAPIs.Tests.UpdateMyDetails
             Assert.Equal(_amendedUser.DisplayName, membershipDetails.DisplayName);
             Assert.Equal(_amendedUser.Fullname, membershipDetails.Fullname);
             Assert.Equal(_amendedUser.Pronoun, membershipDetails.Pronoun);
+        }
+
+        private async Task ThenAMessageIsSentToSlack()
+        {
+            await WaitForServiceBus();
+
+            var lastRequest = Fixture.MockSlack.LastRequest;
+            var json = await lastRequest.Content.ReadAsStringAsync();
+
+            Assert.DoesNotContain(@"""replace_original"":true", json);
+            Assert.Contains(_amendedUser.Fullname, json);
+            Assert.Contains(User.EmailAddress, json);
+            Assert.Contains($"http://localhost/api/users/{User.Id.ToString()}/profilepicture", json);
+            Assert.Contains(User.ApprovalID.ToString(), json);
+            Assert.Contains(_amendedUser.Bio, json);
         }
     }
 }

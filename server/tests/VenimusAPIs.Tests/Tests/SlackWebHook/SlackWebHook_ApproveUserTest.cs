@@ -69,7 +69,7 @@ namespace VenimusAPIs.Tests.Tests.SlackWebHook
                     new Action
                     {
                          ActionID = SlackActionTypes.Approve,
-                         Value = _userToAdd.Id.ToString(),
+                         Value = _userToAdd.ApprovalID.ToString(),
                     },
                 },
                 User = new InteractionUser

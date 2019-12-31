@@ -588,6 +588,11 @@
                 When were they approved/rejected?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.Models.User.ApprovalID">
+            <summary>
+                Unique ID sent to the approve/reject message in slack to the identify the user.
+            </summary>
+        </member>
         <member name="T:VenimusAPIs.Resources.ResourceMessages">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

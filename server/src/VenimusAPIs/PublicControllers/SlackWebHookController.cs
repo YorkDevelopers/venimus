@@ -53,8 +53,8 @@ namespace VenimusAPIs.PublicControllers
 
         private async Task ApproveUser(Interaction interaction, Action action)
         {
-            var userID = new ObjectId(action.Value);
-            var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
+            var userApprovalID = new System.Guid(action.Value);
+            var user = await _userStore.GetUserByApprovalId(userApprovalID).ConfigureAwait(false);
             if (user == null)
             {
                 throw new System.Exception(Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_EXIST);
@@ -77,8 +77,8 @@ namespace VenimusAPIs.PublicControllers
 
         private async Task RejectUser(Interaction interaction, Action action)
         {
-            var userID = new ObjectId(action.Value);
-            var user = await _userStore.GetUserById(userID).ConfigureAwait(false);
+            var userApprovalID = new System.Guid(action.Value);
+            var user = await _userStore.GetUserByApprovalId(userApprovalID).ConfigureAwait(false);
             if (user == null)
             {
                 throw new System.Exception(Resources.ResourceMessages.INTERNALERROR_USER_DOES_NOT_EXIST);

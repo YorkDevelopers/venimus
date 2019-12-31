@@ -62,7 +62,7 @@ namespace VenimusAPIs.Services
                                     Emoji = true,
                                 },
                                 Style = "primary",
-                                Value = user.Id.ToString(),
+                                Value = user.ApprovalID.ToString(),
                             },
                             new Element
                             {
@@ -75,7 +75,7 @@ namespace VenimusAPIs.Services
                                     Emoji = true,
                                 },
                                 Style = "danger",
-                                Value = user.Id.ToString(),
+                                Value = user.ApprovalID.ToString(),
                             },
                         },
                     },

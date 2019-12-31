@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
 
@@ -42,6 +43,15 @@ namespace VenimusAPIs.Mongo
             var users = _mongoConnection.UsersCollection();
 
             var existingUser = await users.Find(u => u.Id == id).SingleOrDefaultAsync().ConfigureAwait(false);
+
+            return existingUser;
+        }
+
+        internal async Task<Models.User?> GetUserByApprovalId(Guid guid)
+        {
+            var users = _mongoConnection.UsersCollection();
+
+            var existingUser = await users.Find(u => u.ApprovalID == guid).SingleOrDefaultAsync().ConfigureAwait(false);
 
             return existingUser;
         }

@@ -72,5 +72,10 @@ namespace VenimusAPIs.Models
         ///     When were they approved/rejected?
         /// </summary>
         public DateTime? ApprovedorRejectedOnUtc { get; set; }
+
+        /// <summary>
+        ///     Unique ID sent to the approve/reject message in slack to the identify the user.
+        /// </summary>
+        public Guid ApprovalID { get; set; } = Guid.NewGuid();
     }
 }
