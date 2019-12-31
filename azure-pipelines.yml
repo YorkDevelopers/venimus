@@ -40,7 +40,7 @@ steps:
 # Generate the report using ReportGenerator (https://github.com/danielpalme/ReportGenerator)
 - script: |
     dotnet tool install -g dotnet-reportgenerator-globaltool
-    reportgenerator -reports:$(Build.SourcesDirectory)/server/tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
+    reportgenerator -reports:$(Build.SourcesDirectory)/server/tests/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
   displayName: Create Code coverage report
 
 # Publish the code coverage result (summary and web site)
