@@ -26,14 +26,6 @@ namespace VenimusAPIs.Mongo
             var events = _mongoConnection.EventsCollection();
             var theEvent = await events.Find(u => u.Slug == eventSlug && u.GroupSlug == groupSlug).SingleOrDefaultAsync().ConfigureAwait(false);
 
-            if (theEvent != null)
-            {
-                if (theEvent.Members == null)
-                {
-                    theEvent.Members = new List<Models.GroupEventAttendee>();
-                }
-            }
-
             return theEvent;
         }
 

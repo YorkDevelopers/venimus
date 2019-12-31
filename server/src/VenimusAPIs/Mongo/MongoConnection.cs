@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VenimusAPIs.Models;
 
@@ -14,14 +13,6 @@ namespace VenimusAPIs.Mongo
         public MongoConnection(IOptions<Settings.MongoDBSettings> mongoDBSettings)
         {
             _mongoDBSettings = mongoDBSettings.Value;
-        }
-
-        public async Task ResetDatabase()
-        {
-            var mongoDatabase = ConnectToDatabase();
-            await mongoDatabase.DropCollectionAsync("events").ConfigureAwait(false);
-            await mongoDatabase.DropCollectionAsync("groups").ConfigureAwait(false);
-            await mongoDatabase.DropCollectionAsync("users").ConfigureAwait(false);
         }
 
         public IMongoCollection<Group> GroupsCollection()

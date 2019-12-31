@@ -1,10 +1,8 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Mongo
@@ -37,14 +35,6 @@ namespace VenimusAPIs.Mongo
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Slug == groupSlug).SingleOrDefaultAsync().ConfigureAwait(false);
 
-            if (group != null)
-            {
-                if (group.Members == null)
-                {
-                    group.Members = new List<GroupMember>();
-                }
-            }
-
             return group;
         }
 
@@ -52,14 +42,6 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Name == groupName).SingleOrDefaultAsync().ConfigureAwait(false);
-
-            if (group != null)
-            {
-                if (group.Members == null)
-                {
-                    group.Members = new List<GroupMember>();
-                }
-            }
 
             return group;
         }
@@ -75,14 +57,6 @@ namespace VenimusAPIs.Mongo
         {
             var groups = _mongoConnection.GroupsCollection();
             var group = await groups.Find(u => u.Id == groupId).SingleOrDefaultAsync().ConfigureAwait(false);
-
-            if (group != null)
-            {
-                if (group.Members == null)
-                {
-                    group.Members = new List<GroupMember>();
-                }
-            }
 
             return group;
         }

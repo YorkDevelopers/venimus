@@ -14,18 +14,6 @@ namespace VenimusAPIs.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task SendBasicMessage(string message, System.Uri sendTo)
-        {
-            var data = new
-            {
-                text = message,
-            };
-
-            var client = _httpClientFactory.CreateClient("Slack");
-            var response = await client.PostAsJsonAsync(sendTo, data).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-        }
-
         public async Task SendAdvancedMessage(AdvancedMessage message, System.Uri sendTo)
         {
             var client = _httpClientFactory.CreateClient("Slack");
