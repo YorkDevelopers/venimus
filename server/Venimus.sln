@@ -12,7 +12,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5780AFA1-1FF5-4D5C-86E0-22DED3966985}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\TODO.md = ..\TODO.md
+		Venimus.ruleset = Venimus.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateInitialData", "tools\CreateInitialData\CreateInitialData.csproj", "{C6FE8EBB-9101-4C9F-BB6D-85F9D8EEE6F2}"

@@ -1219,6 +1219,16 @@
                 How many guests is this person bringing?
             </summary>
         </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.DietaryRequirements">
+            <summary>
+                The user's dietary requirements.   Only viewable by group administrators
+            </summary>
+        </member>
+        <member name="P:VenimusAPIs.ViewModels.ListEventAttendees.Answers">
+            <summary>
+                Any information we need to gather from the user.   Only viewable by group administrators
+            </summary>
+        </member>
         <member name="P:VenimusAPIs.ViewModels.ListEvents.EventSlug">
             <summary>
                 The unique external ID for the event.

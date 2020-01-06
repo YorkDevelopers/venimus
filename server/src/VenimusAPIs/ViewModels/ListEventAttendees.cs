@@ -60,5 +60,15 @@ namespace VenimusAPIs.ViewModels
         ///     How many guests is this person bringing?
         /// </summary>
         public int NumberOfGuests { get; set; }
+
+        /// <summary>
+        ///     The user's dietary requirements.   Only viewable by group administrators
+        /// </summary>
+        public string? DietaryRequirements { get; set; }
+
+        /// <summary>
+        ///     Any information we need to gather from the user.   Only viewable by group administrators
+        /// </summary>
+        public Answer[] Answers { get; set; } = Array.Empty<Answer>();
     }
 }

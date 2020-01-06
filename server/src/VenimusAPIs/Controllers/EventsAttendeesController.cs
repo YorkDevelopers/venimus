@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
 using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
@@ -15,12 +18,14 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
+        private readonly GroupStore _groupStore;
         private readonly URLBuilder _urlBuilder;
 
-        public EventsAttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore, URLBuilder urlBuilder)
+        public EventsAttendeesController(Mongo.EventStore eventStore, Mongo.UserStore userStore, Mongo.GroupStore groupStore, URLBuilder urlBuilder)
         {
             _eventStore = eventStore;
             _userStore = userStore;
+            _groupStore = groupStore;
             _urlBuilder = urlBuilder;
         }
 
@@ -54,6 +59,22 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
+            var uniqueID = UniqueIDForCurrentUser;
+            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var canViewDetails = false;
+            var member = group.Members.SingleOrDefault(member => member.UserId == existingUser.Id);
+            if (member != null)
+            {
+                canViewDetails = member.IsAdministrator;
+            }
+
             return theEvent.Members.Select(attendee => new ListEventAttendees
             {
                 Bio = attendee.Bio,
@@ -67,7 +88,46 @@ namespace VenimusAPIs.Controllers
                 IsAttending = attendee.SignedUp,
                 NumberOfGuests = attendee.NumberOfGuests,
                 ProfilePicture = _urlBuilder.BuildUserDetailsProfilePictureURL(attendee.UserId),
+                DietaryRequirements = SensitiveField(canViewDetails, attendee.DietaryRequirements),
+                Answers = SensitiveArray(canViewDetails, () => attendee.Answers.Select(q => MapQuestion(q, theEvent.Questions))),
             }).ToArray();
+        }
+
+        private static T[] SensitiveArray<T>(bool canViewDetails, Func<IEnumerable<T>> fn)
+        {
+            if (canViewDetails)
+            {
+                return fn().ToArray();
+            }
+            else
+            {
+                return Array.Empty<T>();
+            }
+        }
+
+        private static string? SensitiveField(bool canViewDetails, string fieldValue)
+        {
+            if (canViewDetails)
+            {
+                return fieldValue;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static ViewModels.Answer MapQuestion(Models.Answer answer, System.Collections.Generic.List<Models.Question> questions)
+        {
+            var question = questions.SingleOrDefault(q => q.Code == answer.Code);
+
+            return new Answer
+            {
+                Caption = answer.Caption,
+                Code = answer.Code,
+                QuestionType = question?.QuestionType.ToString(),
+                UsersAnswer = answer.UsersAnswer,
+            };
         }
     }
 }

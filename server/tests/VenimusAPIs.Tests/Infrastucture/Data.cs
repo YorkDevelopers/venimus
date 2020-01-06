@@ -209,6 +209,11 @@ namespace VenimusAPIs.Tests.Infrastucture
                 EmailAddress = user.EmailAddress,
                 Fullname = user.Fullname,
                 Pronoun = user.Pronoun,
+                Answers = new List<Answer>
+                {
+                    new Answer { Code = "Q1", Caption = "Caption1", UsersAnswer = "Answer1" },
+                    new Answer { Code = "Q2", Caption = "Caption2", UsersAnswer = "Answer2" },
+                },
             };
 
             theEvent.Members.Add(attendee);
@@ -235,6 +240,11 @@ namespace VenimusAPIs.Tests.Infrastucture
                 Fullname = user.Fullname,
                 Pronoun = user.Pronoun,
                 IsUserApproved = user.IsApproved,
+                Answers = new List<Answer>
+                {
+                    new Answer { Code = "Q1", Caption = "Caption1", UsersAnswer = "Answer1" },
+                    new Answer { Code = "Q2", Caption = "Caption2", UsersAnswer = "Answer2" },
+                },
             };
 
             theEvent.Members.Add(newAttendee);

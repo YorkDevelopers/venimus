@@ -1,8 +1,7 @@
-using System;
+using MongoDB.Driver;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
 using VenimusAPIs.Tests.Infrastucture;
@@ -12,7 +11,7 @@ using Xunit;
 namespace VenimusAPIs.Tests.ViewEventAttendees
 {
     [Story(AsA = "User", IWant = "to be able to view the other signed up attendees of an event", SoThat = "I can belong to the community")]
-    public class ViewEventAttendees_SysAdmin_Success : BaseTest
+    public class ViewEventAttendees_ApprovedMember_Success : BaseTest
     {
         private GroupEvent _event;
         private Group _existingGroup;
@@ -20,8 +19,11 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
         private User _otherUserInGroup2;
         private User _otherUserInGroup3;
         private User _otherUserNotInGroup1;
+        private GroupEventAttendee _userRegistration;
+        private GroupEventAttendee _otherUser1Registration;
+        private GroupEventAttendee _otherUser2Registration;
 
-        public ViewEventAttendees_SysAdmin_Success(Fixture fixture) : base(fixture)
+        public ViewEventAttendees_ApprovedMember_Success(Fixture fixture) : base(fixture)
         {
         }
 
@@ -31,7 +33,7 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             this.BDDfy();
         }
 
-        private Task GivenIAmASystemAdministrator() => IAmASystemAdministrator();
+        private Task GivenIAmAUser() => IAmANormalUser(isApproved: true);
 
         private async Task GivenThereAreOtherUsers()
         {
@@ -45,10 +47,11 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             await collection.InsertManyAsync(new[] { _otherUserInGroup1, _otherUserInGroup2, _otherUserInGroup3, _otherUserNotInGroup1 });
         }
 
-        private async Task GivenIDontButSomeOthersBelongToTheGroup()
+        private async Task GivenIAndSomeOthersBelongToTheGroup()
         {
             _existingGroup = Data.Create<Models.Group>(g =>
             {
+                Data.AddGroupMember(g, User);
                 Data.AddGroupMember(g, _otherUserInGroup1);
                 Data.AddGroupMember(g, _otherUserInGroup2);
                 Data.AddGroupAdministrator(g, _otherUserInGroup3);
@@ -59,12 +62,13 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             await groups.InsertOneAsync(_existingGroup);
         }
 
-        private async Task GivenSomeOthersAreGoingToAnEvent()
+        private async Task GivenIAndSomeOthersAreGoingToAnEvent()
         {
             _event = Data.CreateEvent(_existingGroup, e =>
             {
-                Data.AddEventSpeaker(e, _otherUserInGroup1);
-                Data.AddEventAttendee(e, _otherUserInGroup2);
+                _userRegistration = Data.AddEventHost(e, User);
+                _otherUser1Registration = Data.AddEventSpeaker(e, _otherUserInGroup1);
+                _otherUser2Registration = Data.AddEventAttendee(e, _otherUserInGroup2);
             });
 
             var events = EventsCollection();
@@ -88,13 +92,14 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var actualAttendees = JsonSerializer.Deserialize<ViewModels.ListEventAttendees[]>(json, options);
 
-            Assert.Equal(2, actualAttendees.Length);
+            Assert.Equal(3, actualAttendees.Length);
 
-            AssertMember(_otherUserInGroup1, actualAttendees, false, true);
-            AssertMember(_otherUserInGroup2, actualAttendees, false, false);
+            AssertMember(User, actualAttendees, true, false, _userRegistration);
+            AssertMember(_otherUserInGroup1, actualAttendees, false, true, _otherUser1Registration);
+            AssertMember(_otherUserInGroup2, actualAttendees, false, false, _otherUser2Registration);
         }
 
-        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker)
+        private void AssertMember(User user, ListEventAttendees[] actualAttendees, bool isHost, bool isSpeaker, GroupEventAttendee attendee)
         {
             var actualAttendee = actualAttendees.Single(m => m.Slug == user.Id.ToString());
 
@@ -103,10 +108,14 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
             Assert.Equal(user.Fullname, actualAttendee.Fullname);
             Assert.Equal(user.Bio, actualAttendee.Bio);
             Assert.Equal(user.Pronoun, actualAttendee.Pronoun);
+            Assert.Equal(attendee.SignedUp, actualAttendee.IsAttending);
+            Assert.Equal(attendee.NumberOfGuests, actualAttendee.NumberOfGuests);
             Assert.Equal(isHost, actualAttendee.IsHost);
             Assert.Equal(isSpeaker, actualAttendee.IsSpeaker);
+            Assert.Equal($"http://localhost/api/users/{user.Id.ToString()}/profilepicture", actualAttendee.ProfilePicture.ToString());
 
-            // Assert.Equal(user.ProfilePicture, Convert.FromBase64String(actualAttendee.ProfilePictureInBase64));
+            Assert.Null(actualAttendee.DietaryRequirements);
+            Assert.Empty(actualAttendee.Answers);
         }
     }
 }
