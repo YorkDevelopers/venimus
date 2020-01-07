@@ -1,16 +1,15 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
 using VenimusAPIs.Services.SlackModels;
 
-namespace VenimusAPIs.PublicControllers
+namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public partial class SlackWebHookController : ControllerBase
+    public partial class SlackWebHookController : BaseController
     {
         private readonly UserStore _userStore;
         private readonly Slack _slack;

@@ -7,11 +7,11 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
-namespace VenimusAPIs.UserControllers
+namespace VenimusAPIs.Controllers
 {
     [Route("api/User/Groups")]
     [ApiController]
-    public class UserGroupsController : BaseUserController
+    public class UserGroupsController : BaseController
     {
         private readonly Mongo.GroupStore _groupStore;
         private readonly Mongo.UserStore _userStore;

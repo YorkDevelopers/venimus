@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
@@ -13,18 +12,16 @@ using VenimusAPIs.ViewModels;
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class GroupsMembersController : Controller
+    public class GroupsMembersController : BaseController
     {
         private readonly UserStore _userStore;
         private readonly GroupStore _groupStore;
-        private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
         private readonly URLBuilder _urlBuilder;
 
-        public GroupsMembersController(UserStore userStore, GroupStore groupStore, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
+        public GroupsMembersController(UserStore userStore, GroupStore groupStore, URLBuilder urlBuilder)
         {
             _userStore = userStore;
             _groupStore = groupStore;
-            _stringLocalizer = stringLocalizer;
             _urlBuilder = urlBuilder;
         }
 

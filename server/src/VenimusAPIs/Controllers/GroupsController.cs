@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
-using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -19,7 +18,7 @@ namespace VenimusAPIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroupsController : BaseUserController
+    public class GroupsController : BaseController
     {
         private readonly UserStore _userStore;
         private readonly EventStore _eventStore;

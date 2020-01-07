@@ -8,14 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
-using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class EventsController : BaseUserController
+    public class EventsController : BaseController
     {
         private readonly UserStore _userStore;
         private readonly EventStore _eventStore;

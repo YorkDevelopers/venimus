@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
-namespace VenimusAPIs.UserControllers
+namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class UserGroupsEventsController : BaseUserController
+    public class UserGroupsEventsController : BaseController
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;

@@ -10,7 +10,7 @@ namespace VenimusAPIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly Mongo.UserStore _userStore;
         private readonly URLBuilder _urlBuilder;

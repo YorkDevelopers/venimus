@@ -2,10 +2,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
-namespace VenimusAPIs.UserControllers
+namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public abstract class BaseUserController : ControllerBase
+    public abstract class BaseController : ControllerBase
     {
         protected string UniqueIDForCurrentUser => User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 

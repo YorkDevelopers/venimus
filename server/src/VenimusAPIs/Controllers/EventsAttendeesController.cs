@@ -7,14 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
-using VenimusAPIs.UserControllers;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class EventsAttendeesController : BaseUserController
+    public class EventsAttendeesController : BaseController
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;

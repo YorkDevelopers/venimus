@@ -9,10 +9,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VenimusAPIs.Services;
 
-namespace VenimusAPIs.UserControllers
+namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class UserConnectedController : BaseUserController
+    public class UserConnectedController : BaseController
     {
         private readonly Mongo.UserStore _userStore;
 

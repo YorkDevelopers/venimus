@@ -236,6 +236,136 @@
              <response code="403">No Permission.</response>
              <response code="404">Group does not exist.</response>
         </member>
+        <member name="M:VenimusAPIs.Controllers.UserConnectedController.Post">
+             <summary>
+                 Called once the user has connected to the frontend.  This ensures that they exist in the database.
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/users/connected
+                 {
+                 }
+            
+             </remarks>
+             <returns>The route to the user</returns>
+             <response code="201">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserDetailsController.Get">
+             <summary>
+                 Allows the current user to retrieve their personal profile
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user
+            
+             </remarks>
+             <returns>ViewMyDetails view model</returns>
+             <response code="200">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserDetailsController.Put(MassTransit.IBus,VenimusAPIs.ViewModels.UpdateMyDetails)">
+             <summary>
+                 Allows the current user to update their personal profile
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 PUT /api/user
+                 {
+                     "pronoun" : "Him"
+                     "Fullname" : "David Betteridge",
+                     "DisplayName" : "David B",
+                     "Bio" : "I am me",
+                     "profilePictureAsBase64" : "123123123",
+                 }
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
+             <summary>
+                 Allows the current user to join a group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/user/groups
+                 {
+                     "groupSlug" : "YorkCodeDojo",
+                 }
+            
+             </remarks>
+             <returns>The route to the created group</returns>
+             <response code="204">Success</response>
+             <response code="401">User is not authorized.</response>
+             <response code="404">Group does not exist</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserGroupsController.DELETE(System.String)">
+             <summary>
+                 Allows the current user to leave a group
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/user/groups/YorkCodeDojo
+            
+             </remarks>
+             <returns>Nothing</returns>
+             <response code="204">Success</response>
+             <response code="401">User is not authorized.</response>
+             <response code="404">Group does not exist.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserGroupsEventsController.Put(System.String,System.String,VenimusAPIs.ViewModels.RegisterForEvent)">
+             <summary>
+                 Allows the current user to update their registration for an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 PUT /api/user/groups/YorkCodeDojo/Events/Nov2019
+                 {
+                     "numberOfGuest" : 1,
+                     "dietaryRequirements" : "Milk free",
+                     "messageToOrganiser" : "I might be 10 minutes late"
+                 }
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+             <response code="401">User is not authorized.</response>
+             <response code="404">Group does not exist</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserGroupsEventsController.Delete(System.String,System.String)">
+             <summary>
+                 Allows the current user to decline attending an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 DELETE /api/user/groups/YorkCodeDojo/Events/Nov2019
+            
+             </remarks>
+             <returns>NoContent</returns>
+             <response code="204">Success</response>
+             <response code="400">Event has already happened</response>
+             <response code="404">Group or Event does not exist.</response>
+        </member>
+        <member name="M:VenimusAPIs.Controllers.UserGroupsEventsController.Get(System.String,System.String)">
+             <summary>
+                 Allows the current user to retrieve their registration details for an event
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 GET /api/user/groups/YorkCodeDojo/Events/Nov2019
+            
+             </remarks>
+             <returns>The GetEvent view model</returns>
+             <response code="200">Success</response>
+             <response code="404">Group or Event does not exist.</response>
+        </member>
         <member name="M:VenimusAPIs.Controllers.UsersController.GetUserDetails(System.String)">
              <summary>
                  Allows you to get the details for a user
@@ -738,136 +868,6 @@
             <summary>
                 The webhook to send the approve membership messaeg to.
             </summary>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserConnectedController.Post">
-             <summary>
-                 Called once the user has connected to the frontend.  This ensures that they exist in the database.
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 POST /api/users/connected
-                 {
-                 }
-            
-             </remarks>
-             <returns>The route to the user</returns>
-             <response code="201">Success</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Get">
-             <summary>
-                 Allows the current user to retrieve their personal profile
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /api/user
-            
-             </remarks>
-             <returns>ViewMyDetails view model</returns>
-             <response code="200">Success</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserDetailsController.Put(MassTransit.IBus,VenimusAPIs.ViewModels.UpdateMyDetails)">
-             <summary>
-                 Allows the current user to update their personal profile
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 PUT /api/user
-                 {
-                     "pronoun" : "Him"
-                     "Fullname" : "David Betteridge",
-                     "DisplayName" : "David B",
-                     "Bio" : "I am me",
-                     "profilePictureAsBase64" : "123123123",
-                 }
-            
-             </remarks>
-             <returns>NoContent</returns>
-             <response code="204">Success</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.Post(VenimusAPIs.ViewModels.JoinGroup)">
-             <summary>
-                 Allows the current user to join a group
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 POST /api/user/groups
-                 {
-                     "groupSlug" : "YorkCodeDojo",
-                 }
-            
-             </remarks>
-             <returns>The route to the created group</returns>
-             <response code="204">Success</response>
-             <response code="401">User is not authorized.</response>
-             <response code="404">Group does not exist</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsController.DELETE(System.String)">
-             <summary>
-                 Allows the current user to leave a group
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 DELETE /api/user/groups/YorkCodeDojo
-            
-             </remarks>
-             <returns>Nothing</returns>
-             <response code="204">Success</response>
-             <response code="401">User is not authorized.</response>
-             <response code="404">Group does not exist.</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Put(System.String,System.String,VenimusAPIs.ViewModels.RegisterForEvent)">
-             <summary>
-                 Allows the current user to update their registration for an event
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 PUT /api/user/groups/YorkCodeDojo/Events/Nov2019
-                 {
-                     "numberOfGuest" : 1,
-                     "dietaryRequirements" : "Milk free",
-                     "messageToOrganiser" : "I might be 10 minutes late"
-                 }
-            
-             </remarks>
-             <returns>NoContent</returns>
-             <response code="204">Success</response>
-             <response code="401">User is not authorized.</response>
-             <response code="404">Group does not exist</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Delete(System.String,System.String)">
-             <summary>
-                 Allows the current user to decline attending an event
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 DELETE /api/user/groups/YorkCodeDojo/Events/Nov2019
-            
-             </remarks>
-             <returns>NoContent</returns>
-             <response code="204">Success</response>
-             <response code="400">Event has already happened</response>
-             <response code="404">Group or Event does not exist.</response>
-        </member>
-        <member name="M:VenimusAPIs.UserControllers.UserGroupsEventsController.Get(System.String,System.String)">
-             <summary>
-                 Allows the current user to retrieve their registration details for an event
-             </summary>
-             <remarks>
-             Sample request:
-            
-                 GET /api/user/groups/YorkCodeDojo/Events/Nov2019
-            
-             </remarks>
-             <returns>The GetEvent view model</returns>
-             <response code="200">Success</response>
-             <response code="404">Group or Event does not exist.</response>
         </member>
         <member name="P:VenimusAPIs.Validation.CallerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead">
             <summary>

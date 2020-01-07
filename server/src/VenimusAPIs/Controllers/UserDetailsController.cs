@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using VenimusAPIs.ViewModels;
 
-namespace VenimusAPIs.UserControllers
+namespace VenimusAPIs.Controllers
 {
     [ApiController]
-    public class UserDetailsController : BaseUserController
+    public class UserDetailsController : BaseController
     {
         private readonly Mongo.UserStore _userStore;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
