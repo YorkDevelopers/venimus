@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -20,16 +19,14 @@ namespace VenimusAPIs.Controllers
         private readonly EventStore _eventStore;
         private readonly GroupStore _groupStore;
 
-        private readonly IMapper _mapper;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
         private readonly GetFutureEventsQuery _getFutureEventsQuery;
 
-        public EventsController(Mongo.UserStore userStore, Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, GetFutureEventsQuery getFutureEventsQuery)
+        public EventsController(Mongo.UserStore userStore, Mongo.EventStore eventStore, Mongo.GroupStore groupStore, IStringLocalizer<ResourceMessages> stringLocalizer, GetFutureEventsQuery getFutureEventsQuery)
         {
             _userStore = userStore;
             _eventStore = eventStore;
             _groupStore = groupStore;
-            _mapper = mapper;
             _stringLocalizer = stringLocalizer;
             _getFutureEventsQuery = getFutureEventsQuery;
         }

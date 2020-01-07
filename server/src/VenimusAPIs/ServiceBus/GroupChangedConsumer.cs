@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 
-namespace VenimusAPIs.ServiceBusMessages
+namespace VenimusAPIs.ServiceBus
 {
     public class GroupChangedConsumer : IConsumer<GroupChangedMessage>
     {

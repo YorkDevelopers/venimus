@@ -854,12 +854,12 @@
               Looks up a localized string similar to You are already signed up to this event..
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ServiceBusMessages.GroupChangedMessage.GroupId">
+        <member name="P:VenimusAPIs.ServiceBus.GroupChangedMessage.GroupId">
             <summary>
                 The unique internal ID of this group
             </summary>
         </member>
-        <member name="P:VenimusAPIs.ServiceBusMessages.UserChangedMessage.UserId">
+        <member name="P:VenimusAPIs.ServiceBus.UserChangedMessage.UserId">
             <summary>
                 The unique internal ID of this user
             </summary>

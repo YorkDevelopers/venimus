@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="MassTransit" Version="6.0.0" />
     <PackageReference Include="MassTransit.AspNetCore" Version="6.0.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="6.0.0" />

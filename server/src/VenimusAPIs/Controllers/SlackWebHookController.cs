@@ -70,7 +70,7 @@ namespace VenimusAPIs.Controllers
             var message = _slackMessages.BuildApprovedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
+            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
             await _bus.Publish(userChangedMessage).ConfigureAwait(false);
         }
 
@@ -95,7 +95,7 @@ namespace VenimusAPIs.Controllers
             var message = _slackMessages.BuildRejectedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
+            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
             await _bus.Publish(userChangedMessage).ConfigureAwait(false);
         }
     }

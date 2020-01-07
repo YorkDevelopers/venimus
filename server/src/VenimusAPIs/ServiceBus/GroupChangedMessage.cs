@@ -1,4 +1,4 @@
-﻿namespace VenimusAPIs.ServiceBusMessages
+﻿namespace VenimusAPIs.ServiceBus
 {
     public class GroupChangedMessage
     {

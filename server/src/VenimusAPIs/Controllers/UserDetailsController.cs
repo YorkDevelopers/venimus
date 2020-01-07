@@ -110,7 +110,7 @@ namespace VenimusAPIs.Controllers
 
             await _userStore.UpdateUser(user).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBusMessages.UserChangedMessage { UserId = user.Id.ToString() };
+            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
             await bus.Publish(userChangedMessage).ConfigureAwait(false);
 
             return NoContent();

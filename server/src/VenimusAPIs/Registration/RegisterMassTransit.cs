@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using VenimusAPIs.ServiceBusMessages;
+using VenimusAPIs.ServiceBus;
 
 namespace VenimusAPIs.Registration
 {

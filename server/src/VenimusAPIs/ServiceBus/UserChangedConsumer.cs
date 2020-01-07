@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using VenimusAPIs.Services;
 using VenimusAPIs.Settings;
 
-namespace VenimusAPIs.ServiceBusMessages
+namespace VenimusAPIs.ServiceBus
 {
     public class UserChangedConsumer : IConsumer<UserChangedMessage>
     {

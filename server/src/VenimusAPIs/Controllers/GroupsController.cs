@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,16 +23,14 @@ namespace VenimusAPIs.Controllers
         private readonly EventStore _eventStore;
         private readonly GroupStore _groupStore;
 
-        private readonly IMapper _mapper;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
         private readonly URLBuilder _urlBuilder;
 
-        public GroupsController(UserStore userStore, EventStore eventStore, GroupStore groupStore, IMapper mapper, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
+        public GroupsController(UserStore userStore, EventStore eventStore, GroupStore groupStore, IStringLocalizer<ResourceMessages> stringLocalizer, URLBuilder urlBuilder)
         {
             _userStore = userStore;
             _eventStore = eventStore;
             _groupStore = groupStore;
-            _mapper = mapper;
             _stringLocalizer = stringLocalizer;
             _urlBuilder = urlBuilder;
         }
@@ -82,7 +79,16 @@ namespace VenimusAPIs.Controllers
                 return ValidationProblem(ModelState);
             }
 
-            var model = _mapper.Map<Models.Group>(group);
+            var model = new Models.Group
+            {
+                Description = group.Description,
+                IsActive = group.IsActive,
+                Logo = Convert.FromBase64String(group.LogoInBase64),
+                Name = group.Name,
+                SlackChannelName = group.SlackChannelName,
+                Slug = group.Slug,
+                StrapLine = group.StrapLine,
+            };
 
             await _groupStore.StoreGroup(model).ConfigureAwait(false);
 
@@ -169,7 +175,7 @@ namespace VenimusAPIs.Controllers
 
             if (updateEvents)
             {
-                var groupChangedMessage = new ServiceBusMessages.GroupChangedMessage { GroupId = group.Id.ToString() };
+                var groupChangedMessage = new ServiceBus.GroupChangedMessage { GroupId = group.Id.ToString() };
                 await bus.Publish(groupChangedMessage).ConfigureAwait(false);
             }
 
