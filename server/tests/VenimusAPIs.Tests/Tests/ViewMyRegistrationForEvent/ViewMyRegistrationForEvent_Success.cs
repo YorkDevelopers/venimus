@@ -46,9 +46,9 @@ namespace VenimusAPIs.Tests.ViewMyRegistrationForEvent
                 _registrationDetails = Data.AddEventAttendee(evt, User, numberOfGuests: 10);
             });
 
-            _registrationDetails.AddAnswer("Q1", "Answer1");
-            _registrationDetails.AddAnswer("Q2", "Answer2");
-            _registrationDetails.AddAnswer("Q3", "Answer3");
+            _registrationDetails.AddAnswer("Q1", "Caption1", "Answer1");
+            _registrationDetails.AddAnswer("Q2", "Caption2", "Answer2");
+            _registrationDetails.AddAnswer("Q3", "Caption3", "Answer3");
 
             var events = EventsCollection();
 

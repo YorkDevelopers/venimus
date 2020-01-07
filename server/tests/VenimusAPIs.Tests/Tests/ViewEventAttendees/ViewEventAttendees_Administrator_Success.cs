@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using TestStack.BDDfy;
 using VenimusAPIs.Models;
+using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 using VenimusAPIs.ViewModels;
 using Xunit;
@@ -68,6 +69,12 @@ namespace VenimusAPIs.Tests.ViewEventAttendees
                 _attendee1 = Data.AddEventSpeaker(e, _otherUserInGroup1);
                 _attendee2 = Data.AddEventAttendee(e, _otherUserInGroup2);
             });
+
+            _attendee1.AddAnswer("Q1", "Caption1", "Answer1");
+            _attendee1.AddAnswer("Q2", "Caption2", "Answer2");
+                                       
+            _attendee2.AddAnswer("Q1", "Caption1", "Answer1");
+            _attendee2.AddAnswer("Q2", "Caption2", "Answer2");
 
             var events = EventsCollection();
 

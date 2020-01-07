@@ -19,12 +19,13 @@ namespace VenimusAPIs.Tests.Extensions
             amendedDetails.Answers.Add(answer);
         }
 
-        public static void AddAnswer(this Models.GroupEventAttendee groupEventAttendee, string code, string userAnswer)
+        public static void AddAnswer(this Models.GroupEventAttendee groupEventAttendee, string code, string caption, string userAnswer)
         {
             var answer = new Models.Answer()
             {
                 Code = code,
                 UsersAnswer = userAnswer,
+                Caption = caption,
             };
 
             groupEventAttendee.Answers.Add(answer);
