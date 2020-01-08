@@ -126,6 +126,7 @@ namespace VenimusAPIs
             services.AddScoped<Mongo.GroupStore>();
             services.AddScoped<Mongo.UserStore>();
 
+            services.AddSingleton<ServiceBus.EventPublisher>();
             services.AddSingleton<Services.Auth0API>();
             services.AddSingleton<Services.URLBuilder>();
             services.AddHttpClient("Slack");

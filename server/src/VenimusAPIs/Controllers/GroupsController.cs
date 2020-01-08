@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
+using VenimusAPIs.ServiceBus;
 using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
@@ -119,7 +120,7 @@ namespace VenimusAPIs.Controllers
         [HttpPut]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Put([FromServices] IBus bus, [FromRoute, Slug]string groupSlug, [FromBody] UpdateGroup newDetails)
+        public async Task<IActionResult> Put([FromServices] EventPublisher eventPublisher, [FromRoute, Slug]string groupSlug, [FromBody] UpdateGroup newDetails)
         {
             var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
 
@@ -175,8 +176,7 @@ namespace VenimusAPIs.Controllers
 
             if (updateEvents)
             {
-                var groupChangedMessage = new ServiceBus.GroupChangedMessage { GroupId = group.Id.ToString() };
-                await bus.Publish(groupChangedMessage).ConfigureAwait(false);
+                await eventPublisher.GroupChanged(group).ConfigureAwait(false); 
             }
 
             return NoContent();

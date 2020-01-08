@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using VenimusAPIs.ServiceBus;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -76,7 +77,7 @@ namespace VenimusAPIs.Controllers
         [Route("api/user")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<ViewMyDetails>> Put([FromServices] IBus bus, [FromBody] UpdateMyDetails updateMyDetails)
+        public async Task<ActionResult<ViewMyDetails>> Put([FromServices] EventPublisher eventPublisher, [FromBody] UpdateMyDetails updateMyDetails)
         {
             var uniqueID = UniqueIDForCurrentUser;
 
@@ -110,8 +111,7 @@ namespace VenimusAPIs.Controllers
 
             await _userStore.UpdateUser(user).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
-            await bus.Publish(userChangedMessage).ConfigureAwait(false);
+            await eventPublisher.UserChanged(user).ConfigureAwait(false);
 
             return NoContent();
         }

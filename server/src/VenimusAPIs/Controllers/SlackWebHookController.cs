@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
+using VenimusAPIs.ServiceBus;
 using VenimusAPIs.Services;
 using VenimusAPIs.Services.SlackModels;
 
@@ -13,14 +14,14 @@ namespace VenimusAPIs.Controllers
     {
         private readonly UserStore _userStore;
         private readonly Slack _slack;
-        private readonly IBus _bus;
+        private readonly EventPublisher _eventPublisher;
         private readonly SlackMessages _slackMessages;
 
-        public SlackWebHookController(UserStore userStore, Slack slack, IBus bus, SlackMessages slackMessages)
+        public SlackWebHookController(UserStore userStore, Slack slack, EventPublisher eventPublisher, SlackMessages slackMessages)
         {
             _userStore = userStore;
             _slack = slack;
-            _bus = bus;
+            _eventPublisher = eventPublisher;
             _slackMessages = slackMessages;
         }
 
@@ -70,8 +71,7 @@ namespace VenimusAPIs.Controllers
             var message = _slackMessages.BuildApprovedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
-            await _bus.Publish(userChangedMessage).ConfigureAwait(false);
+            await _eventPublisher.UserChanged(user).ConfigureAwait(false);
         }
 
         private async Task RejectUser(Interaction interaction, Action action)
@@ -95,8 +95,7 @@ namespace VenimusAPIs.Controllers
             var message = _slackMessages.BuildRejectedRequestMessage(user);
             await _slack.SendAdvancedMessage(message, sendTo).ConfigureAwait(false);
 
-            var userChangedMessage = new ServiceBus.UserChangedMessage { UserId = user.Id.ToString() };
-            await _bus.Publish(userChangedMessage).ConfigureAwait(false);
+            await _eventPublisher.UserChanged(user).ConfigureAwait(false);
         }
     }
 }

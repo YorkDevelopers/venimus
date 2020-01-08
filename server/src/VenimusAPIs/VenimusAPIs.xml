@@ -144,7 +144,7 @@
              <response code="201">Success</response>
              <response code="401">User is not authorized.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Put(MassTransit.IBus,System.String,VenimusAPIs.ViewModels.UpdateGroup)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Put(VenimusAPIs.ServiceBus.EventPublisher,System.String,VenimusAPIs.ViewModels.UpdateGroup)">
              <summary>
                  Allows you to update an existing group
              </summary>
@@ -264,7 +264,7 @@
              <returns>ViewMyDetails view model</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.UserDetailsController.Put(MassTransit.IBus,VenimusAPIs.ViewModels.UpdateMyDetails)">
+        <member name="M:VenimusAPIs.Controllers.UserDetailsController.Put(VenimusAPIs.ServiceBus.EventPublisher,VenimusAPIs.ViewModels.UpdateMyDetails)">
              <summary>
                  Allows the current user to update their personal profile
              </summary>
