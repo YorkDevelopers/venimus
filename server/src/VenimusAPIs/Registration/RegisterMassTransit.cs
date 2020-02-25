@@ -1,8 +1,5 @@
 ﻿using MassTransit;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using System;
 using VenimusAPIs.ServiceBus;
 
 namespace VenimusAPIs.Registration
@@ -13,38 +10,13 @@ namespace VenimusAPIs.Registration
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<UserChangedConsumer>();
-                x.AddConsumer<GroupChangedConsumer>();
+                x.AddConsumersFromNamespaceContaining<UserChangedConsumer>();
 
-                x.AddBus(provider => SetupBusControl(provider));
-            });
-        }
-
-        private static IBusControl SetupBusControl(IServiceProvider provider)
-        {
-            return Bus.Factory.CreateUsingInMemory(cfg =>
-            {
-                cfg.ReceiveEndpoint("venimus-events", ep =>
+                x.AddMediator((provider, cfg) =>
                 {
-                    ep.ConfigureConsumer<GroupChangedConsumer>(provider);
-                    ep.ConfigureConsumer<UserChangedConsumer>(provider);
+                    cfg.ConfigureConsumers(provider);
                 });
             });
-        }
-
-        public static void StartMassTransitBusIfAvailable(this IApplicationBuilder applicationBuilder, IBusControl busControl)
-        {
-            try
-            {
-                Log.Logger.Information("Starting MassTransit service bus");
-                busControl.Start();
-            }
-            catch (Exception ex)
-            {
-                var message = "Failed to start mass transit - " + ex.Message;
-                Log.Logger.Error(message);
-                throw;
-            }
         }
     }
 }

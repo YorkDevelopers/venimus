@@ -6,9 +6,9 @@ namespace VenimusAPIs.ServiceBus
 {
     public class EventPublisher
     {
-        private readonly IBus _bus;
+        private readonly IMediator _bus;
 
-        public EventPublisher(IBus bus)
+        public EventPublisher(IMediator bus)
         {
             _bus = bus;
         }
@@ -17,14 +17,14 @@ namespace VenimusAPIs.ServiceBus
         {
             var groupChangedMessage = new GroupChangedMessage { GroupId = group.Id.ToString() };
 
-            return _bus.Publish(groupChangedMessage);
+            return _bus.Send(groupChangedMessage);
         }
 
         public Task UserChanged(User user)
         {
             var userChangedMessage = new UserChangedMessage { UserId = user.Id.ToString() };
 
-            return _bus.Publish(userChangedMessage);
+            return _bus.Send(userChangedMessage);
         }
     }
 }

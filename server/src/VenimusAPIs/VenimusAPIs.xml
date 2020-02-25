@@ -4,7 +4,7 @@
         <name>VenimusAPIs</name>
     </assembly>
     <members>
-        <member name="M:VenimusAPIs.Controllers.EventsAttendeesController.Get(System.String,System.String)">
+        <member name="M:VenimusAPIs.Controllers.EventsAttendeesController.Get(VenimusAPIs.Models.Group,System.String)">
              <summary>
                  Allows you to retrieve the members of an event
              </summary>
@@ -20,7 +20,7 @@
              <response code="403">No Permission.</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.EventsController.Post(System.String,VenimusAPIs.ViewModels.CreateEvent)">
+        <member name="M:VenimusAPIs.Controllers.EventsController.Post(VenimusAPIs.Models.Group,VenimusAPIs.ViewModels.CreateEvent)">
              <summary>
                  Allows you to create a new event for your group.
              </summary>
@@ -43,7 +43,7 @@
              <response code="401">User is not authorized.</response>
              <response code="404">The group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.EventsController.Put(System.String,System.String,VenimusAPIs.ViewModels.UpdateEvent)">
+        <member name="M:VenimusAPIs.Controllers.EventsController.Put(VenimusAPIs.Models.Group,System.String,VenimusAPIs.ViewModels.UpdateEvent)">
              <summary>
                  Allows you to amend the details of an existing event
              </summary>
@@ -68,7 +68,7 @@
              <response code="401">User is not authorized.</response>
              <response code="404">The group or event does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.EventsController.Delete(System.String,System.String)">
+        <member name="M:VenimusAPIs.Controllers.EventsController.Delete(VenimusAPIs.Models.Group,System.String)">
              <summary>
                  Allows an administrator to delete an event
              </summary>
@@ -81,7 +81,7 @@
              <returns>NoContent</returns>
              <response code="204">Success</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.EventsController.Get(System.String,System.String)">
+        <member name="M:VenimusAPIs.Controllers.EventsController.Get(VenimusAPIs.Models.Group,System.String)">
              <summary>
                  Allows you to retrieve the details of an event
              </summary>
@@ -144,7 +144,7 @@
              <response code="201">Success</response>
              <response code="401">User is not authorized.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Put(VenimusAPIs.ServiceBus.EventPublisher,System.String,VenimusAPIs.ViewModels.UpdateGroup)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Put(VenimusAPIs.ServiceBus.EventPublisher,VenimusAPIs.Models.Group,VenimusAPIs.ViewModels.UpdateGroup)">
              <summary>
                  Allows you to update an existing group
              </summary>
@@ -166,7 +166,7 @@
              <response code="201">Success</response>
              <response code="401">User is not authorized.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(System.String)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Get(VenimusAPIs.Models.Group)">
              <summary>
                  Allows you to retrieve the details of a group
              </summary>
@@ -193,7 +193,7 @@
              <returns>An array of ListGroup view models</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.GetLogo(System.String)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.GetLogo(VenimusAPIs.Models.Group)">
              <summary>
                  Allows you to get the logo for a group
              </summary>
@@ -206,7 +206,7 @@
              <returns>byte array for the image</returns>
              <response code="200">Success</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsController.Delete(System.String)">
+        <member name="M:VenimusAPIs.Controllers.GroupsController.Delete(VenimusAPIs.Models.Group)">
              <summary>
                  Allows you to delete an existing group
              </summary>
@@ -220,7 +220,7 @@
              <response code="204">NoContent</response>
              <response code="401">User is not authorized.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.GroupsMembersController.Get(System.String)">
+        <member name="M:VenimusAPIs.Controllers.GroupsMembersController.Get(VenimusAPIs.Models.Group)">
              <summary>
                  Allows you to retrieve the members of a group
              </summary>
@@ -302,7 +302,7 @@
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.UserGroupsController.DELETE(System.String)">
+        <member name="M:VenimusAPIs.Controllers.UserGroupsController.DELETE(VenimusAPIs.Models.Group)">
              <summary>
                  Allows the current user to leave a group
              </summary>
@@ -317,7 +317,7 @@
              <response code="401">User is not authorized.</response>
              <response code="404">Group does not exist.</response>
         </member>
-        <member name="M:VenimusAPIs.Controllers.UserGroupsEventsController.Put(System.String,System.String,VenimusAPIs.ViewModels.RegisterForEvent)">
+        <member name="M:VenimusAPIs.Controllers.UserGroupsEventsController.Put(VenimusAPIs.Models.Group,System.String,VenimusAPIs.ViewModels.RegisterForEvent)">
              <summary>
                  Allows the current user to update their registration for an event
              </summary>
@@ -867,27 +867,6 @@
         <member name="P:VenimusAPIs.Settings.SlackSettings.ApproversWebhookUrl">
             <summary>
                 The webhook to send the approve membership messaeg to.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Validation.CallerMustBeApprovedGroupMemberAttribute.CanBeSystemAdministratorInstead">
-            <summary>
-            The caller doesn't need to be a member of the group if they have the System Administrator role.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.UseNotFoundRatherThanForbidden">
-            <summary>
-            If the caller doesn't have access to the group then we return NotFound(404) rather than Forbid(403)
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.UseNoContentRatherThanForbidden">
-            <summary>
-            If the caller doesn't have access to the group then we return NoContent(204) rather than Forbid(403).
-            A typical case is when a user's group membership is being removed and their aren't currently a member of the group.
-            </summary>
-        </member>
-        <member name="P:VenimusAPIs.Validation.CallerMustBeGroupMemberAttribute.CanBeSystemAdministratorInstead">
-            <summary>
-            The caller doesn't need to be a member of the group if they have the System Administrator role.
             </summary>
         </member>
         <member name="P:VenimusAPIs.ViewModels.AddGroupMember.Slug">

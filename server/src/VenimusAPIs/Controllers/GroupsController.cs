@@ -11,7 +11,6 @@ using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.ServiceBus;
 using VenimusAPIs.Services;
-using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -120,18 +119,16 @@ namespace VenimusAPIs.Controllers
         [HttpPut]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Put([FromServices] EventPublisher eventPublisher, [FromRoute, Slug]string groupSlug, [FromBody] UpdateGroup newDetails)
+        public async Task<IActionResult> Put([FromServices] EventPublisher eventPublisher, Models.Group? group, [FromBody] UpdateGroup newDetails)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-
-            if (group == null)
+            if (group is null)
             {
                 return NotFound();
             }
 
             var updateEvents = false;
 
-            if (!groupSlug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
+            if (!group.Slug.Equals(newDetails.Slug, System.StringComparison.InvariantCultureIgnoreCase))
             {
                 var duplicateGroup = await _groupStore.RetrieveGroupBySlug(newDetails.Slug).ConfigureAwait(false);
                 if (duplicateGroup != null)
@@ -198,11 +195,9 @@ namespace VenimusAPIs.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetGroup>> Get(string groupSlug)
+        public async Task<ActionResult<GetGroup>> Get(Group? group)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-
-            if (group == null)
+            if (group is null)
             {
                 return NotFound();
             }
@@ -217,10 +212,10 @@ namespace VenimusAPIs.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var uniqueID = UniqueIDForCurrentUser;
-                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-                canViewMembers = existingUser.IsApproved;
+                var caller = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+                canViewMembers = caller.IsApproved;
 
-                var member = group.Members.SingleOrDefault(member => member.UserId == existingUser.Id);
+                var member = group.Members.SingleOrDefault(member => member.UserId == caller.Id);
                 if (member != null)
                 {
                     canAddEvents = member.IsAdministrator;
@@ -241,7 +236,7 @@ namespace VenimusAPIs.Controllers
                 Description = group.Description,
                 Name = group.Name,
                 Slug = group.Slug,
-                Logo = _urlBuilder.BuildGroupLogoURL(groupSlug),
+                Logo = _urlBuilder.BuildGroupLogoURL(group.Slug),
                 IsActive = group.IsActive,
                 SlackChannelName = group.SlackChannelName,
                 StrapLine = group.StrapLine,
@@ -281,8 +276,8 @@ namespace VenimusAPIs.Controllers
             if (groupsIBelongToOnly)
             {
                 var uniqueID = UniqueIDForCurrentUser;
-                var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-                var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, existingUser.Id);
+                var caller = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+                var memberMatch = Builders<GroupMember>.Filter.Eq(a => a.UserId, caller.Id);
                 filters &= Builders<Group>.Filter.ElemMatch(x => x.Members, memberMatch);
             }
 
@@ -317,10 +312,9 @@ namespace VenimusAPIs.Controllers
         [HttpGet]
         [ResponseCache(Duration = 300)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLogo([FromRoute, Slug] string groupSlug)
+        public IActionResult GetLogo(Models.Group? group)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-            if (group == null)
+            if (group is null)
             {
                 return NotFound();
             }
@@ -344,13 +338,11 @@ namespace VenimusAPIs.Controllers
         [HttpDelete]
         [Route("{groupSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> Delete([FromRoute] string groupSlug)
+        public async Task<IActionResult> Delete(Models.Group? group)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-
-            if (group != null)
+            if (group is object)
             {
-                var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(groupSlug).ConfigureAwait(false);
+                var eventsExistForGroup = await _eventStore.DoEventsExistForGroup(group.Slug).ConfigureAwait(false);
                 if (eventsExistForGroup)
                 {
                     var message = _stringLocalizer.GetString(Resources.ResourceMessages.GROUP_HAS_EVENTS).Value;

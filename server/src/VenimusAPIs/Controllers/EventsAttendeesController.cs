@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Extensions;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
 using VenimusAPIs.Validation;
@@ -45,30 +46,31 @@ namespace VenimusAPIs.Controllers
         [Authorize]
         [Route("api/Groups/{groupSlug}/Events/{eventSlug}/Members")]
         [HttpGet]
-        [CallerMustBeApprovedGroupMember]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ListEventAttendees[]>> Get([FromRoute, Slug]string groupSlug, [FromRoute, Slug]string eventSlug)
+        public async Task<ActionResult<ListEventAttendees[]>> Get(Models.Group? group, [FromRoute, Slug]string eventSlug)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
-            if (theEvent == null)
-            {
-                return NotFound();
-            }
-
-            var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
-
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
             if (group == null)
             {
                 return NotFound();
             }
 
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
+            if (!group.UserIsApprovedGroupMember(caller))
+            {
+                return Forbid();
+            }
+
+            var theEvent = await _eventStore.GetEvent(group.Slug, eventSlug).ConfigureAwait(false);
+            if (theEvent == null)
+            {
+                return NotFound();
+            }
+
             var canViewDetails = false;
-            var member = group.Members.SingleOrDefault(member => member.UserId == existingUser.Id);
+            var member = group.Members.SingleOrDefault(member => member.UserId == caller.Id);
             if (member != null)
             {
                 canViewDetails = member.IsAdministrator;

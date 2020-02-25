@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Extensions;
 using VenimusAPIs.Models;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.Services;
-using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
 namespace VenimusAPIs.Controllers
@@ -46,10 +46,19 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [CallerMustBeApprovedGroupMember]
-        public async Task<ActionResult<ListGroupMembers[]>> Get([FromRoute, Slug]string groupSlug)
+        public async Task<ActionResult<ListGroupMembers[]>> Get(Models.Group? group)
         {
-            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
+            if (group is null)
+            {
+                return NotFound();
+            }
+
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
+
+            if (!UserIsASystemAdministrator && !group.UserIsApprovedGroupMember(caller))
+            {
+                return Forbid();
+            }
 
             return group!.Members.Select(m => new ListGroupMembers
             {
@@ -66,17 +75,15 @@ namespace VenimusAPIs.Controllers
         }
 
         [Authorize]
-        [CallerMustBeGroupAdministrator]
         [Route("api/Groups/{groupSlug}/Members")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Post([FromRoute, Slug]string groupSlug, [FromBody] AddGroupMember addGroupMember)
+        public async Task<ActionResult> Post(Models.Group? group, [FromBody] AddGroupMember addGroupMember)
         {
-            var model = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
-            if (model == null)
+            if (group == null)
             {
                 return NotFound();
             }
@@ -87,7 +94,13 @@ namespace VenimusAPIs.Controllers
                 return NotFound();
             }
 
-            var member = model.Members.SingleOrDefault(mem => mem.UserId == userToAdd.Id);
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
+            if (!UserIsASystemAdministrator && !group.UserIsGroupAdministrator(caller))
+            {
+                return Forbid();
+            }
+
+            var member = group.Members.SingleOrDefault(mem => mem.UserId == userToAdd.Id);
             if (member == null)
             {
                 member = new GroupMember
@@ -101,12 +114,12 @@ namespace VenimusAPIs.Controllers
                     Pronoun = userToAdd.Pronoun,
                 };
 
-                model.Members.Add(member);
+                group.Members.Add(member);
             }
             
             member.IsAdministrator = addGroupMember.IsAdministrator;
 
-            await _groupStore.UpdateGroup(model).ConfigureAwait(false);
+            await _groupStore.UpdateGroup(group).ConfigureAwait(false);
 
             return Ok();
         }

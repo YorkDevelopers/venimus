@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using VenimusAPIs.ModelBinders;
 
 namespace VenimusAPIs.Models
 {
+    [ModelBinder(BinderType = typeof(GroupBinder), Name = "groupSlug")]
     public class Group
     {
         /// <summary>

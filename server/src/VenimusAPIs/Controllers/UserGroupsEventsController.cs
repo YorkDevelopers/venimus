@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using VenimusAPIs.Extensions;
+using VenimusAPIs.Mongo;
 using VenimusAPIs.Validation;
 using VenimusAPIs.ViewModels;
 
@@ -17,12 +19,14 @@ namespace VenimusAPIs.Controllers
     {
         private readonly Mongo.EventStore _eventStore;
         private readonly Mongo.UserStore _userStore;
+        private readonly GroupStore _groupStore;
         private readonly IStringLocalizer<ResourceMessages> _stringLocalizer;
 
-        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore, IStringLocalizer<ResourceMessages> stringLocalizer)
+        public UserGroupsEventsController(Mongo.EventStore eventStore, Mongo.UserStore userStore, Mongo.GroupStore groupStore, IStringLocalizer<ResourceMessages> stringLocalizer)
         {
             _eventStore = eventStore;
             _userStore = userStore;
+            _groupStore = groupStore;
             _stringLocalizer = stringLocalizer;
         }
 
@@ -46,14 +50,18 @@ namespace VenimusAPIs.Controllers
         /// <response code="404">Group does not exist</response>
         [Authorize]
         [HttpPut]
-        [CallerMustBeGroupMember]
         [Route("api/User/Groups/{groupSlug}/Events/{eventSlug}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromRoute, Slug] string groupSlug, [FromRoute, Slug] string eventSlug, [FromBody] RegisterForEvent newDetails)
+        public async Task<IActionResult> Put(Models.Group? group, [FromRoute, Slug] string eventSlug, [FromBody] RegisterForEvent newDetails)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
+            if (group is null)
+            {
+                return NotFound();
+            }
+
+            var theEvent = await _eventStore.GetEvent(group.Slug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
@@ -72,23 +80,26 @@ namespace VenimusAPIs.Controllers
 
             newDetails.Answers = newDetails.Answers.Where(a => a.Code != "NumberOfGuests" && a.Code != "DietaryRequirements").ToList();
 
-            var uniqueID = UniqueIDForCurrentUser;
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
 
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+            if (!group.UserIsGroupMember(caller))
+            {
+                return Forbid();
+            }
 
             var created = false;
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == caller.Id);
             if (member == null)
             {
                 member = new Models.GroupEventAttendee
                 {
-                    UserId = existingUser.Id,
-                    Bio = existingUser.Bio,
-                    DisplayName = existingUser.DisplayName,
-                    EmailAddress = existingUser.EmailAddress,
-                    Fullname = existingUser.Fullname,
-                    Pronoun = existingUser.Pronoun,
-                    IsUserApproved = existingUser.IsApproved,
+                    UserId = caller.Id,
+                    Bio = caller.Bio,
+                    DisplayName = caller.DisplayName,
+                    EmailAddress = caller.EmailAddress,
+                    Fullname = caller.Fullname,
+                    Pronoun = caller.Pronoun,
+                    IsUserApproved = caller.IsApproved,
                 };
 
                 theEvent.Members.Add(member);
@@ -136,7 +147,7 @@ namespace VenimusAPIs.Controllers
 
             if (created)
             {
-                return CreatedAtRoute("EventRegistration", new { groupSlug, eventSlug }, null);
+                return CreatedAtRoute("EventRegistration", new { groupSlug = group.Slug, eventSlug }, null);
             }
             else
             {
@@ -209,14 +220,14 @@ namespace VenimusAPIs.Controllers
         {
             var uniqueID = UniqueIDForCurrentUser;
 
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+            var caller = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
 
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == caller.Id);
             if (member == null)
             {
                 member = new Models.GroupEventAttendee
                 {
-                    UserId = existingUser.Id,
+                    UserId = caller.Id,
                 };
 
                 theEvent.Members.Add(member);
@@ -239,13 +250,18 @@ namespace VenimusAPIs.Controllers
         /// <response code="404">Group or Event does not exist.</response>
         [Authorize]
         [Route("api/user/groups/{groupSlug}/events/{eventSlug}", Name = "EventRegistration")]
-        [CallerMustBeGroupMember(CanBeSystemAdministratorInstead = false)]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute] string groupSlug, [FromRoute] string eventSlug)
+        public async Task<ActionResult<ViewMyEventRegistration>> Get([FromRoute, Slug] string groupSlug, [FromRoute] string eventSlug)
         {
-            var theEvent = await _eventStore.GetEvent(groupSlug, eventSlug).ConfigureAwait(false);
+            var group = await _groupStore.RetrieveGroupBySlug(groupSlug).ConfigureAwait(false);
+            if (group is null)
+            {
+                return NotFound();
+            }
+
+            var theEvent = await _eventStore.GetEvent(group.Slug, eventSlug).ConfigureAwait(false);
             if (theEvent == null)
             {
                 return NotFound();
@@ -263,10 +279,14 @@ namespace VenimusAPIs.Controllers
                 allQuestions.Add(CreateDietaryRequirementsQuestion());
             }
 
-            var uniqueID = UniqueIDForCurrentUser;
-            var existingUser = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
 
-            var member = theEvent.Members.SingleOrDefault(m => m.UserId == existingUser.Id);
+            if (!group.UserIsGroupMember(caller))
+            {
+                return Forbid();
+            }
+
+            var member = theEvent.Members.SingleOrDefault(m => m.UserId == caller.Id);
 
             var result = new ViewMyEventRegistration
             {

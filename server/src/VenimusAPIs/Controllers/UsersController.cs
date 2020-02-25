@@ -39,9 +39,14 @@ namespace VenimusAPIs.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [CallerMustBeApprovedUser]
         public async Task<ActionResult<GetUser>> GetUserDetails([FromQuery] string displayName)
         {
+            var caller = await _userStore.GetUserByID(UniqueIDForCurrentUser).ConfigureAwait(false);
+            if (!caller.IsApproved)
+            {
+                return Forbid();
+            }
+
             var user = await _userStore.GetUserByDisplayName(displayName).ConfigureAwait(false);
             if (user == null)
             {

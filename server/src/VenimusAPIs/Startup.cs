@@ -28,10 +28,8 @@ namespace VenimusAPIs
             _env = env;
         }
 
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBusControl busControl)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.StartMassTransitBusIfAvailable(busControl);
-
             app.Use(async (ctx, next) =>
             {
                 ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
@@ -115,10 +113,7 @@ namespace VenimusAPIs
 
             services.AddMvc(options =>
             {
-                options.Filters.AddService<CheckGroupSecurityFilter>();
             });
-
-            services.AddScoped<CheckGroupSecurityFilter>();
 
             services.AddScoped<Mongo.MongoConnection>();
             services.AddScoped<Mongo.GetFutureEventsQuery>();
