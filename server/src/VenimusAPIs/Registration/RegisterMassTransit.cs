@@ -8,9 +8,9 @@ namespace VenimusAPIs.Registration
     {
         public static void AddMassTransit(this IServiceCollection services)
         {
-            services.AddMassTransit(x =>
+            services.AddMediator(options =>
             {
-                x.AddConsumersFromNamespaceContaining<UserChangedConsumer>();
+                options.AddConsumersFromNamespaceContaining<UserChangedConsumer>();
             });
         }
     }

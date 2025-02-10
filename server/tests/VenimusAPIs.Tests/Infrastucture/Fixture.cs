@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using VenimusAPIs.ServiceBus;
 using VenimusAPIs.Tests.Extensions;
 using VenimusAPIs.Tests.Infrastucture;
 
