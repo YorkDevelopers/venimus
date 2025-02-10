@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using System.Threading.Tasks;
+using MassTransit.Mediator;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.ServiceBus

@@ -4,8 +4,11 @@ namespace VenimusAPIs.Validation
 {
     public class SlugAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
+            if (value is null)
+                return new ValidationResult("The slug must be provided");
+            
             var slug = (string)value;
 
             if (string.IsNullOrWhiteSpace(slug))
@@ -18,7 +21,7 @@ namespace VenimusAPIs.Validation
             }
             else
             {
-                return ValidationResult.Success;
+                return ValidationResult.Success!;
             }
         }
     }

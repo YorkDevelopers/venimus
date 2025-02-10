@@ -27,7 +27,7 @@ namespace VenimusAPIs.Services
 
             var profile = JsonSerializer.Deserialize<UserProfile>(json);
 
-            return profile;
+            return profile!;
         }
     }
 }

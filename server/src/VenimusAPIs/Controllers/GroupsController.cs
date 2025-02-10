@@ -209,7 +209,7 @@ namespace VenimusAPIs.Controllers
             var canLeaveGroup = false;
             var canEditGroup = false;
 
-            if (User.Identity.IsAuthenticated)
+            if (User!.Identity!.IsAuthenticated)
             {
                 var uniqueID = UniqueIDForCurrentUser;
                 var caller = await _userStore.GetUserByID(uniqueID).ConfigureAwait(false);

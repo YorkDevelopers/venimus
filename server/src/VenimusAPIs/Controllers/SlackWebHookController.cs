@@ -1,6 +1,4 @@
-﻿using MassTransit;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VenimusAPIs.Mongo;
 using VenimusAPIs.ServiceBus;
@@ -27,11 +25,11 @@ namespace VenimusAPIs.Controllers
 
         [Route("public/SlackWebHook")]
         [HttpPost]
-        [Consumes("application/x-www-form-urlencoded")]
+        // [Consumes("application/x-www-form-urlencoded")]
         public async Task<IActionResult> Post()
         {
             var data = Request.Form["payload"];
-            var interaction = JsonConvert.DeserializeObject<Interaction>(data);
+            var interaction = Newtonsoft.Json.JsonConvert.DeserializeObject<Interaction>(data!)!;
             var action = interaction.Actions[0];
 
             switch (action.ActionID)

@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using VenimusAPIs.Models;
 
 namespace VenimusAPIs.Mongo
 {
-    public class MongoConnection
+    public sealed class MongoConnection : IDisposable
     {
         private readonly Settings.MongoDBSettings _mongoDBSettings;
 
@@ -40,11 +41,19 @@ namespace VenimusAPIs.Mongo
         {
             if (_cachedDatabase == null)
             {
+#pragma warning disable CA2000
                 var client = new MongoClient(_mongoDBSettings.ConnectionString);
+#pragma warning restore CA2000
                 _cachedDatabase = client.GetDatabase(_mongoDBSettings.DatabaseName);
             }
 
             return _cachedDatabase;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            _cachedDatabase?.Client.Dispose();
         }
     }
 }

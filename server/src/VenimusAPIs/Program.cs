@@ -2,9 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
-using Serilog;
 
 namespace VenimusAPIs
 {
@@ -36,12 +34,12 @@ namespace VenimusAPIs
 
             IdentityModelEventSource.ShowPII = true;
 
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.FromLogContext()
-                .CreateLogger();
-
-            Log.Information("Application starting...");
+            // Log.Logger = new LoggerConfiguration()
+            //     .ReadFrom.Configuration(Configuration)
+            //     .Enrich.FromLogContext()
+            //     .CreateLogger();
+            //
+            // Log.Information("Application starting...");
 
             CreateWebHostBuilder(args).Build().Run();
         }
@@ -49,8 +47,8 @@ namespace VenimusAPIs
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseSerilog();
+                .UseStartup<Startup>();
+            //  .UseSerilog();
         }
     }
 }

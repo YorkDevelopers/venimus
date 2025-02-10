@@ -11,11 +11,6 @@ namespace VenimusAPIs.Registration
             services.AddMassTransit(x =>
             {
                 x.AddConsumersFromNamespaceContaining<UserChangedConsumer>();
-
-                x.AddMediator((provider, cfg) =>
-                {
-                    cfg.ConfigureConsumers(provider);
-                });
             });
         }
     }

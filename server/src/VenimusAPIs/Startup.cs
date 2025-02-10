@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using VenimusAPIs.Registration;
 using VenimusAPIs.Validation;
 
@@ -32,7 +33,7 @@ namespace VenimusAPIs
         {
             app.Use(async (ctx, next) =>
             {
-                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+                ctx.Response.Headers.Append("Content-Security-Policy", "default-src 'self';");
                 await next().ConfigureAwait(false);
             });
 
@@ -43,8 +44,6 @@ namespace VenimusAPIs
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseSwagger();
 
             app.AddLocalisation();
 
@@ -100,7 +99,7 @@ namespace VenimusAPIs
                         var accessToken = context.SecurityToken as JwtSecurityToken;
                         if (accessToken != null)
                         {
-                            if (context.Principal.Identity is ClaimsIdentity identity)
+                            if (context.Principal!.Identity is ClaimsIdentity identity)
                             {
                                 identity.AddClaim(new Claim("access_token", accessToken.RawData));
                             }
@@ -130,8 +129,6 @@ namespace VenimusAPIs
             services.AddSingleton<Services.SlackMessages>();
             services.AddHttpContextAccessor();
             services.AddControllers();
-
-            services.AddSwagger();
 
             services.AddHealthChecks();
 

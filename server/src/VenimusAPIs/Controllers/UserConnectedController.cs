@@ -62,18 +62,18 @@ namespace VenimusAPIs.Controllers
                 (theUser, newUser) = await CreateOrMergeUser(uniqueID).ConfigureAwait(false);
             }
 
-            Response.Headers.Add("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser).ToString()));
-            Response.Headers.Add("IsSystemAdministrator", new Microsoft.Extensions.Primitives.StringValues(UserIsASystemAdministrator.ToString(CultureInfo.InvariantCulture)));
+            Response.Headers.Append("ProfilePictureURL", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildUserDetailsProfilePictureURL(theUser).ToString()));
+            Response.Headers.Append("IsSystemAdministrator", new Microsoft.Extensions.Primitives.StringValues(UserIsASystemAdministrator.ToString(CultureInfo.InvariantCulture)));
 
             if (newUser)
             {
-                Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("true"));
+                Response.Headers.Append("NewUser", new Microsoft.Extensions.Primitives.StringValues("true"));
                 return CreatedAtRoute("CurrentUserDetails", new { }, null);
             }
             else
             {
-                Response.Headers.Add("NewUser", new Microsoft.Extensions.Primitives.StringValues("false"));
-                Response.Headers.Add("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL().ToString()));
+                Response.Headers.Append("NewUser", new Microsoft.Extensions.Primitives.StringValues("false"));
+                Response.Headers.Append("Location", new Microsoft.Extensions.Primitives.StringValues(_urlBuilder.BuildCurrentUserDetailsURL().ToString()));
                 return NoContent();
             }
         }
