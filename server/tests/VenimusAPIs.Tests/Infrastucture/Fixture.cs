@@ -26,7 +26,6 @@ namespace VenimusAPIs.Tests
     {
         private readonly WebApplicationFactory<Startup> _factory;
         private readonly IConfigurationRoot _configuration;
-        private readonly WebApplicationFactory<Startup> _fixture;
 
         public Fixture()
         {
@@ -62,8 +61,8 @@ namespace VenimusAPIs.Tests
             MockImageSource = new MockImageSource();
             MockSlack = new MockSlack();
 
-            _fixture = new WebApplicationFactory<Startup>();
-            _factory = _fixture.Factories.FirstOrDefault() ?? _fixture.WithWebHostBuilder(ConfigureWebHostBuilder);
+            var fixture = new WebApplicationFactory<Startup>();
+            _factory = fixture.Factories.FirstOrDefault() ?? fixture.WithWebHostBuilder(ConfigureWebHostBuilder);
             _client = _factory.CreateClient();
         }
 
@@ -77,7 +76,9 @@ namespace VenimusAPIs.Tests
 
         public MockSlack MockSlack { get; }
 
+#pragma warning disable CA2213
         private readonly HttpClient _client;
+#pragma warning restore CA2213
 
         public string GetTokenForNewUser(string uniqueID)
         {
