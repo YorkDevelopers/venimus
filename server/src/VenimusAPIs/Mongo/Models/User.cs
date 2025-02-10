@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace VenimusAPIs.Models
 {
@@ -76,6 +77,7 @@ namespace VenimusAPIs.Models
         /// <summary>
         ///     Unique ID sent to the approve/reject message in slack to the identify the user.
         /// </summary>
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
         public Guid ApprovalID { get; set; } = Guid.NewGuid();
     }
 }
