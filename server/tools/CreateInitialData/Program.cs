@@ -14,12 +14,14 @@ namespace CreateInitialData
         {
             Console.WriteLine("Please wait...");
 
-            var s = new VenimusAPIs.Settings.MongoDBSettings();
-            s.ConnectionString = "mongodb+srv://app:ZsZoyFiGaWWxx6kG@cluster0-mwrwp.azure.mongodb.net/test?retryWrites=true&w=majority";
-            s.DatabaseName = "venimus";
+            var s = new VenimusAPIs.Settings.MongoDBSettings
+            {
+                ConnectionString = "mongodb+srv://app:ZsZoyFiGaWWxx6kG@cluster0-mwrwp.azure.mongodb.net/test?retryWrites=true&w=majority",
+                DatabaseName = "venimus"
+            };
 
             var m = new MongoConnection(Options.Create(s));
-            await m.ResetDatabase();
+            //await m.ResetDatabase();
 
             var groups = m.GroupsCollection();
             var events = m.EventsCollection();
@@ -27,8 +29,8 @@ namespace CreateInitialData
 
             foreach (var meetupFilename in Directory.GetFiles("Meetups", "*.markdown"))
             {
-                Console.WriteLine($"{meetupFilename}"); 
-                var fileContents = File.ReadAllLines(meetupFilename);
+                Console.WriteLine(meetupFilename); 
+                var fileContents = await File.ReadAllLinesAsync(meetupFilename);
                 var title = fileContents.First(line => line.StartsWith("title:")).Substring(7).Trim().Replace(@"""","") ;
                 var slug = title.ToUpper().Replace(" ", "").Replace("-", "");
                 var imageName = fileContents.First(line => line.StartsWith("img:")).Substring("img: img/meetups/".Length).Trim();
